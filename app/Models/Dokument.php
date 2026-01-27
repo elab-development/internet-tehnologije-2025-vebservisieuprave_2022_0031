@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Dokument extends Model
 {
+    protected $table='dokumenta';
      protected $fillable = [
         'nazivFajla',
         'putanja', // kako bismo nasli dokument

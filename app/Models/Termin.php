@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Termin extends Model
 {
+    protected $table='termini';
      protected $fillable = [
         'tip_dokumenta', // licnakarta  ili  pasos
         'lokacija',

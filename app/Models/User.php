@@ -26,6 +26,7 @@ class User extends Authenticatable
         'jmbg',            // za domace
         'broj_pasoša',     // za strane
         'drzavljanstvo',   // za strane
+        'broj_zaposlenog', //za admina
         'datum_kreiranja_naloga',
         'email',
         'password',
@@ -57,4 +58,26 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    
+
+    /**
+ * Svi zahtevi koje je korisnik poslao
+ */
+public function zahtevi()
+{
+    return $this->hasMany(Zahtev::class);
+}
+
+/**
+ * Svi termini koje je korisnik zakazao
+ */
+public function termini()
+{
+    return $this->hasMany(Termin::class);
+}
+// Helper metode
+    public function isAdmin() { return $this->tip_korisnika === 'admin'; }
+    public function isDomaci() { return $this->tip_korisnika === 'domaci'; }
+    public function isStrani() { return $this->tip_korisnika === 'strani'; }
+
 }

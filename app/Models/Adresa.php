@@ -13,12 +13,19 @@ class Adresa extends Model
         'opstina',
         'grad', 
         'postanski_broj',
-        'tip_adrese',
+        'trajanje_prebivalista', // trajna ili privremena
+        'uloga_adrese', // stara ili nova
         'zahtev_id'
     ];
      protected $casts = [
-        'tip_adrese' => 'string',
+        'trajanje_prebivalista' => 'string',
     ];
 
-    
+    /**
+ * Zahtev kojem adresa pripada
+ */
+public function zahtev()
+{
+    return $this->belongsTo(Zahtev::class, 'zahtev_id');
+}
 }

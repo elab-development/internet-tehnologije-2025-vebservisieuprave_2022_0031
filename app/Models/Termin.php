@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Termin extends Model
 {
      protected $fillable = [
-        'tip_dokumenta', // licna_karta / pasos
+        'tip_dokumenta', // licnakarta  ili  pasos
         'lokacija',
         'datum_vreme',
         'korisnik_id',  // FK na korisnika
@@ -17,4 +17,12 @@ class Termin extends Model
         'tip_dokumenta' => 'string',
         'lokacija'=>'string',
     ];
+
+  /**
+ * Korisnik kojem termin pripada
+ */
+public function korisnik()
+{
+    return $this->belongsTo(User::class, 'user_id');
+}
 }

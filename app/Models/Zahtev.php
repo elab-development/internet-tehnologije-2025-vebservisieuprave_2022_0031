@@ -22,7 +22,7 @@ class Zahtev extends Model
             'prezime_partnera',
             'datum_rodjenja_partnera',
             'partner_pol',
-            'broj-licnog_dokumenta',
+            'broj_licnog_dokumenta',
             'broj_licnog_dokumenta_partnera',
             'datum_promene'
 

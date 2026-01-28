@@ -4,10 +4,11 @@ namespace App\Models;
 
 use DateTime;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Zahtev extends Model
 {
+    use HasFactory;
     protected $table='zahtevi';
         protected $fillable=[
             'tip_zahteva',// promena bracnog statusa i promena prebivalista
@@ -58,8 +59,7 @@ public function dokumenti()
     public function staraAdresa()
     {
         return $this->hasOne(Adresa::class, 'zahtev_id')
-                    ->where('tip_adrese', 'stara')
-                    ->where('tip_zahteva', self::PREBIVALISTE);
+                    ->where('uloga_adrese', 'stara');
     }
 
     /**
@@ -68,8 +68,7 @@ public function dokumenti()
     public function novaAdresa()
     {
         return $this->hasOne(Adresa::class, 'zahtev_id')
-                    ->where('tip_adrese', 'nova')
-                    ->where('tip_zahteva', self::PREBIVALISTE);
+                    ->where('uloga_adrese', 'nova');
     }
         
 

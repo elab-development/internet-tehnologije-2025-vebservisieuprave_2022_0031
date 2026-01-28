@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Adresa extends Model
 {
-    protected $table='novcanici';
+    use HasFactory;
+    protected $table='adrese';
     protected $fillable = [
         'ulica',
         'broj',

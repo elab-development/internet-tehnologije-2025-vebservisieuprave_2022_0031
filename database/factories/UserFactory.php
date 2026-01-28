@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
  */
 class UserFactory extends Factory
-{
+{//da proizvede odredjene objekte, UserFactory proizvodi korisnike
     /**
      * The current password being used by the factory.
      */
@@ -23,22 +23,33 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $tip = $this->faker->randomElement(['domaci', 'strani', 'admin']);
         return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
-            'remember_token' => Str::random(10),
+            'ime' => $this->fake()->firstName(),
+            'prezime' => $this->fake()->lastName(),
+            'datum_rodjenja' => $this->faker->date('Y-m-d', '-18 years'),//korisnik ce imati najmanje 18 godina
+            'pol' => $this->faker->randomElement(['M', 'Ž']),
+            'tip_korisnika' => $tip,
+            // uslovna polja
+            'jmbg' => $tip === 'domaci'
+                ? $this->faker->numerify('#############')
+                : null,
+            'broj_pasoša' => $tip === 'strani'
+                ? strtoupper($this->faker->bothify('??######'))
+                : null,
+
+            'drzavljanstvo' => $tip === 'strani'
+                ? $this->faker->country()
+                : 'Srbija',
+
+            'broj_zaposlenog' => $tip === 'admin'
+                ? 'ADM-' . $this->faker->unique()->numberBetween(1000, 9999)
+                : null,
+            'datum_kreiranja_naloga' => now(),
+            'email' => $this->faker->unique()->safeEmail(),
+            'password' => 'password', // hashed automatski
         ];
     }
 
-    /**
-     * Indicate that the model's email address should be unverified.
-     */
-    public function unverified(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'email_verified_at' => null,
-        ]);
-    }
+    
 }

@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Termin extends Model
 {
+    use HasFactory;
     protected $table='termini';
      protected $fillable = [
         'tip_dokumenta', // licnakarta  ili  pasos
@@ -24,6 +26,6 @@ class Termin extends Model
  */
 public function korisnik()
 {
-    return $this->belongsTo(User::class, 'user_id');
+    return $this->belongsTo(User::class, 'korisnik_id');
 }
 }

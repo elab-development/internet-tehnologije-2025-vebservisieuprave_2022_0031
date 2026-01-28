@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Adresa;
+use App\Models\Zahtev;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -21,9 +22,9 @@ class AdresaFactory extends Factory
             'opstina' => $this->faker->city(),
             'grad' => $this->faker->city(),
             'postanski_broj' => $this->faker->postcode(),
-            'trajanje_prebivalista' => $this->faker->randomElement(['trajna', 'privremena']),
+            'trajanje_prebivalista' => $this->faker->randomElement(['stalna', 'privremena']),
             'uloga_adrese' => $this->faker->randomElement(['stara', 'nova']),
-            'zahtev_id' => null, // popunićemo kroz ZahtevFactory
+            'zahtev_id' => Zahtev::inRandomOrder()->value('id') ?? Zahtev::factory(),
         ];
     }
 

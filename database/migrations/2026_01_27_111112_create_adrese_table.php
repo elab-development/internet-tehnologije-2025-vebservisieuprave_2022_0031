@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('mesto');
             $table->string('opstina');
             $table->string('grad');
-            $table->integer('postanski_broj');
+            $table->string('postanski_broj');
             $table->enum('trajanje_prebivalista' , ['stalna', 'privremena']);
                 
             $table->enum('uloga_adrese' , ['nova', 'stara']);

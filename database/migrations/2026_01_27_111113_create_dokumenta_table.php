@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nazivFajla'); 
             $table->string('putanja');    
-            $table->enum('tipDokumeta', ['izvod_iz_knjige_vecnacih', 'presuda', 'licna_karta', 'pasos']); 
+            $table->enum('tipDokumeta', ['izvod', 'presuda', 'licna_karta', 'pasos']); 
             $table->string('broj_dokumenta')->nullable(); 
             $table->string('organ_izdavanja')->nullable(); 
             $table->foreignId('zahtev_id')->constrained('zahtevi')->cascadeOnDelete();

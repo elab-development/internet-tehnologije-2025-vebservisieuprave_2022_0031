@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Zahtev;
 use Illuminate\Http\Request;
+use App\Http\Resources\ZahtevResource;
 
 
 class ZahtevController extends Controller
@@ -12,10 +13,10 @@ class ZahtevController extends Controller
     /**
      * Display a listing of the resource.
      */
-    // get, da vrati sve zahteve
+    // koristimo sa GET, da vrati sve zahteve
     public function index()
     {
-        return Zahtev::all();
+        return ZahtevResource::collection(Zahtev::all());
         
     }
 
@@ -30,7 +31,7 @@ class ZahtevController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    //post kreiraj zahtev
+    //Sa POST zahtevom , on sluzi za kreiranje objekta
     public function store(Request $request)
     {
        $validator = Validator::make($request->all(), [
@@ -56,17 +57,17 @@ class ZahtevController extends Controller
     }
         $data=$validator-> validated();
         $zahtev=Zahtev::create($data);
-        return response()-> json($zahtev, 201);
+        return response()-> json(new ZahtevResource($zahtev, 201));
     }
 
     /**
      * Display the specified resource.
      */
-    //get, da vratimo jedan zahtev
+    //sa get zahtevom, da vratimo jedan zahtev
     //get/zahtev/(zahtevid)
     public function show( $zahtev_id)
     {
-        return Zahtev::find($zahtev_id);
+        return new ZahtevResource(Zahtev::findOrFail($zahtev_id));
     }
 
     /**
@@ -81,9 +82,36 @@ class ZahtevController extends Controller
      * Update the specified resource in storage.
      */
     //putm azurira objekta
-    public function update(Request $request, Zahtev $zahtev)
-    {
-        //
+    public function update(Request $request,  $id)
+    {  $zahtev=Zahtev::find($id);
+         if(!$zahtev){
+        return response()->json(['message'=> 'Zahtev nije pronadjen.'], 404);
+        }
+        
+        $validator = Validator::make($request->all(), [
+        'tip_zahteva' => 'sometimes|in:prebivaliste,bracni_status',
+        'status' => 'sometimes|string|max:255',
+        'datum_kreiranja' => 'sometimes|date',
+
+        'korisnik_id' => 'sometimes|integer|exists:users,id',
+
+        'tip_promene' => 'sometimes|in:razvod,sklapanje_braka',
+        'ime_partnera' => 'sometimes|string|max:255',
+        'prezime_partnera' => 'sometimes|string|max:255',
+        'datum_rodjenja_partnera' => 'sometimes|date',
+        'partner_pol' => 'sometimes|in:M,Z',
+        'broj_licnog_dokumenta' => 'sometimes|string|max:255',
+        'broj_licnog_dokumenta_partnera' => 'sometimes|string|max:255',
+        'datum_promene' => 'sometimes|date',
+    ]);
+    if ($validator->fails()) {
+        return response()->json([
+            'message'=> 'Validacija nije prosla.',
+            'errors' => $validator->errors()], 422); 
+    }
+    $data=$validator-> validated();
+        $zahtev->update($data);
+        return response()-> json(new ZahtevResource($zahtev, 200));
     }
 
     /**

@@ -24,7 +24,7 @@ class User extends Authenticatable
         'pol',
         'tip_korisnika',   // domaci, strani, administrator
         'jmbg',            // za domace
-        'broj_pasoša',     // za strane
+        'broj_pasosa',     // za strane
         'drzavljanstvo',   // za strane
         'broj_zaposlenog', //za admina
         'datum_kreiranja_naloga',

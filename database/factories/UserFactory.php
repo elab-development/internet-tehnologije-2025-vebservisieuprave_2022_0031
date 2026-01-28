@@ -25,8 +25,8 @@ class UserFactory extends Factory
     {
         $tip = $this->faker->randomElement(['domaci', 'strani', 'admin']);
         return [
-            'ime' => $this->fake()->firstName(),
-            'prezime' => $this->fake()->lastName(),
+            'ime' => $this->faker->firstName(),
+            'prezime' => $this->faker->lastName(),
             'datum_rodjenja' => $this->faker->date('Y-m-d', '-18 years'),//korisnik ce imati najmanje 18 godina
             'pol' => $this->faker->randomElement(['M', 'Ž']),
             'tip_korisnika' => $tip,
@@ -34,7 +34,7 @@ class UserFactory extends Factory
             'jmbg' => $tip === 'domaci'
                 ? $this->faker->numerify('#############')
                 : null,
-            'broj_pasoša' => $tip === 'strani'
+            'broj_pasosa' => $tip === 'strani'
                 ? strtoupper($this->faker->bothify('??######'))
                 : null,
 

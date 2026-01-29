@@ -6,6 +6,7 @@ use App\Http\Controllers\TerminController;
 use App\Http\Controllers\AdresaController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DokumentController;
+use App\Http\Controllers\ForgotPasswordController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -40,6 +41,9 @@ Route::get('/termin/{id}', [TerminController::class, 'show']);
 Route::post('/termin', [TerminController::class, 'store']);
 Route::delete('/termin/{id}', [TerminController::class, 'destroy']);
 Route::put('/termin/{id}', [TerminController::class, 'update']);
+
+Route::post('/password/forgot', [ForgotPasswordController::class, 'sendResetLink']);
+Route::post('/password/reset', [ForgotPasswordController::class, 'resetPassword']);
 
 
 Route::resource('/dokument', DokumentController::class);//ova linija menja donjih 5, zahtev - da imamo resource rutu

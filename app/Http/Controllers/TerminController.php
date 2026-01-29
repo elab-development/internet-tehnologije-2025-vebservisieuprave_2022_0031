@@ -26,6 +26,37 @@ class TerminController extends Controller
         //
     }
 
+    public function mojiTerminiPaginatedFiltered(Request $request){
+            $userId=$request->user()->id;
+             $perPage=$request->get('per_page', 10);
+           
+             $query=Termin::where('korisnik_id', $userId);
+            
+             if($request->filled('tip_dokumenta')){
+                $query->where('tip_dokumenta', $request->get('tip_dokumenta'));
+             }
+             
+             if($request->filled('lokacija')){
+                $query->where('lokacija', $request->get('lokacija'));
+             }
+
+             if($request->filled('date_from')){
+                $query->where('datum_vreme','>=', $request->get('date_from'));
+             }
+
+
+            if($request->filled('date_to')){
+                $query->where('datum_vreme','<=', $request->get('date_to'));
+             }
+
+             $query->orderByDesc('datum_vreme');
+            $paginator= $query->paginate($perPage);
+
+           
+                 return TerminResource::collection($paginator);
+        }
+
+
     /**
      * Store a newly created resource in storage.
      */

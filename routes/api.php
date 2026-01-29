@@ -24,9 +24,13 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::get('/me', [AuthController::class, 'me']);
       
 
-     Route::get('/zahtev/moje', [ZahtevController::class, 'moje']);
+     Route::get('/zahtev/moje', [ZahtevController::class, 'mojiZahteviPaginatedFiltered']);
 
-     Route::get('/zahtev/moje/bracni_status', [ZahtevController::class, 'mojiBracniStatus']);
+     Route::get('/zahtev/moje/bracni_status', [ZahtevController::class, 'mojiBracniStatusPaginatedFiltered']);
+
+     Route::get('/zahtev/moje/prebivaliste', [ZahtevController::class, 'mojiPromenaPrebivalistaPaginatedFiltered']);
+
+      Route::get('/termin/moje', [TerminController::class, 'mojiTerminiPaginatedFiltered']);
     
 });
 //ako neke rute zelimo da zastitimo pakujemo ih u grupu ruta

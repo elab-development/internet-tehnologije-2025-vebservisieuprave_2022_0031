@@ -30,33 +30,93 @@ class ZahtevController extends Controller
         //
     }
         //get/zahtevi/moji
-        // da prikaze izlistane zahteve ulogovanog korisnika
-     public function moje(Request $request){
+        // da prikaze izlistane zahteve ulogovanog korisnika +paginacija + filter
+     public function mojiZahteviPaginatedFiltered(Request $request){
             $userId=$request->user()->id;
+             $perPage=$request->get('per_page', 10);
             Log::info('ID ulogovanog korisnika: ' . $userId);
 
-            $zahtevi=Zahtev::where('korisnik_id', $userId)
-            ->orderByDesc('datum_kreiranja')
-            ->get();
+             $query=Zahtev::where('korisnik_id', $userId);
+            
+             if($request->filled('status')){
+                $query->where('status', $request->get('status'));
+             }
 
-            Log::info('Broj zahteva: ' . $zahtevi->count());
-                 return ZahtevResource::collection($zahtevi);
+             if($request->filled('date_from')){
+                $query->where('datum_kreiranja','>=', $request->get('date_from'));
+             }
+
+
+            if($request->filled('date_to')){
+                $query->where('datum_kreiranja','<=', $request->get('date_to'));
+             }
+
+             $query->orderByDesc('datum_kreiranja');
+            $paginator= $query->paginate($perPage);
+
+           
+                 return ZahtevResource::collection($paginator);
         }
+
         //get/zahtevi/moji ali samo za bracni status
         // da prikaze izlistane zahteve za br status ulogovanog korisnika
-        public function mojiBracniStatus(Request $request){
+        public function mojiBracniStatusPaginatedFiltered(Request $request){
     $userId = $request->user()->id;
+    $perPage=$request->get('per_page', 10);
     Log::info('ID ulogovanog korisnika: ' . $userId);
 
-    $zahtevi = Zahtev::where('korisnik_id', $userId)
-                ->where('tip_zahteva', Zahtev::BRACNI_STATUS) // koristi const iz modela
-                ->orderByDesc('datum_kreiranja')
-                ->get();
+   $query= Zahtev::where('korisnik_id', $userId)
+                ->where('tip_zahteva', Zahtev::BRACNI_STATUS) ;// koristi const iz modela
 
-    Log::info('Broj zahteva: ' . $zahtevi->count());
+    if($request->filled('status')){
+                $query->where('status', $request->get('status'));
+             }
 
-    return ZahtevResource::collection($zahtevi);
+    if($request->filled('date_from')){
+                $query->where('datum_kreiranja','>=', $request->get('date_from'));
+             }
+
+
+    if($request->filled('date_to')){
+                $query->where('datum_kreiranja','<=', $request->get('date_to'));
+             }
+
+    $query->orderByDesc('datum_kreiranja');
+    
+    $paginator= $query->paginate($perPage);
+
+    
+    return ZahtevResource::collection($paginator);
 }
+//get/zahtevi/moji ali samo za bracni status
+        // da prikaze izlistane zahteve za br status ulogovanog korisnika
+        public function mojiPromenaPrebivalistaPaginatedFiltered(Request $request){
+    $userId = $request->user()->id;
+    $perPage=$request->get('per_page', 10);
+    Log::info('ID ulogovanog korisnika: ' . $userId);
+
+    $query = Zahtev::where('korisnik_id', $userId)
+                ->where('tip_zahteva', Zahtev::PREBIVALISTE) ;// koristi const iz modela
+                
+    if($request->filled('status')){
+                $query->where('status', $request->get('status'));
+             }
+
+    if($request->filled('date_from')){
+                $query->where('datum_kreiranja','>=', $request->get('date_from'));
+             }
+
+
+    if($request->filled('date_to')){
+                $query->where('datum_kreiranja','<=', $request->get('date_to'));
+             }
+
+    $query->orderByDesc('datum_kreiranja');            
+
+    $paginator= $query->paginate($perPage);
+
+    return ZahtevResource::collection($paginator);
+} 
 
     /**
      * Store a newly created resource in storage.

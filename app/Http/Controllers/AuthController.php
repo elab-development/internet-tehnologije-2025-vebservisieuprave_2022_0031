@@ -5,8 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\VerifyEmail;
+
 
 
 
@@ -38,11 +42,17 @@ class AuthController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
-
-        //nakon sto je kreiran user u bazi, kreiramo mu token -> odobrava korisniku pristup odredjenim rutama
-        //onaj koji ima token je ulogovan, onaj koji nema nije, tako pravimo razliku
-        //token ce se sadrzati od random brojeva, cuva se u bazi
+        //logika za slanje verifikacionog mejla, taj mejl moramo da napravimo kroz terminal
+        //pravimo da link bude privremen, vazi npr 60min, za pravljenje linka koristimo ugradjene metode
+        $url=URL::temporarySignedRoute(
+            'verification.verify',//korisnik kad klikne dugme otvara mu se i ova ruta, ruta ima token koji vazi 60min
+            now()->addMinutes(60),
+            ['id' => $user->id]
+        );
+        Mail::to($user->email)->send(new VerifyEmail( $user, $url));
         $token = $user->createToken('api_token')->plainTextToken;
+
+        
         return response()->json([
             'message' => 'Registracija uspesna.',
             'user' => $user,
@@ -100,5 +110,28 @@ class AuthController extends Controller
     //kada hocemo da prikazemo profil korisnika: GET /api/me
     public function me(Request $request){
         return response()->json($request->user());
+    }
+
+    //metoda za verifikaciju mejla
+    public function verifyEmail(Request $request, $id)
+    {
+        //da li je link potpisan i da li je vazeci (nije istekao)
+        //uzimamo link za verifikaciju koji je korisnik kliknuo i proveravamo da li je vazeci (60min)
+        if(! $request->hasValidSignature()){
+            return response()->json([
+                'message' => 'Link za verifikaciju je nevazeci ili je istekao.',
+            ],401);
+        }
+        $user = User::findOrFail($id);//trazimo korisnika sa id koji saljemo
+        if($user->email_verified_at){//ako je ovo polje null dole ga postavlja na now
+            return response()->json([//ako je to polje razlicito od null
+                'message' => 'Email je vec verifikovan.',
+            ], 200);
+        }
+        $user->email_verified_at=now();
+        $user->save();//azuriranje usera
+        return response()->json([
+            'message' => 'Email je uspesno verifikovan.',
+        ], 200);
     }
 }

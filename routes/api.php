@@ -12,6 +12,10 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
+//sta se desava kada korisnik ode na rutu verification.verify
+Route::get('/email/verify/{id}', [AuthController::class, 'verifyEmail'])//pozivamo iz AuthControllera metodu verifyEmail
+    ->name('verification.verify');
+
 //kada pise Route::.... tim rutama mogu da pristupe svi (i neulogovani korisnici)
 //korisnik koji nije ulogovan treba da pristupi metodama register (ako nema nalog) i login (ako ima nalog ali nije prijavljen)
 Route::middleware('auth:sanctum')->group(function (){

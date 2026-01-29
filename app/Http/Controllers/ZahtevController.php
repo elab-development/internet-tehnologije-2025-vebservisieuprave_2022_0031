@@ -2,11 +2,13 @@
 
 
 namespace App\Http\Controllers;
+
+
 use Illuminate\Support\Facades\Validator;
 use App\Models\Zahtev;
 use Illuminate\Http\Request;
 use App\Http\Resources\ZahtevResource;
-
+use Illuminate\Support\Facades\Log;
 
 class ZahtevController extends Controller
 {
@@ -27,6 +29,34 @@ class ZahtevController extends Controller
     {
         //
     }
+        //get/zahtevi/moji
+        // da prikaze izlistane zahteve ulogovanog korisnika
+     public function moje(Request $request){
+            $userId=$request->user()->id;
+            Log::info('ID ulogovanog korisnika: ' . $userId);
+
+            $zahtevi=Zahtev::where('korisnik_id', $userId)
+            ->orderByDesc('datum_kreiranja')
+            ->get();
+
+            Log::info('Broj zahteva: ' . $zahtevi->count());
+                 return ZahtevResource::collection($zahtevi);
+        }
+        //get/zahtevi/moji ali samo za bracni status
+        // da prikaze izlistane zahteve za br status ulogovanog korisnika
+        public function mojiBracniStatus(Request $request){
+    $userId = $request->user()->id;
+    Log::info('ID ulogovanog korisnika: ' . $userId);
+
+    $zahtevi = Zahtev::where('korisnik_id', $userId)
+                ->where('tip_zahteva', Zahtev::BRACNI_STATUS) // koristi const iz modela
+                ->orderByDesc('datum_kreiranja')
+                ->get();
+
+    Log::info('Broj zahteva: ' . $zahtevi->count());
+
+    return ZahtevResource::collection($zahtevi);
+}
 
     /**
      * Store a newly created resource in storage.
@@ -130,4 +160,8 @@ class ZahtevController extends Controller
         return response()->json(['message'=> 'Zahtev je obrisan.'], 200);
 
     }
+
+    
+
+
 }

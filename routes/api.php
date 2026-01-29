@@ -22,6 +22,11 @@ Route::get('/email/verify/{id}', [AuthController::class, 'verifyEmail'])//poziva
 Route::middleware('auth:sanctum')->group(function (){
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
+      
+
+     Route::get('/zahtev/moje', [ZahtevController::class, 'moje']);
+
+     Route::get('/zahtev/moje/bracni_status', [ZahtevController::class, 'mojiBracniStatus']);
     
 });
 //ako neke rute zelimo da zastitimo pakujemo ih u grupu ruta

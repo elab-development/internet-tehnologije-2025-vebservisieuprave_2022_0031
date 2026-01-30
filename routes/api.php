@@ -31,7 +31,7 @@ Route::middleware('auth:sanctum')->group(function (){
      Route::get('/zahtev/moje/prebivaliste', [ZahtevController::class, 'mojiPromenaPrebivalistaPaginatedFiltered']);
 
       Route::get('/termin/moje', [TerminController::class, 'mojiTerminiPaginatedFiltered']);
-    
+     Route::get('/zahtev/export/csv', [ZahtevController::class, 'exportCsv']);
 });
 //ako neke rute zelimo da zastitimo pakujemo ih u grupu ruta
 //sanctum je biblioteka koju instaliramo da bi mogli da radimo autent.

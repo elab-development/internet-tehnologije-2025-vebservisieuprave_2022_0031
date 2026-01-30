@@ -31,6 +31,7 @@ class User extends Authenticatable implements MustVerifyEmail//ovaj model ce ima
         'datum_kreiranja_naloga',
         'email',
         'password',
+        'profile_photo_path'
     ];
 
     /**

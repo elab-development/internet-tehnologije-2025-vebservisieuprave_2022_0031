@@ -31,6 +31,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable(); // samo ako koristiš verifikaciju
             $table->string('password');
+             $table->string('profile_photo_path')->nullable(); // dodato
             $table->rememberToken();
 
             $table->timestamps();

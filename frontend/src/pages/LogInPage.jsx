@@ -1,21 +1,52 @@
 import React, { useState } from 'react';
 import './LogInPage.css'
 import api from '../api/api';
+import { useNavigate } from 'react-router-dom';
 
 
 export const LogInPage = () => {
+  const navigate = useNavigate(); //navigaciona ruta
+  const [email, setEmail] = useState("nitzsche.elmo@example.net");
+  const [password, setPassword] = useState("password");
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);// jer kada otvorimo stranicu forma ne radi nista pa je loading false
+  const [error, setError] = useState("");
+  const [info, setInfo] = useState("");
+
+
 
   const handleSubmit= async (e) =>{
     e.preventDefault();// kako bismo sprecili da nam svaki sekund refresh stranice
-    //await- ceka da dobijemo kompletan odgovor ne prelazi na naredne linije koda
-    const res= await api.post('/login', {email, password})
-    const {token, user, message}=res.data;
+    setLoading(true);
+    setError("");
+    setInfo("");
+    
+    try{//await- ceka da dobijemo kompletan odgovor ne prelazi na naredne linije koda
+      const res= await api.post('/login', {email, password})
+      const {token, user, message}=res.data;
+      
+      localStorage.setItem("token", token);
+      localStorage.setItem("usrer", JSON.stringify(user));
 
 
-    console.log('Uspesna prijava:', message, token, user);
+      setInfo(message || "Uspešno Ste prijavljeni.");
+      setLoading(false);
+      setTimeout(() => {
+      navigate('/userpage');
+    }, 800);
+
+
+    }catch(err){ //hvatamo gresku kako nam ne bi pala apl
+        setLoading(false);
+        if(err.response.status===401){
+          setError("Neispravna email adresa ili lozinka. ");
+        }else if(err.response.status===422){
+          setError("Molimo popunite ispravno sva polja. ");
+        }else{
+          setError("Došlo je do greške. Pokušajte ponovo.");
+        }
+  }
+    
 
 
   
@@ -58,13 +89,15 @@ export const LogInPage = () => {
               required
             />
           </div>
-
+        {info && <div className="auth-alert auth-alert-info">{info}</div>}
+         {error && <div className="auth-alert auth-alert-error">{error}</div>}
           <button
            type="submit"
            className="btn-primary auth-submit"
+           disabled= {loading}
            >
-          
-          {"Prijavi se"}
+        
+          {loading ? "Prijavljivanje..." : "Prijavi se"} 
           </button>
           <div className="auth-extra">
             <span>Zaboravili ste lozinku?</span>

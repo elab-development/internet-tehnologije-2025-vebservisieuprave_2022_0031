@@ -5,6 +5,7 @@ import Pocetna from './pages/HomePage';
 import { LogInPage } from './pages/LogInPage';
 import NavBar from './components/NavBar';
 import Footer from './components/Footer';
+import UserPage from './pages/UserPage';
 
 //ako zelimo da NavBar bude na svakoj stranici, navodimo ga ovde
 function App() {
@@ -14,6 +15,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Pocetna />} />
         <Route path="/login" element={<LogInPage />} />
+        <Route path="/userpage" element={<UserPage />} />
         {/*
         <Route path="/register" element={<RegisterPage />} />
         */}

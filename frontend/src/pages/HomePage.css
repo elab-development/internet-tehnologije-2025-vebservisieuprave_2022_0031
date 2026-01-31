@@ -1,0 +1,189 @@
+/* --- RESET --- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body, html {
+  width: 100%;
+  min-height: 100%;
+}
+
+/* --- Glavni container --- */
+.homepage-container {
+  background: #f7f9fc; 
+  color: #333;
+  padding: 50px 20px;
+}
+
+/* --- HERO SEKCIJA --- */
+.hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+/* Leva strana */
+.hero-left {
+  flex: 1;
+  min-width: 300px;
+}
+
+.hero-left h1 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  color: #1a1a1a;
+}
+
+.hero-left .moto {
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+  color: #555;
+}
+
+.hero-left .about {
+  font-size: 1rem;
+  margin-bottom: 30px;
+  line-height: 1.5;
+  color: #666;
+}
+
+/* Dugmici*/
+.hero-buttons {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 12px 28px;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.btn.primary {
+  background: #4a90e2; 
+  color: #fff;
+}
+
+.btn.primary:hover {
+  background: #357abd;
+  transform: scale(1.05);
+}
+
+.btn.secondary {
+  background: #e0e0e0; 
+  color: #333;
+}
+
+.btn.secondary:hover {
+  background: #cfcfcf;
+}
+
+/* Desna strana */
+.hero-right {
+  flex: 1;
+  min-width: 250px;
+  display: flex;
+  justify-content: center;
+}
+
+.user-card {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 15px;
+  width: 220px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.user-card .avatar {
+  font-size: 3rem;
+  margin-bottom: 15px;
+}
+
+/* --- SEKCIJA FUNKCIONALNOSTI --- */
+.features-container {
+  max-width: 1200px;
+  margin: 80px auto 50px auto;
+  text-align: center;
+}
+
+.features-container h2 {
+  font-size: 2.2rem;
+  margin-bottom: 40px;
+  color: #1a1a1a;
+}
+
+/* Grid layout  */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 25px;
+}
+
+/* KARTICE */
+.feature-card {
+  background: #ffffff;
+  color: #333;
+  padding: 25px 20px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+
+/* Hover efekat */
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  background: #f0f4f8; /* vrlo svetla plava nijansa */
+}
+
+/* Ikonice */
+.feature-icon {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+  color: #4a90e2; /* plava boja ikona */
+}
+
+/* Naslov kartice */
+.feature-card h3 {
+  margin-bottom: 10px;
+  font-size: 1.3rem;
+  color: #1a1a1a;
+}
+
+/* Tekst kartice */
+.feature-card p {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #555;
+}
+
+/* --- Responsive --- */
+@media (max-width: 900px) {
+  .hero {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero-right {
+    margin-top: 30px;
+  }
+}
+
+@media (max-width: 600px) {
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+}

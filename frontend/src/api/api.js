@@ -3,10 +3,9 @@ import axios from "axios";
 const api= axios.create({
     baseURL: "http://127.0.0.1:8000/api",// onda samo na ovaj url dodajemo sta nam je potrebno
 });
-
+//opcioni interceptor za token
 api.interceptors.request.use((config)=> {
-    const token =
-        sessionStorage.getItem('token') || localStorage.getItem('token');
+    const token = localStorage.getItem('token');
 
         if(token){
             config.headers.Authorization=`Bearer ${token}`;

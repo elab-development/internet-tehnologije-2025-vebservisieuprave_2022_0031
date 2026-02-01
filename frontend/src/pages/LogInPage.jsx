@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import './LogInPage.css'
 import api from '../api/api';
 import { useNavigate } from 'react-router-dom';
+import TextInput from '../components/TextInput';
+import PrimaryButton from '../components/PrimaryButton';
 
 
 export const LogInPage = () => {
@@ -64,41 +66,37 @@ export const LogInPage = () => {
         <form  className="auth-form" onSubmit={handleSubmit}>
           
 
-          <div className="auth-field">
-            <label htmlFor="email">Email adresa:</label>
-            <input
-              id="email"
-              type="email"
-              placeholder="ime.prezime@example.com"
-              value={email}// ovim su povezana nasa polja i promenljive
-              onChange={(e) => setEmail(e.target.value)}
-              autoComplete="email"
-              required
-            />
-          </div>
+          <TextInput
+          id="email"
+          label="Email adresa:"
+          type="email"
+          placeholder="ime.prezime@example.com"
+          value={email}
+          onChange={(e)=>setEmail(e.target.value)}
+          autoComplete="email"
+          required
+          />
 
-          <div className="auth-field">
-            <label htmlFor="password">Lozinka:</label>
-            <input
-              id="password"
-              type="password"
-              placeholder="Unesite lozinku"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              autoComplete="current-password"
-              required
-            />
-          </div>
+         <TextInput
+          id="password"
+          label="Lozinka:"
+          type="password"
+          placeholder="Unesite lozinku"
+          value={password}
+          onChange={(e)=>setPassword(e.target.value)}
+          autoComplete="current-password"
+          showPasswordToggle={true}
+          required
+          />
         {info && <div className="auth-alert auth-alert-info">{info}</div>}
          {error && <div className="auth-alert auth-alert-error">{error}</div>}
-          <button
-           type="submit"
-           className="btn-primary auth-submit"
-           disabled= {loading}
-           >
-        
-          {loading ? "Prijavljivanje..." : "Prijavi se"} 
-          </button>
+          <PrimaryButton
+          type="submit"
+          loading={loading}
+          loadingText="Prijavljivanje..."
+          >
+            Prijavi se
+          </PrimaryButton>
           <div className="auth-extra">
             <span>Zaboravili ste lozinku?</span>
             <span className="auth-extra-link">

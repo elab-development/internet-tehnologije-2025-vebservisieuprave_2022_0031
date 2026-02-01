@@ -3,7 +3,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
+  padding: 40px 16px;
   background-color: #f0f2f5;
   font-family: Arial, sans-serif;
 }
@@ -104,3 +105,58 @@
 .auth-extra-link:hover {
   text-decoration: underline;
 }
+
+.toggle-password-btn {
+  position: absolute;
+  right: 0.6rem;
+  border: none;
+  background: transparent;
+  color: #9aa3af;
+  font-size: 0.75rem;
+  cursor: pointer;
+  padding: 0.1rem 0.2rem;
+}
+
+.toggle-password-btn:hover {
+  color: #2567eb;
+}
+
+.toggle-password-btn:focus {
+  outline: 2px solid #22c55e;
+  outline-offset: 2px;
+}
+/* Wrapper oko inputa i dugmeta */
+.auth-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* Input da bude preko cele širine */
+.auth-input-wrapper input {
+  width: 100%;
+  padding-right: 4.5rem; /* mesta za dugme Prikazi/Sakrij */
+}
+
+/* Dugme Prikazi/Sakrij */
+.auth-input-wrapper .toggle-password-btn {
+  position: absolute;
+  top: 50%;
+  right: 0.6rem;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  color: #9aa3af;
+  font-size: 0.75rem;
+  cursor: pointer;
+  padding: 0.1rem 0.2rem;
+}
+
+.auth-input-wrapper .toggle-password-btn:hover {
+  color: #2567eb;
+}
+
+.auth-input-wrapper .toggle-password-btn:focus {
+  outline: 2px solid #22c55e;
+  outline-offset: 2px;
+}
+

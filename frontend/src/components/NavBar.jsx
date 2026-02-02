@@ -42,6 +42,10 @@ const NavBar = () => {
         Pocetna
         </Link>
         {isAuth ? (
+          <>
+          <Link to="/mojizahtevi" className='href'>
+          Moji zahtevi
+          </Link>
           <button
         type="button"
         className="href href-button"
@@ -49,6 +53,7 @@ const NavBar = () => {
         >
           Logout
         </button>
+        </>
         ) : (
           <>
           <Link to="/login" className="href">

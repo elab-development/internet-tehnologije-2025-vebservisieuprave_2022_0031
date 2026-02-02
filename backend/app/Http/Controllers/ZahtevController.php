@@ -125,33 +125,38 @@ class ZahtevController extends Controller
      */
     //Sa POST zahtevom , on sluzi za kreiranje objekta
     public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'tip_zahteva' => 'required|in:prebivaliste,bracni_status',
-            'status' => 'required|string|max:255',
-            'datum_kreiranja' => 'nullable|date',
+{
+    $validator = Validator::make($request->all(), [
+        'tip_zahteva' => 'required|in:prebivaliste,bracni_status',
+        'tip_promene' => 'nullable|in:razvod,sklapanje_braka',
+        'ime_partnera' => 'nullable|string|max:255',
+        'prezime_partnera' => 'nullable|string|max:255',
+        'datum_rodjenja_partnera' => 'nullable|date',
+        'partner_pol' => 'nullable|in:M,Z',
+        'broj_licnog_dokumenta' => 'nullable|string|max:255',
+        'broj_licnog_dokumenta_partnera' => 'nullable|string|max:255',
+        'datum_promene' => 'nullable|date',
+    ]);
 
-            'korisnik_id' => 'required|integer|exists:users,id',
-
-            'tip_promene' => 'nullable|in:razvod,sklapanje_braka',
-            'ime_partnera' => 'nullable|string|max:255',
-            'prezime_partnera' => 'nullable|string|max:255',
-            'datum_rodjenja_partnera' => 'nullable|date',
-            'partner_pol' => 'nullable|in:M,Z',
-            'broj_licnog_dokumenta' => 'nullable|string|max:255',
-            'broj_licnog_dokumenta_partnera' => 'nullable|string|max:255',
-            'datum_promene' => 'nullable|date',
-        ]);
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => 'Validacija nije prosla.',
-                'errors' => $validator->errors()
-            ], 422);
-        }
-        $data = $validator->validated();
-        $zahtev = Zahtev::create($data);
-        return response()->json(new ZahtevResource($zahtev, 201));
+    if ($validator->fails()) {
+        return response()->json([
+            'message' => 'Validacija nije prošla.',
+            'errors' => $validator->errors()
+        ], 422);
     }
+
+    $data = $validator->validated();
+
+    // Backend sam dodaje obavezna polja
+    $data['korisnik_id'] = $request->user()->id;   // ID ulogovanog korisnika
+    $data['status'] = 'kreiran';                   // inicijalni status
+    $data['datum_kreiranja'] = now();              // trenutni datum
+    Log::info('Podaci za kreiranje zahteva:', $data);
+
+    $zahtev = Zahtev::create($data);
+
+    return response()->json(new ZahtevResource($zahtev), 201);
+}
 
     /**
      * Display the specified resource.

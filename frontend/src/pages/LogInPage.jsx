@@ -28,9 +28,9 @@ export const LogInPage = () => {
       const {token, user, message}=res.data;
       
       localStorage.setItem("token", token);
-      localStorage.setItem("usrer", JSON.stringify(user));
+      localStorage.setItem("user", JSON.stringify(user));
 
-
+      console.log("Login response:", res.data);
       setInfo(message || "Uspešno Ste prijavljeni.");
       setLoading(false);
       setTimeout(() => {

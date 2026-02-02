@@ -72,7 +72,6 @@ body, html {
   background: #4a90e2;
   color: #fff;
 }
-
 .btn.primary:hover {
   background: #357abd;
   transform: scale(1.05);
@@ -82,7 +81,6 @@ body, html {
   background: #e0e0e0;
   color: #333;
 }
-
 .btn.secondary:hover {
   background: #cfcfcf;
 }
@@ -120,72 +118,7 @@ body, html {
   color: #555;
 }
 
-/* --- Responsive --- */
-@media (max-width: 900px) {
-  .hero {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .hero-right {
-    margin-top: 30px;
-  }
-  .zahtevi-lista {
-  margin-top: 40px;
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.no-zahtevi {
-  text-align: center;
-  font-size: 1.2rem;
-  color: #555;
-  background: #f0f4f8;
-  padding: 20px;
-  border-radius: 10px;
-}
-
-.zahtev-item {
-  background: #ffffff;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.zahtev-item:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-}
-
-.zahtev-item h3 {
-  margin-bottom: 10px;
-  font-size: 1.4rem;
-  color: #1a1a1a;
-}
-
-.zahtev-item p {
-  margin-bottom: 5px;
-  font-size: 1rem;
-  color: #555;
-}
-/* Status boje */
-.status-odobren {
-  color: #2e7d32; /* tamno zelena */
-  font-weight: bold;
-}
-
-.status-odbijen {
-  color: #c62828; /* tamno crvena */
-  font-weight: bold;
-}
-
-.status-kreiran {
-  color: #555; /* neutralno siva */
-  font-weight: bold;
-}
+/* --- LISTA ZAHTEVA --- */
 .zahtevi-lista {
   margin-top: 40px;
   max-width: 800px;
@@ -210,18 +143,15 @@ body, html {
   box-shadow: 0 6px 18px rgba(0,0,0,0.1);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-
 .zahtev-item:hover {
   transform: translateY(-3px);
   box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
-
 .zahtev-item h3 {
   margin-bottom: 10px;
   font-size: 1.4rem;
   color: #1a1a1a;
 }
-
 .zahtev-item p {
   margin-bottom: 5px;
   font-size: 1rem;
@@ -229,19 +159,42 @@ body, html {
 }
 
 /* Status boje */
-.status-odobren {
-  color: #2e7d32; /* zelena */
-  font-weight: bold;
+.status-odobren { color: #2e7d32; font-weight: bold; }
+.status-odbijen { color: #c62828; font-weight: bold; }
+.status-kreiran { color: #555; font-weight: bold; }
+
+/* --- NOVI ZAHTEV FORMA --- */
+.novi-zahtev-container {
+  max-width: 600px;       /* manja širina da ne iskače */
+  margin: 40px auto;      /* centrirano i manji razmak od vrha */
+  background: #fff;
+  padding: 20px;          /* smanjen padding */
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-.status-odbijen {
-  color: #c62828; /* crvena */
-  font-weight: bold;
+.novi-zahtev-container h2 {
+  margin-bottom: 10px;
+  text-align: center;
+  font-size: 1.8rem;      /* malo manji naslov */
+  color: #1a1a1a;
 }
 
-.status-kreiran {
-  color: #555; /* neutralna siva */
-  font-weight: bold;
+.novi-zahtev-text {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1rem;        /* manji opisni tekst */
+  color: #555;
 }
 
+.novi-zahtev-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;              /* razmak između polja */
+}
+
+/* --- Responsive --- */
+@media (max-width: 900px) {
+  .hero { flex-direction: column; align-items: center; }
+  .hero-right { margin-top: 30px; }
 }

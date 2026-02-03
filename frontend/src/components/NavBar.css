@@ -1,0 +1,54 @@
+/* Glavni navbar */
+.navbar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  padding: 12px 20px;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+
+  font-family: Arial, sans-serif;
+}
+
+/* Svi linkovi u navbaru */
+.navbar .href {
+  text-decoration: none;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 500;
+
+  padding: 8px 12px;
+  border-radius: 8px;
+
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+/* Hover efekat za linkove */
+.navbar .href:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+/* Logout dugme – isti izgled kao link */
+.href-button {
+  background: transparent;
+  color: #374151;
+  border: none;
+
+  padding: 8px 12px;
+  border-radius: 8px;
+
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+/* Hover efekat kao i kod linkova */
+.href-button:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+

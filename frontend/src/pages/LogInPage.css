@@ -106,25 +106,6 @@
   text-decoration: underline;
 }
 
-.toggle-password-btn {
-  position: absolute;
-  right: 0.6rem;
-  border: none;
-  background: transparent;
-  color: #9aa3af;
-  font-size: 0.75rem;
-  cursor: pointer;
-  padding: 0.1rem 0.2rem;
-}
-
-.toggle-password-btn:hover {
-  color: #2567eb;
-}
-
-.toggle-password-btn:focus {
-  outline: 2px solid #22c55e;
-  outline-offset: 2px;
-}
 /* Wrapper oko inputa i dugmeta */
 .auth-input-wrapper {
   position: relative;
@@ -138,7 +119,7 @@
 }
 
 /* Dugme Prikazi/Sakrij */
-.auth-input-wrapper .toggle-password-btn {
+.toggle-password-btn {
   position: absolute;
   top: 50%;
   right: 0.6rem;
@@ -151,11 +132,11 @@
   padding: 0.1rem 0.2rem;
 }
 
-.auth-input-wrapper .toggle-password-btn:hover {
+.toggle-password-btn:hover {
   color: #2567eb;
 }
 
-.auth-input-wrapper .toggle-password-btn:focus {
+.toggle-password-btn:focus {
   outline: 2px solid #22c55e;
   outline-offset: 2px;
 }
@@ -176,4 +157,41 @@ input[type="password"] {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
+}
+
+/* ========================= */
+/* PORUKE (LOGIN / REGISTER) */
+/* ========================= */
+
+.auth-message {
+  margin-top: 12px;
+  font-size: 14px;
+  text-align: center;
+  font-weight: 500;
+}
+
+/* Uspešna poruka */
+.auth-message.success {
+  color: #16a34a; /* zelena */
+}
+
+/* Poruka greške */
+.auth-message.error {
+  color: #dc2626; /* crvena */
+}
+
+/* Blagi fade-in efekat */
+.auth-message {
+  animation: fadeIn 0.2s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

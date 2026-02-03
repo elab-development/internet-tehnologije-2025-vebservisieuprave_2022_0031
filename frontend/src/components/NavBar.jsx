@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useNavigate } from "react-router-dom";
 import api from "../api/api";
+import "./NavBar.css";
 
 //navodimo linkove, omogucavaju kretanje kroz stranice
 //da bi mogao da se omoguci logout, svaki put treba u navbaru da proverimo da li je korisnik ulogovan

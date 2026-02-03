@@ -88,8 +88,18 @@ export const LogInPage = () => {
           showPasswordToggle={true}
           required
           />
-        {info && <div className="auth-alert auth-alert-info">{info}</div>}
-         {error && <div className="auth-alert auth-alert-error">{error}</div>}
+        {info && (
+          <p className="auth-message success">
+          {info}
+          </p>
+        )}
+
+        {error && (
+        <p className="auth-message error">
+        {error}
+        </p>
+        )}
+
           <PrimaryButton
           type="submit"
           loading={loading}

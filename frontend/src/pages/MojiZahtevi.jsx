@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import api from "../api/api";
 import "./MojiZahtevi.css";
+import useMojiZahtevi from "../hooks/useMojiZahtevi";
+
 
 // Tipovi zahteva
 const zahteviTypes = [
@@ -33,8 +35,7 @@ const user = getUserFromStorage();
 console.log("User iz localStorage:", user);
 
 const MojiZahtevi = () => {
-  const [zahtevi, setZahtevi] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { zahtevi, setZahtevi, loading, loadError, loadZahtevi } = useMojiZahtevi();
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [info, setInfo] = useState("");
@@ -55,10 +56,6 @@ const MojiZahtevi = () => {
 
   const [editingId, setEditingId] = useState(null);
 
-  useEffect(() => {
-    loadZahtevi();
-  }, []);
-
   // Kad se promeni tip zahteva, očisti partner polja ako nije bracni_status
   useEffect(() => {
     if (tipZahteva !== "bracni_status") {
@@ -71,25 +68,7 @@ const MojiZahtevi = () => {
     }
   }, [tipZahteva]);
 
-  const loadZahtevi = async () => {
-    setLoading(true);
-    setError("");
-    try {
-      const res = await api.get("/zahtev/moje");
-      console.log(res.data.data);
-      setZahtevi(
-        (res.data.data || []).map((z) => ({
-          ...z,
-          id: z[" id"] || z.id,
-        }))
-      );
-    } catch (error) {
-      console.error(error);
-      setError("Ne mogu da ucitam zahteve. Pokusaj ponovo");
-    } finally {
-      setLoading(false);
-    }
-  };
+  
 
   const resetForm = () => {
     setTipZahteva("");
@@ -256,6 +235,7 @@ const MojiZahtevi = () => {
         </div>
 
         <div className="zahtevi-lista">
+          {loadError && <p style={{ color: "red" }}>{loadError}</p>}
           {loading ? (
             <p>Učitavanje...</p>
           ) : zahtevi.length === 0 ? (

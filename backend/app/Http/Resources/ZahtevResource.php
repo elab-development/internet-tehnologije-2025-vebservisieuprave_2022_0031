@@ -32,6 +32,10 @@ class ZahtevResource extends JsonResource
             'broj_licnog_dokumenta_partnera' => $this->broj_licnog_dokumenta_partnera,
             'datum_promene' => $this->datum_promene,
 
+             'stara_adresa' => new AdresaResource($this->staraAdresa),
+        'nova_adresa' => new AdresaResource($this->novaAdresa),
+
+
         ];
     }
 }

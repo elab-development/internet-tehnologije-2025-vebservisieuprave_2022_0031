@@ -53,33 +53,83 @@ const MojiZahtevi = () => {
   const [brojLicnogDokumentaPartnera, setBrojLicnogDokumentaPartnera] =
     useState("");
   const [datumPromene, setDatumPromene] = useState("");
+// ===== ADRESE (samo za prebivaliste) =====
+
+// Stara adresa
+const [staraUlica, setStaraUlica] = useState("");
+const [stariBroj, setStariBroj] = useState("");
+const [staroMesto, setStaroMesto] = useState("");
+const [staraOpstina, setStaraOpstina] = useState("");
+const [stariGrad, setStariGrad] = useState("");
+const [stariPostanskiBroj, setStariPostanskiBroj] = useState("");
+
+// Nova adresa
+const [novaUlica, setNovaUlica] = useState("");
+const [noviBroj, setNoviBroj] = useState("");
+const [novoMesto, setNovoMesto] = useState("");
+const [novaOpstina, setNovaOpstina] = useState("");
+const [noviGrad, setNoviGrad] = useState("");
+const [noviPostanskiBroj, setNoviPostanskiBroj] = useState("");
 
   const [editingId, setEditingId] = useState(null);
 
-  // Kad se promeni tip zahteva, očisti partner polja ako nije bracni_status
-  useEffect(() => {
-    if (tipZahteva !== "bracni_status") {
-      setTipPromene("");
-      setImePartnera("");
-      setPrezimePartnera("");
-      setDatumRodjenjaPartnera("");
-      setPartnerPol("");
-      setBrojLicnogDokumentaPartnera("");
-    }
-  }, [tipZahteva]);
-
-  
-
-  const resetForm = () => {
-    setTipZahteva("");
+ // Kad se promeni tip zahteva, očisti partner polja ako nije bracni_status
+ useEffect(() => {
+   if (editingId) return;
+  if (tipZahteva !== "bracni_status") {
     setTipPromene("");
     setImePartnera("");
     setPrezimePartnera("");
     setDatumRodjenjaPartnera("");
     setPartnerPol("");
-    setBrojLicnogDokumenta("");
     setBrojLicnogDokumentaPartnera("");
-    setDatumPromene("");
+  }
+
+  if (tipZahteva !== "prebivaliste") {
+    setStaraUlica("");
+    setStariBroj("");
+    setStaroMesto("");
+    setStaraOpstina("");
+    setStariGrad("");
+    setStariPostanskiBroj("");
+
+    setNovaUlica("");
+    setNoviBroj("");
+    setNovoMesto("");
+    setNovaOpstina("");
+    setNoviGrad("");
+    setNoviPostanskiBroj("");
+  }
+}, [tipZahteva]);
+
+
+  
+
+  const resetForm = () => {
+   setTipZahteva("");
+  setTipPromene("");
+  setImePartnera("");
+  setPrezimePartnera("");
+  setDatumRodjenjaPartnera("");
+  setPartnerPol("");
+  setBrojLicnogDokumenta("");
+  setBrojLicnogDokumentaPartnera("");
+  setDatumPromene("");
+
+  // samo kada dodaješ novi zahtev
+  setStaraUlica("");
+  setStariBroj("");
+  setStaroMesto("");
+  setStaraOpstina("");
+  setStariGrad("");
+  setStariPostanskiBroj("");
+
+  setNovaUlica("");
+  setNoviBroj("");
+  setNovoMesto("");
+  setNovaOpstina("");
+  setNoviGrad("");
+  setNoviPostanskiBroj("");
   };
 
   const handleCancelEdit = () => {
@@ -89,22 +139,46 @@ const MojiZahtevi = () => {
     setError("");
   };
 
-  const handleEdit = (zahtev) => {
-    setEditingId(zahtev.id);
+ const handleEdit = (zahtev) => {
+  setEditingId(zahtev.id);
 
-    setTipZahteva(zahtev.tip_zahteva || "");
+  // Postavi tip zahteva prvo
+  setTipZahteva(zahtev.tip_zahteva || "");
+
+  // Nakon tipa, popuni adrese i partner polja
+  if (zahtev.tip_zahteva === "prebivaliste") {
+    setStaraUlica(zahtev.stara_adresa?.ulica || "");
+    setStariBroj(zahtev.stara_adresa?.broj || "");
+    setStaroMesto(zahtev.stara_adresa?.mesto || "");
+    setStaraOpstina(zahtev.stara_adresa?.opstina || "");
+    setStariGrad(zahtev.stara_adresa?.grad || "");
+    setStariPostanskiBroj(zahtev.stara_adresa?.postanski_broj || "");
+
+    setNovaUlica(zahtev.nova_adresa?.ulica || "");
+    setNoviBroj(zahtev.nova_adresa?.broj || "");
+    setNovoMesto(zahtev.nova_adresa?.mesto || "");
+    setNovaOpstina(zahtev.nova_adresa?.opstina || "");
+    setNoviGrad(zahtev.nova_adresa?.grad || "");
+    setNoviPostanskiBroj(zahtev.nova_adresa?.postanski_broj || "");
+  }
+
+  if (zahtev.tip_zahteva === "bracni_status") {
     setTipPromene(zahtev.tip_promene || "");
     setImePartnera(zahtev.ime_partnera || "");
     setPrezimePartnera(zahtev.prezime_partnera || "");
     setDatumRodjenjaPartnera(zahtev.datum_rodjenja_partnera || "");
     setPartnerPol(zahtev.partner_pol || "");
-    setBrojLicnogDokumenta(zahtev.broj_licnog_dokumenta || "");
     setBrojLicnogDokumentaPartnera(zahtev.broj_licnog_dokumenta_partnera || "");
-    setDatumPromene(zahtev.datum_promene || "");
+  }
 
-    setInfo("");
-    setError("");
-  };
+  setBrojLicnogDokumenta(zahtev.broj_licnog_dokumenta || "");
+  setDatumPromene(zahtev.datum_promene || "");
+
+  setInfo("");
+  setError("");
+};
+
+
 
   const handleDelete = async (id) => {
     if (!window.confirm("Da li ste sigurni da želite da obrišete ovaj zahtev?"))
@@ -140,6 +214,20 @@ const MojiZahtevi = () => {
       setSaving(false);
       return;
     }
+    if (tipZahteva === "prebivaliste") {
+  if (
+    !staraUlica ||
+    !stariBroj ||
+    !staroMesto ||
+    !novaUlica ||
+    !noviBroj ||
+    !novoMesto
+  ) {
+    setError("Molimo popunite sva polja za staru i novu adresu.");
+    setSaving(false);
+    return;
+  }
+}
 
     // 2) Dodatna validacija samo za bracni_status
     if (tipZahteva === "bracni_status") {
@@ -163,6 +251,28 @@ const MojiZahtevi = () => {
       broj_licnog_dokumenta: brojLicnogDokumenta,
       datum_promene: datumPromene,
     };
+   if (tipZahteva === "prebivaliste") {
+  payload.stara_adresa = {
+    ulica: staraUlica,
+    broj: stariBroj,
+    mesto: staroMesto,
+    opstina: staraOpstina,
+    grad: stariGrad || null,
+  postanski_broj: stariPostanskiBroj || null
+  };
+
+  payload.nova_adresa = {
+    ulica: novaUlica,
+    broj: noviBroj,
+    mesto: novoMesto,
+    opstina: novaOpstina,
+    grad: noviGrad || null,            
+  postanski_broj: noviPostanskiBroj || null
+  };
+}
+
+
+
 
     // Ako je bracni_status, dodaj i partner polja
     if (tipZahteva === "bracni_status") {
@@ -212,8 +322,11 @@ const MojiZahtevi = () => {
 
       resetForm();
     } catch (err) {
-      console.error(err);
-      setError("Došlo je do greške prilikom čuvanja zahteva.");
+      console.error("GRESKA:", err.response?.data);
+  console.error("STATUS:", err.response?.status);
+  setError(
+    err.response?.data?.message ||
+    "Došlo je do greške prilikom čuvanja zahteva.");
     } finally {
       setSaving(false);
     }
@@ -312,6 +425,91 @@ const MojiZahtevi = () => {
                 ))}
               </select>
             </div>
+                {/* ADRESE – samo za promenu prebivališta */}
+{tipZahteva === "prebivaliste" && (
+  <>
+    <h3>Stara adresa</h3>
+
+<div className="form-group">
+  <label>Ulica</label>
+  <input
+    type="text"
+    value={staraUlica}
+    onChange={(e) => setStaraUlica(e.target.value)}
+    required
+  />
+</div>
+
+<div className="form-group">
+  <label>Broj</label>
+  <input
+    type="text"
+    value={stariBroj}
+    onChange={(e) => setStariBroj(e.target.value)}
+    required
+  />
+</div>
+
+<div className="form-group">
+  <label>Mesto</label>
+  <input
+    type="text"
+    value={staroMesto}
+    onChange={(e) => setStaroMesto(e.target.value)}
+    required
+  />
+</div>
+
+<div className="form-group">
+  <label>Opština</label>
+  <input
+    type="text"
+    value={staraOpstina}
+    onChange={(e) => setStaraOpstina(e.target.value)}
+    required
+  />
+</div>
+
+
+    <h3>Nova adresa</h3>
+
+    <div className="form-group">
+      <label>Ulica</label>
+      <input
+        type="text"
+        value={novaUlica}
+        onChange={(e) => setNovaUlica(e.target.value)}
+      />
+    </div>
+
+    <div className="form-group">
+      <label>Broj</label>
+      <input
+        type="text"
+        value={noviBroj}
+        onChange={(e) => setNoviBroj(e.target.value)}
+      />
+    </div>
+
+    <div className="form-group">
+      <label>Mesto</label>
+      <input
+        type="text"
+        value={novoMesto}
+        onChange={(e) => setNovoMesto(e.target.value)}
+      />
+    </div>
+    <div className="form-group">
+  <label>Opština</label>
+  <input
+    type="text"
+    value={novaOpstina}
+    onChange={(e) => setNovaOpstina(e.target.value)}
+    required
+  />
+</div>
+  </>
+)}
 
             {/* Tip promene + partner podaci */}
             {tipZahteva === "bracni_status" && (

@@ -75,6 +75,17 @@ class TerminController extends Controller
             'errors' => $validator->errors()], 422); 
     }
         $data=$validator-> validated();
+        //  Provera da li je termin zauzet
+    $postoji = Termin::where('lokacija', $data['lokacija'])
+        ->where('datum_vreme', $data['datum_vreme'])
+        ->exists();
+
+    if ($postoji) {
+        return response()->json([
+            'message' => 'Termin je već zauzet na toj lokaciji i u tom vremenu.'
+        ], 409); // 409 Conflict
+    }
+
         $termin=Termin::create($data);
         return response()-> json(new TerminResource($termin, 201));
     }

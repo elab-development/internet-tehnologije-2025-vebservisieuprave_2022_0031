@@ -1,0 +1,94 @@
+/* --- RESET --- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* --- Container forme --- */
+.zakazi-termin-container {
+  max-width: 500px;
+  margin: 50px auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+}
+
+/* --- Naslov --- */
+.zakazi-termin-container h3 {
+  text-align: center;
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  color: #1a1a1a;
+}
+
+/* --- Polja forme --- */
+.zakazi-termin-container label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+  color: #333;
+}
+
+.zakazi-termin-container input,
+.zakazi-termin-container select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  transition: border 0.3s ease;
+}
+
+.zakazi-termin-container input:focus,
+.zakazi-termin-container select:focus {
+  border-color: #4a90e2;
+  outline: none;
+}
+
+/* --- Dugmad --- */
+.zakazi-termin-container button {
+  padding: 12px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.zakazi-termin-container button[type="submit"] {
+  background: #4a90e2;
+  color: #fff;
+  margin-right: 10px;
+}
+
+.zakazi-termin-container button[type="submit"]:hover {
+  background: #357abd;
+  transform: scale(1.05);
+}
+
+.zakazi-termin-container button[type="button"] {
+  background: #e0e0e0;
+  color: #333;
+}
+
+.zakazi-termin-container button[type="button"]:hover {
+  background: #cfcfcf;
+}
+
+/* --- Poruke --- */
+.success-message {
+  color: #2e7d32;
+  font-weight: bold;
+  margin-top: 15px;
+  text-align: center;
+}
+
+.error-message {
+  color: #c62828;
+  font-weight: bold;
+  margin-top: 15px;
+  text-align: center;
+}

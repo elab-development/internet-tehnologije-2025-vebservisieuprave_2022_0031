@@ -262,7 +262,7 @@ Adresa::create([
     $data = $validator->validated();
     $zahtev->update($data);
 
-    // ✅ Ažuriranje povezanih adresa
+    // Ažuriranje povezanih adresa
     if ($request->has('stara_adresa')) {
         $zahtev->staraAdresa()->update($request->input('stara_adresa'));
     }
@@ -289,8 +289,7 @@ Adresa::create([
     }
 
     public function exportCsv(Request $request)
-{
-    $userId = $request->user()->id;
+{    $userId = $request->user()->id;
 
     $zahtevi = Zahtev::with(['staraAdresa', 'novaAdresa', 'korisnik.termin'])
                 ->where('korisnik_id', $userId)

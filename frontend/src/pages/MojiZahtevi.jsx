@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import api from "../api/api";
 import "./MojiZahtevi.css";
 import useMojiZahtevi from "../hooks/useMojiZahtevi";
-
 
 // Tipovi zahteva
 const zahteviTypes = [
@@ -35,7 +34,7 @@ const user = getUserFromStorage();
 console.log("User iz localStorage:", user);
 
 const MojiZahtevi = () => {
-  const { zahtevi, setZahtevi, loading, loadError, loadZahtevi } = useMojiZahtevi();
+  const { zahtevi, setZahtevi, loading, loadError } = useMojiZahtevi();
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [info, setInfo] = useState("");
@@ -53,39 +52,114 @@ const MojiZahtevi = () => {
   const [brojLicnogDokumentaPartnera, setBrojLicnogDokumentaPartnera] =
     useState("");
   const [datumPromene, setDatumPromene] = useState("");
-// ===== ADRESE (samo za prebivaliste) =====
 
-// Stara adresa
-const [staraUlica, setStaraUlica] = useState("");
-const [stariBroj, setStariBroj] = useState("");
-const [staroMesto, setStaroMesto] = useState("");
-const [staraOpstina, setStaraOpstina] = useState("");
-const [stariGrad, setStariGrad] = useState("");
-const [stariPostanskiBroj, setStariPostanskiBroj] = useState("");
+  // ===== ADRESE (samo za prebivaliste) =====
+  // Stara adresa
+  const [staraUlica, setStaraUlica] = useState("");
+  const [stariBroj, setStariBroj] = useState("");
+  const [staroMesto, setStaroMesto] = useState("");
+  const [staraOpstina, setStaraOpstina] = useState("");
+  const [stariGrad, setStariGrad] = useState("");
+  const [stariPostanskiBroj, setStariPostanskiBroj] = useState("");
 
-// Nova adresa
-const [novaUlica, setNovaUlica] = useState("");
-const [noviBroj, setNoviBroj] = useState("");
-const [novoMesto, setNovoMesto] = useState("");
-const [novaOpstina, setNovaOpstina] = useState("");
-const [noviGrad, setNoviGrad] = useState("");
-const [noviPostanskiBroj, setNoviPostanskiBroj] = useState("");
+  // Nova adresa
+  const [novaUlica, setNovaUlica] = useState("");
+  const [noviBroj, setNoviBroj] = useState("");
+  const [novoMesto, setNovoMesto] = useState("");
+  const [novaOpstina, setNovaOpstina] = useState("");
+  const [noviGrad, setNoviGrad] = useState("");
+  const [noviPostanskiBroj, setNoviPostanskiBroj] = useState("");
 
   const [editingId, setEditingId] = useState(null);
 
- // Kad se promeni tip zahteva, očisti partner polja ako nije bracni_status
- useEffect(() => {
-   if (editingId) return;
-  if (tipZahteva !== "bracni_status") {
+  // MAX datum za datum rođenja partnera = danas - 18 godina
+  const maxPartnerDob = useMemo(() => {
+    const today = new Date();
+    today.setFullYear(today.getFullYear() - 18);
+    return today.toISOString().split("T")[0]; // yyyy-mm-dd
+  }, []);
+
+  // Datum promene mora biti najmanje 1 dan pre danasnjeg (max = juce)
+  const maxDatumPromene = useMemo(() => {
+    const d = new Date();
+    d.setDate(d.getDate() - 1);
+    return d.toISOString().split("T")[0]; // yyyy-mm-dd
+  }, []);
+
+  // Lokalna poruka greške samo za datum rođenja partnera (UX)
+  const [partnerDobError, setPartnerDobError] = useState("");
+
+  const validatePartnerDob = (value) => {
+    if (!value) return "Datum rođenja partnera je obavezan.";
+
+    const selected = new Date(value);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const maxAllowed = new Date(maxPartnerDob);
+
+    if (selected > today) return "Datum rođenja ne može biti u budućnosti.";
+    if (selected > maxAllowed) return "Partner mora imati najmanje 18 godina.";
+
+    return "";
+  };
+
+  // Validacija datuma promene: mora biti najkasnije juce
+  const validateDatumPromene = (value) => {
+    if (!value) return "Datum promene je obavezan.";
+
+    // value i maxDatumPromene su YYYY-MM-DD -> string compare radi ispravno
+    if (value > maxDatumPromene) {
+      return "Datum promene mora biti najmanje 1 dan pre današnjeg datuma.";
+    }
+    return "";
+  };
+
+  // Kad se promeni tip zahteva, očisti partner polja ako nije bracni_status
+  useEffect(() => {
+    if (editingId) return;
+
+    if (tipZahteva !== "bracni_status") {
+      setTipPromene("");
+      setImePartnera("");
+      setPrezimePartnera("");
+      setDatumRodjenjaPartnera("");
+      setPartnerPol("");
+      setBrojLicnogDokumentaPartnera("");
+      setPartnerDobError("");
+    }
+
+    if (tipZahteva !== "prebivaliste") {
+      setStaraUlica("");
+      setStariBroj("");
+      setStaroMesto("");
+      setStaraOpstina("");
+      setStariGrad("");
+      setStariPostanskiBroj("");
+
+      setNovaUlica("");
+      setNoviBroj("");
+      setNovoMesto("");
+      setNovaOpstina("");
+      setNoviGrad("");
+      setNoviPostanskiBroj("");
+    }
+  }, [tipZahteva, editingId]);
+
+  const resetForm = () => {
+    setTipZahteva("");
     setTipPromene("");
     setImePartnera("");
     setPrezimePartnera("");
     setDatumRodjenjaPartnera("");
     setPartnerPol("");
+    setBrojLicnogDokumenta("");
     setBrojLicnogDokumentaPartnera("");
-  }
+    setDatumPromene("");
 
-  if (tipZahteva !== "prebivaliste") {
+    setPartnerDobError("");
+
+    // samo kada dodaješ novi zahtev
     setStaraUlica("");
     setStariBroj("");
     setStaroMesto("");
@@ -99,37 +173,6 @@ const [noviPostanskiBroj, setNoviPostanskiBroj] = useState("");
     setNovaOpstina("");
     setNoviGrad("");
     setNoviPostanskiBroj("");
-  }
-}, [tipZahteva]);
-
-
-  
-
-  const resetForm = () => {
-   setTipZahteva("");
-  setTipPromene("");
-  setImePartnera("");
-  setPrezimePartnera("");
-  setDatumRodjenjaPartnera("");
-  setPartnerPol("");
-  setBrojLicnogDokumenta("");
-  setBrojLicnogDokumentaPartnera("");
-  setDatumPromene("");
-
-  // samo kada dodaješ novi zahtev
-  setStaraUlica("");
-  setStariBroj("");
-  setStaroMesto("");
-  setStaraOpstina("");
-  setStariGrad("");
-  setStariPostanskiBroj("");
-
-  setNovaUlica("");
-  setNoviBroj("");
-  setNovoMesto("");
-  setNovaOpstina("");
-  setNoviGrad("");
-  setNoviPostanskiBroj("");
   };
 
   const handleCancelEdit = () => {
@@ -139,46 +182,53 @@ const [noviPostanskiBroj, setNoviPostanskiBroj] = useState("");
     setError("");
   };
 
- const handleEdit = (zahtev) => {
-  setEditingId(zahtev.id);
+  const handleEdit = (zahtev) => {
+    setEditingId(zahtev.id);
 
-  // Postavi tip zahteva prvo
-  setTipZahteva(zahtev.tip_zahteva || "");
+    // Postavi tip zahteva prvo
+    setTipZahteva(zahtev.tip_zahteva || "");
 
-  // Nakon tipa, popuni adrese i partner polja
-  if (zahtev.tip_zahteva === "prebivaliste") {
-    setStaraUlica(zahtev.stara_adresa?.ulica || "");
-    setStariBroj(zahtev.stara_adresa?.broj || "");
-    setStaroMesto(zahtev.stara_adresa?.mesto || "");
-    setStaraOpstina(zahtev.stara_adresa?.opstina || "");
-    setStariGrad(zahtev.stara_adresa?.grad || "");
-    setStariPostanskiBroj(zahtev.stara_adresa?.postanski_broj || "");
+    // Nakon tipa, popuni adrese i partner polja
+    if (zahtev.tip_zahteva === "prebivaliste") {
+      setStaraUlica(zahtev.stara_adresa?.ulica || "");
+      setStariBroj(zahtev.stara_adresa?.broj || "");
+      setStaroMesto(zahtev.stara_adresa?.mesto || "");
+      setStaraOpstina(zahtev.stara_adresa?.opstina || "");
+      setStariGrad(zahtev.stara_adresa?.grad || "");
+      setStariPostanskiBroj(zahtev.stara_adresa?.postanski_broj || "");
 
-    setNovaUlica(zahtev.nova_adresa?.ulica || "");
-    setNoviBroj(zahtev.nova_adresa?.broj || "");
-    setNovoMesto(zahtev.nova_adresa?.mesto || "");
-    setNovaOpstina(zahtev.nova_adresa?.opstina || "");
-    setNoviGrad(zahtev.nova_adresa?.grad || "");
-    setNoviPostanskiBroj(zahtev.nova_adresa?.postanski_broj || "");
-  }
+      setNovaUlica(zahtev.nova_adresa?.ulica || "");
+      setNoviBroj(zahtev.nova_adresa?.broj || "");
+      setNovoMesto(zahtev.nova_adresa?.mesto || "");
+      setNovaOpstina(zahtev.nova_adresa?.opstina || "");
+      setNoviGrad(zahtev.nova_adresa?.grad || "");
+      setNoviPostanskiBroj(zahtev.nova_adresa?.postanski_broj || "");
+    }
 
-  if (zahtev.tip_zahteva === "bracni_status") {
-    setTipPromene(zahtev.tip_promene || "");
-    setImePartnera(zahtev.ime_partnera || "");
-    setPrezimePartnera(zahtev.prezime_partnera || "");
-    setDatumRodjenjaPartnera(zahtev.datum_rodjenja_partnera || "");
-    setPartnerPol(zahtev.partner_pol || "");
-    setBrojLicnogDokumentaPartnera(zahtev.broj_licnog_dokumenta_partnera || "");
-  }
+    if (zahtev.tip_zahteva === "bracni_status") {
+      setTipPromene(zahtev.tip_promene || "");
+      setImePartnera(zahtev.ime_partnera || "");
+      setPrezimePartnera(zahtev.prezime_partnera || "");
+      setDatumRodjenjaPartnera(zahtev.datum_rodjenja_partnera || "");
+      setPartnerPol(zahtev.partner_pol || "");
+      setBrojLicnogDokumentaPartnera(
+        zahtev.broj_licnog_dokumenta_partnera || ""
+      );
 
-  setBrojLicnogDokumenta(zahtev.broj_licnog_dokumenta || "");
-  setDatumPromene(zahtev.datum_promene || "");
+      // validiraj odmah (kad uđe u edit)
+      setPartnerDobError(
+        zahtev.datum_rodjenja_partnera
+          ? validatePartnerDob(zahtev.datum_rodjenja_partnera)
+          : ""
+      );
+    }
 
-  setInfo("");
-  setError("");
-};
+    setBrojLicnogDokumenta(zahtev.broj_licnog_dokumenta || "");
+    setDatumPromene(zahtev.datum_promene || "");
 
-
+    setInfo("");
+    setError("");
+  };
 
   const handleDelete = async (id) => {
     if (!window.confirm("Da li ste sigurni da želite da obrišete ovaj zahtev?"))
@@ -191,8 +241,6 @@ const [noviPostanskiBroj, setNoviPostanskiBroj] = useState("");
       await api.delete(`/zahtev/${id}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
-
-      console.log("Brisanje ID:", id);
 
       setZahtevi((prev) => prev.filter((z) => z.id !== id));
       setInfo("Zahtev je obrisan.");
@@ -214,20 +262,29 @@ const [noviPostanskiBroj, setNoviPostanskiBroj] = useState("");
       setSaving(false);
       return;
     }
+
+    // Datum promene: mora biti najkasnije juce (min 1 dan pre danas)
+    const dpErr = validateDatumPromene(datumPromene);
+    if (dpErr) {
+      setError(dpErr);
+      setSaving(false);
+      return;
+    }
+
     if (tipZahteva === "prebivaliste") {
-  if (
-    !staraUlica ||
-    !stariBroj ||
-    !staroMesto ||
-    !novaUlica ||
-    !noviBroj ||
-    !novoMesto
-  ) {
-    setError("Molimo popunite sva polja za staru i novu adresu.");
-    setSaving(false);
-    return;
-  }
-}
+      if (
+        !staraUlica ||
+        !stariBroj ||
+        !staroMesto ||
+        !novaUlica ||
+        !noviBroj ||
+        !novoMesto
+      ) {
+        setError("Molimo popunite sva polja za staru i novu adresu.");
+        setSaving(false);
+        return;
+      }
+    }
 
     // 2) Dodatna validacija samo za bracni_status
     if (tipZahteva === "bracni_status") {
@@ -243,6 +300,16 @@ const [noviPostanskiBroj, setNoviPostanskiBroj] = useState("");
         setSaving(false);
         return;
       }
+
+      // Validacija datuma partnera (future i <18)
+      const dobErr = validatePartnerDob(datumRodjenjaPartnera);
+      setPartnerDobError(dobErr);
+
+      if (dobErr) {
+        setError(dobErr);
+        setSaving(false);
+        return;
+      }
     }
 
     // Payload: uvek šalji zajednička polja
@@ -251,28 +318,26 @@ const [noviPostanskiBroj, setNoviPostanskiBroj] = useState("");
       broj_licnog_dokumenta: brojLicnogDokumenta,
       datum_promene: datumPromene,
     };
-   if (tipZahteva === "prebivaliste") {
-  payload.stara_adresa = {
-    ulica: staraUlica,
-    broj: stariBroj,
-    mesto: staroMesto,
-    opstina: staraOpstina,
-    grad: stariGrad || null,
-  postanski_broj: stariPostanskiBroj || null
-  };
 
-  payload.nova_adresa = {
-    ulica: novaUlica,
-    broj: noviBroj,
-    mesto: novoMesto,
-    opstina: novaOpstina,
-    grad: noviGrad || null,            
-  postanski_broj: noviPostanskiBroj || null
-  };
-}
+    if (tipZahteva === "prebivaliste") {
+      payload.stara_adresa = {
+        ulica: staraUlica,
+        broj: stariBroj,
+        mesto: staroMesto,
+        opstina: staraOpstina,
+        grad: stariGrad || null,
+        postanski_broj: stariPostanskiBroj || null,
+      };
 
-
-
+      payload.nova_adresa = {
+        ulica: novaUlica,
+        broj: noviBroj,
+        mesto: novoMesto,
+        opstina: novaOpstina,
+        grad: noviGrad || null,
+        postanski_broj: noviPostanskiBroj || null,
+      };
+    }
 
     // Ako je bracni_status, dodaj i partner polja
     if (tipZahteva === "bracni_status") {
@@ -323,10 +388,11 @@ const [noviPostanskiBroj, setNoviPostanskiBroj] = useState("");
       resetForm();
     } catch (err) {
       console.error("GRESKA:", err.response?.data);
-  console.error("STATUS:", err.response?.status);
-  setError(
-    err.response?.data?.message ||
-    "Došlo je do greške prilikom čuvanja zahteva.");
+      console.error("STATUS:", err.response?.status);
+      setError(
+        err.response?.data?.message ||
+          "Došlo je do greške prilikom čuvanja zahteva."
+      );
     } finally {
       setSaving(false);
     }
@@ -365,13 +431,9 @@ const [noviPostanskiBroj, setNoviPostanskiBroj] = useState("");
               }
 
               let statusClass = "";
-              if (z.status === "odobren") {
-                statusClass = "status-odobren";
-              } else if (z.status === "odbijen") {
-                statusClass = "status-odbijen";
-              } else {
-                statusClass = "status-kreiran";
-              }
+              if (z.status === "odobren") statusClass = "status-odobren";
+              else if (z.status === "odbijen") statusClass = "status-odbijen";
+              else statusClass = "status-kreiran";
 
               return (
                 <div key={z.id} className="zahtev-item">
@@ -425,91 +487,92 @@ const [noviPostanskiBroj, setNoviPostanskiBroj] = useState("");
                 ))}
               </select>
             </div>
-                {/* ADRESE – samo za promenu prebivališta */}
-{tipZahteva === "prebivaliste" && (
-  <>
-    <h3>Stara adresa</h3>
 
-<div className="form-group">
-  <label>Ulica</label>
-  <input
-    type="text"
-    value={staraUlica}
-    onChange={(e) => setStaraUlica(e.target.value)}
-    required
-  />
-</div>
+            {/* ADRESE – samo za promenu prebivališta */}
+            {tipZahteva === "prebivaliste" && (
+              <>
+                <h3>Stara adresa</h3>
 
-<div className="form-group">
-  <label>Broj</label>
-  <input
-    type="text"
-    value={stariBroj}
-    onChange={(e) => setStariBroj(e.target.value)}
-    required
-  />
-</div>
+                <div className="form-group">
+                  <label>Ulica</label>
+                  <input
+                    type="text"
+                    value={staraUlica}
+                    onChange={(e) => setStaraUlica(e.target.value)}
+                    required
+                  />
+                </div>
 
-<div className="form-group">
-  <label>Mesto</label>
-  <input
-    type="text"
-    value={staroMesto}
-    onChange={(e) => setStaroMesto(e.target.value)}
-    required
-  />
-</div>
+                <div className="form-group">
+                  <label>Broj</label>
+                  <input
+                    type="text"
+                    value={stariBroj}
+                    onChange={(e) => setStariBroj(e.target.value)}
+                    required
+                  />
+                </div>
 
-<div className="form-group">
-  <label>Opština</label>
-  <input
-    type="text"
-    value={staraOpstina}
-    onChange={(e) => setStaraOpstina(e.target.value)}
-    required
-  />
-</div>
+                <div className="form-group">
+                  <label>Mesto</label>
+                  <input
+                    type="text"
+                    value={staroMesto}
+                    onChange={(e) => setStaroMesto(e.target.value)}
+                    required
+                  />
+                </div>
 
+                <div className="form-group">
+                  <label>Opština</label>
+                  <input
+                    type="text"
+                    value={staraOpstina}
+                    onChange={(e) => setStaraOpstina(e.target.value)}
+                    required
+                  />
+                </div>
 
-    <h3>Nova adresa</h3>
+                <h3>Nova adresa</h3>
 
-    <div className="form-group">
-      <label>Ulica</label>
-      <input
-        type="text"
-        value={novaUlica}
-        onChange={(e) => setNovaUlica(e.target.value)}
-      />
-    </div>
+                <div className="form-group">
+                  <label>Ulica</label>
+                  <input
+                    type="text"
+                    value={novaUlica}
+                    onChange={(e) => setNovaUlica(e.target.value)}
+                  />
+                </div>
 
-    <div className="form-group">
-      <label>Broj</label>
-      <input
-        type="text"
-        value={noviBroj}
-        onChange={(e) => setNoviBroj(e.target.value)}
-      />
-    </div>
+                <div className="form-group">
+                  <label>Broj</label>
+                  <input
+                    type="text"
+                    value={noviBroj}
+                    onChange={(e) => setNoviBroj(e.target.value)}
+                  />
+                </div>
 
-    <div className="form-group">
-      <label>Mesto</label>
-      <input
-        type="text"
-        value={novoMesto}
-        onChange={(e) => setNovoMesto(e.target.value)}
-      />
-    </div>
-    <div className="form-group">
-  <label>Opština</label>
-  <input
-    type="text"
-    value={novaOpstina}
-    onChange={(e) => setNovaOpstina(e.target.value)}
-    required
-  />
-</div>
-  </>
-)}
+                <div className="form-group">
+                  <label>Mesto</label>
+                  <input
+                    type="text"
+                    value={novoMesto}
+                    onChange={(e) => setNovoMesto(e.target.value)}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Opština</label>
+                  <input
+                    type="text"
+                    value={novaOpstina}
+                    onChange={(e) => setNovaOpstina(e.target.value)}
+                    required
+                  />
+                </div>
+              </>
+            )}
 
             {/* Tip promene + partner podaci */}
             {tipZahteva === "bracni_status" && (
@@ -553,8 +616,19 @@ const [noviPostanskiBroj, setNoviPostanskiBroj] = useState("");
                   <input
                     type="date"
                     value={datumRodjenjaPartnera}
-                    onChange={(e) => setDatumRodjenjaPartnera(e.target.value)}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setDatumRodjenjaPartnera(val);
+                      setPartnerDobError(validatePartnerDob(val));
+                    }}
+                    max={maxPartnerDob}
+                    required
                   />
+                  {partnerDobError && (
+                    <p style={{ color: "red", marginTop: 6 }}>
+                      {partnerDobError}
+                    </p>
+                  )}
                 </div>
 
                 <div className="form-group">
@@ -601,6 +675,8 @@ const [noviPostanskiBroj, setNoviPostanskiBroj] = useState("");
                 type="date"
                 value={datumPromene}
                 onChange={(e) => setDatumPromene(e.target.value)}
+                max={maxDatumPromene} // najkasnije juce
+                required
               />
             </div>
 
@@ -629,5 +705,7 @@ const [noviPostanskiBroj, setNoviPostanskiBroj] = useState("");
 };
 
 export default MojiZahtevi;
+
+
 
 

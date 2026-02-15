@@ -34,7 +34,7 @@ const ZakaziTerminForm = ({ user }) => {
       return "Neispravan format datuma i vremena.";
 
     if (selected < minAllowed)
-      return "Termin mora biti najmanje 30 minuta unapred.";
+      return "Termin mora biti zakazan najmanje 30 minuta unapred.";
 
     return "";
   };

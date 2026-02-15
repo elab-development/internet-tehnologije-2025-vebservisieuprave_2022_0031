@@ -18,7 +18,7 @@ const NavBar = () => {
     const token=localStorage.getItem("token");
     setIsAuth(!!token);
     console.log("Location changed to:", location.pathname);
-    console.log("Is Auth:", isAuth);//da li je ulogovan, na pocetku smo postavili da bude false
+    //console.log("Is Auth:", isAuth);//da li je ulogovan, na pocetku smo postavili da bude false
     console.log("Token:", token);
   }, [location]);
   

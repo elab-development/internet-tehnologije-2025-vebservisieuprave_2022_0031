@@ -21,7 +21,7 @@ class AuthController extends Controller
             'prezime' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email',
             'password' => 'required|string|min:6|confirmed',
-            // ✅ bez razmaka u mimes
+            
             'slika' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
@@ -34,10 +34,10 @@ class AuthController extends Controller
 
         $data = $validator->validated();
 
-        // ✅ uvek obezbedi ključ (da ne puca kad nema slike)
+        // uvek obezbedi ključ (da ne puca kad nema slike)
         $data['slika'] = null;
 
-        // ✅ ako postoji slika, sacuvaj i upisi putanju
+        // ako postoji slika, sacuvaj i upisi putanju
         if ($request->hasFile('slika')) {
             $path = $request->file('slika')->store('profile_photos', 'public');
             $data['slika'] = $path;
@@ -48,7 +48,7 @@ class AuthController extends Controller
             'prezime' => $data['prezime'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            // ✅ sad je ili putanja ili null
+            // sad je ili putanja ili null
             'profile_photo_path' => $data['slika'],
         ]);
 
@@ -139,7 +139,6 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Email je uspesno verifikovan.',
-        ], 200);
-    }
+        ], 200);    }
 }
 

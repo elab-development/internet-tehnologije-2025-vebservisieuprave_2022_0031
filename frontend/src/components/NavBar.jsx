@@ -16,7 +16,7 @@ const NavBar = () => {
   //kuka ovaj kod izvrsava svaki put kad se promeni location:
   useEffect(()=> {
     const token=localStorage.getItem("token");
-    setIsAuth(!!token);//postavlja da li token postoji ili ne
+    setIsAuth(!!token);
     console.log("Location changed to:", location.pathname);
     console.log("Is Auth:", isAuth);//da li je ulogovan, na pocetku smo postavili da bude false
     console.log("Token:", token);

@@ -184,7 +184,7 @@ Adresa::create([
     'mesto' => $request->stara_adresa['mesto'],
     'opstina' => $request->stara_adresa['opstina'],
     'grad' => $request->stara_adresa['grad'] ?? '',
-'postanski_broj' => $request->stara_adresa['postanski_broj'] ?? '',
+    'postanski_broj' => $request->stara_adresa['postanski_broj'] ?? '',
     'trajanje_prebivalista' => 'stalna',
     'uloga_adrese' => 'stara',
 ]);
@@ -197,7 +197,7 @@ Adresa::create([
     'mesto' => $request->nova_adresa['mesto'],
     'opstina' => $request->nova_adresa['opstina'],
     'grad' => $request->nova_adresa['grad'] ?? '',
-'postanski_broj' => $request->nova_adresa['postanski_broj'] ?? '',
+    'postanski_broj' => $request->nova_adresa['postanski_broj'] ?? '',
     'trajanje_prebivalista' => 'stalna',
     'uloga_adrese' => 'nova',
 ]);

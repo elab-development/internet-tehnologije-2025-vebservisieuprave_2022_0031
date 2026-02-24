@@ -41,7 +41,8 @@ Zatim pokrenuti:
             
 4. Pristup aplikaciji
 Nakon uspesnog pokretanja app ce biti dostupne na sledecim linkovima: 
-[text](http://127.0.0.1:8000/)
-[text](http://localhost:3000/)
+
+                [text](http://127.0.0.1:8000/)
+                [text](http://localhost:3000/)
 
 ## Opis funkcionalnosti

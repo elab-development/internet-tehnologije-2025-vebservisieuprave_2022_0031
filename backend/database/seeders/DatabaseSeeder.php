@@ -7,6 +7,7 @@ use App\Models\Dokument;
 use App\Models\Termin;
 use App\Models\User;
 use App\Models\Zahtev;
+use App\Models\Drzavljanin;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -33,5 +34,7 @@ class DatabaseSeeder extends Seeder//direktno popunjavaju bazu
         Zahtev::factory(20)->create();
         Dokument::factory(10)->create();
         Adresa::factory(15)->create();
+        Drzavljanin::factory(20)->create(); 
     }
-}
+    }
+

@@ -44,12 +44,15 @@ const NavBar = () => {
         </Link>
         {isAuth ? (
           <>
+          <Link to="/profil" className="href">
+            Profil
+          </Link>
           <Link to="/mojizahtevi" className='href'>
           Moji zahtevi
           </Link>
           <Link to="/zakazi-termin" className="href">
-  Zakaži termin
-</Link>
+          Zakaži termin
+          </Link>
           <button
         type="button"
         className="href href-button"

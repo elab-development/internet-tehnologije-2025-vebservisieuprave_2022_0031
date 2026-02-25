@@ -3,6 +3,7 @@
     "private": true,
     "type": "module",
     "scripts": {
+        "start": "react-scripts start",
         "build": "vite build",
         "dev": "vite"
     },

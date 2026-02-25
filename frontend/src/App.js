@@ -6,7 +6,7 @@ import { LogInPage } from './pages/LogInPage';
 import NavBar from './components/NavBar';
 import Footer from './components/Footer';
 import UserPage from './pages/UserPage';
-import Register from './pages/Register';
+import RegisterPage from './pages/RegisterPage';
 import MojiZahtevi from './pages/MojiZahtevi';
 import ZakaziTerminForm from './pages/ZakaziTerminForm';
 
@@ -30,9 +30,10 @@ function App() {
         <Route path="/" element={<Pocetna />} />
         <Route path="/login" element={<LogInPage />} />
         <Route path="/userpage" element={<UserPage />} />
-        <Route path="/register" element={<Register />} />
-         <Route path="/mojizahtevi" element={<MojiZahtevi />} />
-          <Route path="/zakazi-termin" element={<ZakaziTerminForm user={user} />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/mojizahtevi" element={<MojiZahtevi />} />
+        <Route path="/zakazi-termin" element={<ZakaziTerminForm user={user} />} />
+        <Route path="/profil" element={<UserPage />} />
 
       </Routes>
       <Footer/>

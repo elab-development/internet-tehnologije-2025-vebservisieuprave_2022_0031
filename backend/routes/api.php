@@ -10,7 +10,9 @@ use App\Http\Controllers\ForgotPasswordController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/register', [AuthController::class, 'register']);
+Route::post('/register-domaci', [AuthController::class, 'registerDomaci']);
+Route::post('/check-jmbg', [AuthController::class, 'checkJmbg']); 
+Route::post('/register-strani', [AuthController::class, 'registerStrani']); 
 Route::post('/login', [AuthController::class, 'login']);
 
 //sta se desava kada korisnik ode na rutu verification.verify
@@ -22,6 +24,7 @@ Route::get('/email/verify/{id}', [AuthController::class, 'verifyEmail'])//poziva
 Route::middleware('auth:sanctum')->group(function (){
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
+    Route::put('/profile', [AuthController::class, 'updateProfile']);
       
 
      Route::get('/zahtev/moje', [ZahtevController::class, 'mojiZahteviPaginatedFiltered']);

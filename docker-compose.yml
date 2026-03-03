@@ -47,7 +47,7 @@ services:
     ports:
       - "5173:5173"
       - "3000:3000"
-    command: sh -c "npm install && npm start"
+    command: sh -c "npm install &&  npm start"
 
 volumes:
   dbdata:

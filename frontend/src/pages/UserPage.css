@@ -1,108 +1,60 @@
-/* Pozadina cele stranice */
-body {
-  background-color: #f4f6f9;
-  margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-/* Glavna kartica */
 .profile-container {
-  max-width: 650px;
-  margin: 50px auto;
-  padding: 35px;
-  background-color: #ffffff;
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 30px;
+  background: white;
   border-radius: 14px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
 }
 
-/* Naslov */
-.profile-container h2 {
-  text-align: center;
-  margin-bottom: 30px;
-  color: #222;
+.profile-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
 }
 
-/* Podnaslovi */
-.profile-container h3 {
-  margin-top: 30px;
-  margin-bottom: 15px;
-  font-size: 18px;
-  color: #444;
-  border-bottom: 1px solid #eee;
+.profile-card {
+  background: #fafafa;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #eee;
+}
+
+.profile-card h3 {
+  margin-top: 0;
+  border-bottom: 1px solid #e2e2e2;
   padding-bottom: 6px;
 }
 
-/* Tekstualni podaci */
-.profile-container p {
+.profile-card p {
   margin: 6px 0;
-  color: #555;
   font-size: 14px;
+  color: #444;
 }
 
-/* Label */
-.profile-container label {
-  display: block;
-  margin-top: 10px;
+.profile-card label {
   font-weight: 600;
-  font-size: 14px;
-  color: #333;
+  font-size: 13px;
 }
 
-/* Input polja */
-.profile-container input[type="email"],
-.profile-container input[type="password"],
-.profile-container input[type="file"] {
+.profile-card input {
   width: 100%;
   padding: 10px;
-  margin-top: 5px;
   border-radius: 8px;
   border: 1px solid #ccc;
-  font-size: 14px;
-  transition: 0.2s ease;
 }
 
-/* Focus efekat */
-.profile-container input:focus {
-  border-color: #4c6ef5;
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(76, 110, 245, 0.15);
-}
-
-/* Slika */
-.profile-container img {
-  margin-top: 10px;
-  border-radius: 10px;
-  border: 1px solid #ddd;
-}
-
-/* Dugme */
 .profile-container button {
   width: 100%;
   padding: 12px;
-  margin-top: 15px;
-  background-color: #4c6ef5;
+  background: #4c6ef5;
   color: white;
   border: none;
   border-radius: 10px;
-  font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-  transition: 0.2s ease;
 }
 
 .profile-container button:hover {
-  background-color: #3b5bdb;
-  transform: translateY(-1px);
-}
-
-/* Poruke */
-.profile-container p:first-of-type {
-  font-weight: 500;
-}
-
-/* Horizontalna linija */
-.profile-container hr {
-  margin: 30px 0;
-  border: none;
-  border-top: 1px solid #eee;
+  background: #3b5bdb;
 }

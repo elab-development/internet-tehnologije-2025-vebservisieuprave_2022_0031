@@ -3,7 +3,9 @@ import api from "../api/api";
 import "./ZakaziTerminForm.css";
 
 const ZakaziTerminForm = ({ user }) => {
-  const [tipDokumenta, setTipDokumenta] = useState("licna_karta");
+  console.log("USER OBJEKAT:", user);
+console.log("TIP KORISNIKA:", user?.tip_korisnika);
+const [tipDokumenta, setTipDokumenta] = useState("licna_karta");
   const [lokacija, setLokacija] = useState("");
   const [datumVreme, setDatumVreme] = useState("");
   const [info, setInfo] = useState("");
@@ -83,14 +85,19 @@ const ZakaziTerminForm = ({ user }) => {
     <div className="zakazi-termin-container">
       <h3>Zakaži termin</h3>
       <form onSubmit={handleSubmit}>
-        <label>Tip dokumenta:</label>
-        <select
-          value={tipDokumenta}
-          onChange={(e) => setTipDokumenta(e.target.value)}
-        >
-          <option value="licna_karta">Lična karta</option>
-          <option value="pasos">Pasoš</option>
-        </select>
+     <label>Tip dokumenta:</label>
+
+{user?.tip_korisnika && user.tip_korisnika.toLowerCase() === "strani" ? (
+  <p><strong>Lična karta</strong></p>
+) : (
+  <select
+    value={tipDokumenta}
+    onChange={(e) => setTipDokumenta(e.target.value)}
+  >
+    <option value="pasos">Pasoš</option>
+    <option value="licna_karta">Lična karta</option>
+  </select>
+)}
 
         <label>Lokacija:</label>
         <input

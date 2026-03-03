@@ -86,7 +86,16 @@ class TerminController extends Controller
         }
 
         $data = $validator->validated();
+        // Provera tipa korisnika i tipa dokumenta
+$user = \App\Models\User::find($data['korisnik_id']);
 
+if ($user) {
+    if ($user->isStrani() && $data['tip_dokumenta'] !== 'licna_karta') {
+        return response()->json([
+            'message' => 'Strani državljani mogu zakazati samo termin za ličnu kartu.'
+        ], 403);
+    }
+}
         // Provera da li je termin zauzet (lokacija + datum_vreme)
         $postoji = Termin::where('lokacija', $data['lokacija'])
             ->where('datum_vreme', $data['datum_vreme'])
@@ -97,6 +106,7 @@ class TerminController extends Controller
                 'message' => 'Termin je već zauzet na toj lokaciji i u tom vremenu.'
             ], 409);
         }
+                // Provera tipa korisnika i dokumenta
 
         $termin = Termin::create($data);
 
@@ -157,7 +167,13 @@ class TerminController extends Controller
         }
 
         $data = $validator->validated();
+    $user = \App\Models\User::find($data['korisnik_id']);
 
+if ($user && $user->isStrani() && $data['tip_dokumenta'] !== 'licna_karta') {
+    return response()->json([
+        'message' => 'Strani državljani mogu zakazati samo termin za ličnu kartu.'
+    ], 403);
+}
         // Provera zauzetosti i kod update (ali ignoriši trenutni termin)
         $postoji = Termin::where('lokacija', $data['lokacija'])
             ->where('datum_vreme', $data['datum_vreme'])
@@ -169,6 +185,8 @@ class TerminController extends Controller
                 'message' => 'Termin je već zauzet na toj lokaciji i u tom vremenu.'
             ], 409);
         }
+        $user = \App\Models\User::find($data['korisnik_id']);
+
 
         $termin->update($data);
 

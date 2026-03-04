@@ -9,7 +9,7 @@ import UserPage from './pages/UserPage';
 import RegisterPage from './pages/RegisterPage';
 import MojiZahtevi from './pages/MojiZahtevi';
 import ZakaziTerminForm from './pages/ZakaziTerminForm';
-import { useState, useEffect } from "react";
+import { useState} from "react";
 // const getUserFromStorage = () => {
 //   try {
 //     const raw = localStorage.getItem("user");

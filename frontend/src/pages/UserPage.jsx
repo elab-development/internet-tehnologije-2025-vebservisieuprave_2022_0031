@@ -17,6 +17,43 @@ export default function UserPage() {
 
   const token = localStorage.getItem("token");
 
+  // format datuma u latinici
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+
+    const date = new Date(dateString);
+
+    const formatted = date.toLocaleDateString("sr-RS", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+
+    const cirToLat = {
+      а: "a", б: "b", в: "v", г: "g", д: "d", ђ: "đ", е: "e", ж: "ž",
+      з: "z", и: "i", ј: "j", к: "k", л: "l", љ: "lj", м: "m", н: "n",
+      њ: "nj", о: "o", п: "p", р: "r", с: "s", т: "t", ћ: "ć", у: "u",
+      ф: "f", х: "h", ц: "c", ч: "č", џ: "dž", ш: "š"
+    };
+
+    return formatted.replace(/[а-яђжљњћџ]/g, (c) => cirToLat[c] || c);
+  };
+
+  // prikaz pola
+  const formatPol = (pol) => {
+    if (pol === "Z") return "Ženski";
+    if (pol === "M") return "Muški";
+    return pol;
+  };
+
+  // prikaz tipa korisnika
+  const formatTipKorisnika = (tip) => {
+    if (tip === "domaci") return "Domaći državljanin";
+    if (tip === "strani") return "Strani državljanin";
+    if (tip === "admin") return "Administrator";
+    return tip;
+  };
+
   useEffect(() => {
     axios
       .get("http://localhost:8000/api/me", {
@@ -95,9 +132,18 @@ export default function UserPage() {
 
           <p><strong>Ime:</strong> {user.ime}</p>
           <p><strong>Prezime:</strong> {user.prezime}</p>
-          <p><strong>Datum rođenja:</strong> {user.datum_rodjenja}</p>
-          <p><strong>Pol:</strong> {user.pol}</p>
-          <p><strong>Tip korisnika:</strong> {user.tip_korisnika}</p>
+
+          <p>
+            <strong>Datum rođenja:</strong> {formatDate(user.datum_rodjenja)}
+          </p>
+
+          <p>
+            <strong>Pol:</strong> {formatPol(user.pol)}
+          </p>
+
+          <p>
+            <strong>Tip korisnika:</strong> {formatTipKorisnika(user.tip_korisnika)}
+          </p>
 
           {user.tip_korisnika === "domaci" && (
             <p><strong>JMBG:</strong> {user.jmbg}</p>
@@ -177,6 +223,7 @@ export default function UserPage() {
             />
 
             <button type="submit">Sačuvaj izmene</button>
+
           </form>
         </div>
 

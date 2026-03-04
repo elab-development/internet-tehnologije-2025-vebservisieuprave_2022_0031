@@ -114,3 +114,88 @@ input[type="file"] + .hint {
   margin-top: 4px;
   display: block;
 }
+
+/* ---------------------------
+   React-Select (Državljanstvo)
+   classNamePrefix="custom-select"
+---------------------------- */
+
+/* Glavni okvir */
+.custom-select__control {
+  width: 100%;
+  min-height: 44px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  box-shadow: none;
+  padding: 0; /* padding ide u value-container */
+}
+
+/* Hover efekat kao kod inputa */
+.custom-select__control:hover {
+  border-color: #d1d5db;
+}
+
+/* Fokus efekat identičan inputu */
+.custom-select__control--is-focused {
+  border-color: #4f46e5 !important;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2) !important;
+}
+
+/* Unutrašnji padding (isto kao input: 10px 12px) */
+.custom-select__value-container {
+  padding: 10px 12px;
+}
+
+/* Placeholder */
+.custom-select__placeholder {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* Tekst selektovane vrednosti */
+.custom-select__single-value {
+  color: #111827;
+  font-size: 14px;
+}
+
+/* Separator (mala vertikalna linija) */
+.custom-select__indicator-separator {
+  background-color: #e5e7eb;
+}
+
+/* Strelica */
+.custom-select__dropdown-indicator {
+  color: #6b7280;
+  padding-right: 10px;
+}
+
+.custom-select__dropdown-indicator:hover {
+  color: #4f46e5;
+}
+
+/* Menu lista */
+.custom-select__menu {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+
+/* Opcija */
+.custom-select__option {
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* Opcija hover */
+.custom-select__option--is-focused {
+  background-color: rgba(79, 70, 229, 0.08);
+}
+
+/* Opcija selected */
+.custom-select__option--is-selected {
+  background-color: #4f46e5;
+  color: white;
+}

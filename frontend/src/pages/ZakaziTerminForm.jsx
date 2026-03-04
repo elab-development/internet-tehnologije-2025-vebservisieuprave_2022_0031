@@ -120,6 +120,11 @@ const ZakaziTerminForm = ({ user }) => {
 
     return `${yyyy}-${mm}-${dd}T${hh}:${min}`;
   }, []);
+  useEffect(() => {
+  if (user?.tip_korisnika === "strani") {
+    setTipDokumenta("licna_karta");
+  }
+}, [user]);
 
   const validateDatumVreme = (value) => {
     if (!value) return "Datum i vreme su obavezni.";
@@ -285,21 +290,26 @@ const ZakaziTerminForm = ({ user }) => {
       setError("Greška prilikom zakazivanja termina.");
     }
   };
-
+console.log("USER OBJEKAT:", user);
+console.log("TIP KORISNIKA:", user?.tip_korisnika);
   return (
     <div className="zakazi-termin-container">
-      <h3>Zakaži termin</h3>
+      <h3>ZakaziTermin </h3>
 
       <form onSubmit={handleSubmit}>
         <label>Tip dokumenta:</label>
 
-        <select
-          value={tipDokumenta}
-          onChange={(e) => setTipDokumenta(e.target.value)}
-        >
-          <option value="pasos">Pasoš</option>
-          <option value="licna_karta">Lična karta</option>
-        </select>
+{user?.tip_korisnika === "strani" ? (
+  <input type="text" value="Lična karta" disabled />
+) : (
+  <select
+    value={tipDokumenta}
+    onChange={(e) => setTipDokumenta(e.target.value)}
+  >
+    <option value="pasos">Pasoš</option>
+    <option value="licna_karta">Lična karta</option>
+  </select>
+)}
 
         <label>Lokacija (mesto/grad):</label>
 
@@ -371,7 +381,13 @@ const ZakaziTerminForm = ({ user }) => {
         </div>
       </form>
 
-      {info && <p className="success-message">{info}</p>}
+    {info && (
+  <p>
+    {typeof info === "string"
+      ? info
+      : info.message || "Termin uspešno zakazan!"}
+  </p>
+)}
       {error && <p className="error-message">{error}</p>}
     </div>
   );

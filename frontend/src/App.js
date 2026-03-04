@@ -30,7 +30,7 @@ function App() {
     <BrowserRouter>
     <NavBar user={user} setUser={setUser} />
       <Routes>
-        <Route path="/" element={<Pocetna />} />
+       <Route path="/" element={<Pocetna user={user} />} />
         <Route path="/login" element={<LogInPage setUser={setUser} />} />
         <Route path="/userpage" element={<UserPage user={user} />} />
         <Route path="/register" element={<RegisterPage />} />

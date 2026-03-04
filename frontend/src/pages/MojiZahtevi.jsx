@@ -415,12 +415,11 @@ const MojiZahtevi = () => {
 
         <div className="zahtevi-lista">
           {loadError && <p style={{ color: "red" }}>{loadError}</p>}
-          {loading ? (
-            <p>Učitavanje...</p>
-          ) : zahtevi.length === 0 ? (
-            <p className="no-zahtevi">Nemaš nijedan zahtev. Dodaj novi zahtev!</p>
-          ) : (
-            zahtevi.map((z) => {
+
+{zahtevi.length === 0 ? (
+  <p className="no-zahtevi">Nemaš nijedan zahtev. Dodaj novi zahtev!</p>
+) : (
+  zahtevi.map((z) => {
               let tipZahtevaLabel = "";
               if (z.tip_zahteva === "bracni_status") {
                 tipZahtevaLabel = "Promena bračnog statusa";

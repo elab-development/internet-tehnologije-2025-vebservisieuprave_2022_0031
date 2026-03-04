@@ -8,7 +8,7 @@ import { GiDiamondRing } from "react-icons/gi";
 import { IoIosLock } from "react-icons/io";
 import { FaUser } from "react-icons/fa";
 
-const HomePage = () => {
+const HomePage = ({ user }) => {
   const FEATURES= [
   {
     id: 1,
@@ -41,7 +41,10 @@ const HomePage = () => {
     icon: <IoIosLock />
   }
 ];
-
+const formatTipKorisnika = (tip) => {
+    if (!tip) return "Nepoznato";
+    return tip === "domaci" ? "Domaći" : "Strani";
+  };
 
   return (
     <div className="homepage-container">
@@ -57,22 +60,30 @@ const HomePage = () => {
           <p className="about">
             Portal mojaEUprava omogućava građanima da podnose zahteve, zakazuju termine i prate status dokumenata elektronski, štedeći vreme i olakšavajući proces administracije.
           </p>
-          <div className="hero-buttons">
-            <button className="btn primary">Kreiraj nalog</button>
-            <button className="btn secondary">Uloguj se</button>
-          </div>
+         
         </div>
 
-        {/* Desna strana */}
-        <div className="hero-right">
+        
+             <div className="hero-right">
           <div className="user-card">
             <div className="avatar"><FaUser /></div>
-            <h3>Jovana Petrović</h3>
-            <p>Status: Aktivno</p>
-            <p>Uloga: Građanin</p>
+            
+            {user ? (
+              <>
+                <h3>{user.ime} {user.prezime}</h3>
+                <p><strong>Email:</strong> {user.email}</p>
+                <p><strong>Tip:</strong> {formatTipKorisnika(user.tip_korisnika)}</p>
+              </>
+            ) : (
+              <p>Niste prijavljeni.</p>
+            )}
+
           </div>
         </div>
       </div>
+   
+  
+
 
       {/* --- SEKCIJA: ČEMU SLUŽI E-UPRAVA --- */}
       <div className="features-container">

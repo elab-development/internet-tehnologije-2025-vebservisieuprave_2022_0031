@@ -10,10 +10,13 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\VerifyEmail;
+use App\Models\Zahtev;
+use App\Models\Termin;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class AuthController extends Controller
 {
-
+//PROVERA DA LI JE JMBG ISPRAVAN, I DA LI POSTOJI U BAZI DRZAVLJANINA
 public function checkJmbg(Request $request)
 {
     $validator = Validator::make($request->all(), [
@@ -22,7 +25,7 @@ public function checkJmbg(Request $request)
 
     if ($validator->fails()) {
         return response()->json([
-            'message' => 'Validacija JMBG-a nije prošla.',
+            'message' => 'Validacija JMBG-a nije uspela.',
             'errors' => $validator->errors(),
         ], 422);
     }
@@ -45,7 +48,9 @@ public function checkJmbg(Request $request)
         ]
     ]);
 }
-    // POST /api/register/domaci
+
+    
+    //FUNKCIJA REGISTRUJE DOMACEG KORISNIKA (POST /api/register/domaci)
 public function registerDomaci(Request $request)
 {
     $validator = Validator::make($request->all(), [
@@ -56,7 +61,7 @@ public function registerDomaci(Request $request)
 
     if ($validator->fails()) {
         return response()->json([
-            'message' => 'Validacija nije prosla.',
+            'message' => 'Validacija nije uspela.',
             'errors' => $validator->errors(),
         ], 422);
     }
@@ -74,9 +79,9 @@ public function registerDomaci(Request $request)
     $postojećiUser = User::where('jmbg', $data['jmbg'])->first();
     if ($postojećiUser) {
     return response()->json([
-        'message' => 'Корисник са тим JMBG-ом је већ регистрован.'
+        'message' => 'Korisnik sa tim JMBG-om je već registrovan.'
     ], 409); // 409 Conflict
-}
+    }
 
     // Kreiramo User sa podacima iz Drzavljanin tabele + email i šifra koju je korisnik uneo
     $user = User::create([
@@ -104,7 +109,8 @@ public function registerDomaci(Request $request)
     ], 201);
 }
 
-// POST /api/register/strani
+
+//FUNKCIJA REGISTRUJE STRANOG KORISNIKA ( POST /api/register/strani)
 public function registerStrani(Request $request)
 {
     $validator = Validator::make($request->all(), [
@@ -155,9 +161,10 @@ public function registerStrani(Request $request)
         'message' => 'Registracija uspešna. Proverite email za verifikaciju.',
         'user' => $user
     ], 201);
-}
+    }
 
-    // POST /api/login
+
+    // LOGIN KORISNIKA (POST /api/login)
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -167,7 +174,7 @@ public function registerStrani(Request $request)
 
         if ($validator->fails()) {
             return response()->json([
-                'message' => 'Validacija nije prosla.',
+                'message' => 'Validacija nije uspela.',
                 'errors' => $validator->errors(),
             ], 422);
         }
@@ -176,20 +183,20 @@ public function registerStrani(Request $request)
 
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
-                'message' => 'Pogresan email ili lozinka.',
+                'message' => 'Pogrešan email ili lozinka.',
             ], 401);
         }
 
         $token = $user->createToken('api_token')->plainTextToken;
 
         return response()->json([
-            'message' => 'Uspesno ste prijavljeni.',
+            'message' => 'Uspešno ste prijavljeni.',
             'user' => $user,
             'token' => $token,
         ], 200);
     }
 
-    // POST /api/logout
+    // LOGOUT KORISNIKA (POST /api/logout)
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
@@ -205,12 +212,12 @@ public function registerStrani(Request $request)
         return response()->json($request->user());
     }
 
-    // verifikacija mejla
+    //VERIFIKACIJA MEJLA
     public function verifyEmail(Request $request, $id)
     {
         if (!$request->hasValidSignature()) {
             return response()->json([
-                'message' => 'Link za verifikaciju je nevazeci ili je istekao.',
+                'message' => 'Link za verifikaciju je nevažeći ili je istekao.',
             ], 401);
         }
 
@@ -218,7 +225,7 @@ public function registerStrani(Request $request)
 
         if ($user->email_verified_at) {
             return response()->json([
-                'message' => 'Email je vec verifikovan.',
+                'message' => 'Email je već verifikovan.',
             ], 200);
         }
 
@@ -229,8 +236,10 @@ public function registerStrani(Request $request)
             'message' => 'Email je uspesno verifikovan.',
         ], 200);    }
 
+
+    //UPDATE PROFILA KORISNIKA
     public function updateProfile(Request $request)
-{
+    {
     $user = $request->user();
 
     $validator = Validator::make($request->all(), [
@@ -242,7 +251,7 @@ public function registerStrani(Request $request)
 
     if ($validator->fails()) {
         return response()->json([
-            'message' => 'Validacija nije prošla.',
+            'message' => 'Validacija nije uspela.',
             'errors' => $validator->errors()
         ], 422);
     }
@@ -277,6 +286,51 @@ public function registerStrani(Request $request)
         'message' => 'Profil uspešno ažuriran.',
         'user' => $user
     ]);
+}
+
+
+//FUNKCIJA VRACA UKUPAN BROJ KORISNIKA(GET /api/admin/stats)
+public function statistika()
+{
+    // Ukupan broj korisnika
+    $totalUsers = \App\Models\User::count();
+
+    // Možeš dodati i broj domaćih i stranih korisnika
+    $totalDomaci = \App\Models\User::where('tip_korisnika', 'domaci')->count();
+    $totalStrani = \App\Models\User::where('tip_korisnika', 'strani')->count();
+
+    return response()->json([
+        'totalUsers' => $totalUsers,
+        'totalDomaci' => $totalDomaci,
+        'totalStrani' => $totalStrani
+    ]);
+}
+
+// FUNKCIJA VRACA SVE KORISNIKE KOJI NISU ADMINI (GET /api/admin/korisnici)
+public function sviKorisnici()
+{
+    
+    $users = User::where('tip_korisnika', '!=', 'admin')
+        ->select('id', 'ime', 'prezime', 'email', 'tip_korisnika', 'datum_rodjenja') 
+        ->orderBy('ime')
+        ->get();
+
+    return response()->json([
+        'total' => $users->count(),
+        'users' => $users
+    ]);
+}
+
+
+// FUNKCIJA VRACA TACNO ODREDJENOG KORISNIKA(GET /api/admin/users/{id})
+public function prikaziKorisnika($id)
+{
+    $user = User::where('id', $id)
+        ->where('tip_korisnika', '!=', 'admin')
+        ->with(['zahtevi', 'termini']) 
+        ->firstOrFail();
+
+    return response()->json($user);
 }
 }
 

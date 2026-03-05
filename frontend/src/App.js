@@ -9,7 +9,10 @@ import UserPage from './pages/UserPage';
 import RegisterPage from './pages/RegisterPage';
 import MojiZahtevi from './pages/MojiZahtevi';
 import ZakaziTerminForm from './pages/ZakaziTerminForm';
+import AdminPanel from './pages/AdminPanel';
 import { useState} from "react";
+import UsersPanelAdmin from './pages/UsersPanelAdmin';
+import UserProfileAdmin from './pages/UserProfileAdmin';
 // const getUserFromStorage = () => {
 //   try {
 //     const raw = localStorage.getItem("user");
@@ -37,6 +40,9 @@ function App() {
         <Route path="/mojizahtevi" element={<MojiZahtevi />} /> 
          <Route path="/zakazi-termin" element={<ZakaziTerminForm user={user} />} />
         <Route path="/profil" element={<UserPage />} />
+        <Route path="/admin/statistika" element={<AdminPanel user={user} />} />
+        <Route path="/admin/korisnici" element={<UsersPanelAdmin user={user} />} />
+        <Route path="/admin/korisnici/:id" element={<UserProfileAdmin user={user}/>} />
 
       </Routes>
       <Footer/>

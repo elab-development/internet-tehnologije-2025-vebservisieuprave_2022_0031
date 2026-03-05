@@ -6,7 +6,10 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Zahtev;
+use App\Models\Termin;
 
 class User extends Authenticatable implements MustVerifyEmail//ovaj model ce imati email verified at
 {
@@ -67,7 +70,7 @@ class User extends Authenticatable implements MustVerifyEmail//ovaj model ce ima
  */
 public function zahtevi()
 {
-    return $this->hasMany(Zahtev::class);
+    return $this->hasMany(Zahtev::class, 'korisnik_id');
 }
 
 /**
@@ -75,7 +78,7 @@ public function zahtevi()
  */
 public function termini()
 {
-    return $this->hasMany(Termin::class);
+    return $this->hasMany(Termin::class, 'korisnik_id');
 }
 // Helper metode
     public function isAdmin() { return $this->tip_korisnika === 'admin'; }

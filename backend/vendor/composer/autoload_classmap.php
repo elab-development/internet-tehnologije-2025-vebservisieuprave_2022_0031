@@ -6,6 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'App\\Console\\Commands\\ResetUserPassword' => $baseDir . '/app/Console/Commands/ResetUserPassword.php',
     'App\\Http\\Controllers\\AdresaController' => $baseDir . '/app/Http/Controllers/AdresaController.php',
     'App\\Http\\Controllers\\AuthController' => $baseDir . '/app/Http/Controllers/AuthController.php',
     'App\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',
@@ -13,6 +14,10 @@ return array(
     'App\\Http\\Controllers\\ForgotPasswordController' => $baseDir . '/app/Http/Controllers/ForgotPasswordController.php',
     'App\\Http\\Controllers\\TerminController' => $baseDir . '/app/Http/Controllers/TerminController.php',
     'App\\Http\\Controllers\\ZahtevController' => $baseDir . '/app/Http/Controllers/ZahtevController.php',
+    'App\\Http\\Kernel' => $baseDir . '/app/Http/Kernel.php',
+    'App\\Http\\Middleware\\AdminMiddleware' => $baseDir . '/app/Http/Middleware/AdminMiddleware.php',
+    'App\\Http\\Middleware\\Authenticate' => $baseDir . '/app/Http/Middleware/Authenticate.php',
+    'App\\Http\\Middleware\\VerifyCsrfToken' => $baseDir . '/app/Http/Middleware/VerifyCsrfToken.php',
     'App\\Http\\Resources\\AdresaResource' => $baseDir . '/app/Http/Resources/AdresaResource.php',
     'App\\Http\\Resources\\DokumentResource' => $baseDir . '/app/Http/Resources/DokumentResource.php',
     'App\\Http\\Resources\\TerminResource' => $baseDir . '/app/Http/Resources/TerminResource.php',

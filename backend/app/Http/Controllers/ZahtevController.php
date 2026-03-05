@@ -368,6 +368,21 @@ class ZahtevController extends Controller
             'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
         ]);
     }
+
+
+//FUNKCIJA KOJA VRACA STATISTIKU SVIH ZAHTEVA, SVIH KORISNIKA
+    public function statistikaZahteva()
+{
+    $totalCekajuci = Zahtev::where('status', 'kreiran')->count();
+    $totalOdobreni = Zahtev::where('status', 'odobren')->count();
+    $totalOdbijeni = Zahtev::where('status', 'odbijen')->count();
+
+    return response()->json([
+        'cekajuci' => $totalCekajuci,
+        'odobreni' => $totalOdobreni,
+        'odbijeni' => $totalOdbijeni,
+    ]);
+}
 }
 
 

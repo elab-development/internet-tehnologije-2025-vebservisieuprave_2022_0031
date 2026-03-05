@@ -643,6 +643,7 @@ class ComposerStaticInit3d0eb3da301e30bfbfc0b8a57c681d76
     );
 
     public static $classMap = array (
+        'App\\Console\\Commands\\ResetUserPassword' => __DIR__ . '/../..' . '/app/Console/Commands/ResetUserPassword.php',
         'App\\Http\\Controllers\\AdresaController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdresaController.php',
         'App\\Http\\Controllers\\AuthController' => __DIR__ . '/../..' . '/app/Http/Controllers/AuthController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
@@ -650,6 +651,10 @@ class ComposerStaticInit3d0eb3da301e30bfbfc0b8a57c681d76
         'App\\Http\\Controllers\\ForgotPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/ForgotPasswordController.php',
         'App\\Http\\Controllers\\TerminController' => __DIR__ . '/../..' . '/app/Http/Controllers/TerminController.php',
         'App\\Http\\Controllers\\ZahtevController' => __DIR__ . '/../..' . '/app/Http/Controllers/ZahtevController.php',
+        'App\\Http\\Kernel' => __DIR__ . '/../..' . '/app/Http/Kernel.php',
+        'App\\Http\\Middleware\\AdminMiddleware' => __DIR__ . '/../..' . '/app/Http/Middleware/AdminMiddleware.php',
+        'App\\Http\\Middleware\\Authenticate' => __DIR__ . '/../..' . '/app/Http/Middleware/Authenticate.php',
+        'App\\Http\\Middleware\\VerifyCsrfToken' => __DIR__ . '/../..' . '/app/Http/Middleware/VerifyCsrfToken.php',
         'App\\Http\\Resources\\AdresaResource' => __DIR__ . '/../..' . '/app/Http/Resources/AdresaResource.php',
         'App\\Http\\Resources\\DokumentResource' => __DIR__ . '/../..' . '/app/Http/Resources/DokumentResource.php',
         'App\\Http\\Resources\\TerminResource' => __DIR__ . '/../..' . '/app/Http/Resources/TerminResource.php',

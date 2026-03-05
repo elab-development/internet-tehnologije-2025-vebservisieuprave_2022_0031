@@ -1,0 +1,17 @@
+.neobradjeni-zahtevi-page {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.zahtevi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.loading, .error {
+  font-size: 18px;
+  text-align: center;
+  margin-top: 50px;
+}

@@ -327,7 +327,12 @@ public function prikaziKorisnika($id)
 {
     $user = User::where('id', $id)
         ->where('tip_korisnika', '!=', 'admin')
-        ->with(['zahtevi', 'termini']) 
+        ->with([
+            'zahtevi' => function($q) {
+                $q->with(['staraAdresa', 'novaAdresa', 'dokumenti']);// kako bi vratio sve podatke
+            },
+            'termini'
+        ])
         ->firstOrFail();
 
     return response()->json($user);

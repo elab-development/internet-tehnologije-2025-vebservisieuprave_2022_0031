@@ -42,18 +42,21 @@ const NavBar = () => {
     <div className="navbar">
   <div className="navbar-left">
     <Link to="/" className="href">Početna stranica</Link>
-    <Link to="/profil" className="href">Profil korisnika</Link>
+    
     {isAuth && user?.tip_korisnika !== "admin" && (
       <>
-        
+        <Link to="/profil" className="href">Profil korisnika</Link>
         <Link to="/mojizahtevi" className="href">Moji zahtevi</Link>
         <Link to="/zakazi-termin" className="href">Zakaži termin</Link>
       </>
     )}
     {isAuth && user?.tip_korisnika === "admin" && (
       <>
+      <Link to="/profil" className="href">Profil korisnika</Link>
       <Link to="/admin/statistika" className="href">Statistika</Link>
       <Link to="/admin/korisnici" className="href">Korisnici</Link>
+      <Link to="/admin/neobradjeniZahtevi" className="href">Neobradjeni zahtevi</Link>
+
       </>
     )}
     {!isAuth && (

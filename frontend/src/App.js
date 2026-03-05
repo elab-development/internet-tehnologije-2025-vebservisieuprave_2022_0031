@@ -13,6 +13,8 @@ import AdminPanel from './pages/AdminPanel';
 import { useState} from "react";
 import UsersPanelAdmin from './pages/UsersPanelAdmin';
 import UserProfileAdmin from './pages/UserProfileAdmin';
+import UnprocessedRequestsPage from './pages/UnprocessedRequestsPage';
+import RequestDetailsAdmin from "./pages/RequestDetailsAdmin";
 // const getUserFromStorage = () => {
 //   try {
 //     const raw = localStorage.getItem("user");
@@ -43,6 +45,8 @@ function App() {
         <Route path="/admin/statistika" element={<AdminPanel user={user} />} />
         <Route path="/admin/korisnici" element={<UsersPanelAdmin user={user} />} />
         <Route path="/admin/korisnici/:id" element={<UserProfileAdmin user={user}/>} />
+        <Route path="/admin/neobradjeniZahtevi" element={<UnprocessedRequestsPage user={user}/>} />
+        <Route path="/admin/request/:id" element={<RequestDetailsAdmin user={user}/>} />
 
       </Routes>
       <Footer/>

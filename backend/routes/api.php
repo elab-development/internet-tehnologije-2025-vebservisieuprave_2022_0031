@@ -44,6 +44,14 @@ Route::middleware(['auth:sanctum', AdminMiddleware::class])->group(function (){
      Route::get('/admin/korisnici', [AuthController::class, 'sviKorisnici']);
      Route::get('/admin/korisnici/{id}', [AuthController::class, 'prikaziKorisnika']);
 
+     //Prikaz neobradjenih zahteva i obrada
+      Route::get('/admin/neobradjeniZahtevi', [ZahtevController::class, 'neobradjeniZahtevi']);
+      Route::get('/admin/zahtevi/{id}', [ZahtevController::class, 'prikaziZahtev']);
+      Route::post('/admin/zahtevi/{id}/odobri', [ZahtevController::class, 'odobriZahtev']);
+      Route::post('/admin/zahtevi/{id}/odbij', [ZahtevController::class, 'odbijZahtev']);
+
+      
+
     // Statistika i vizualizacija
     Route::get('/admin/statistika', [AuthController::class, 'statistika']);
     Route::get('/admin/statistikaZahteva', [ZahtevController::class, 'statistikaZahteva']);

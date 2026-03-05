@@ -24,7 +24,7 @@ class ZahtevController extends Controller
         //
     }
 
-    //get/zahtevi/moji
+    //FUNKCIJA KOJA VRACA ZAHTEVE
     public function mojiZahteviPaginatedFiltered(Request $request)
     {
         $userId = $request->user()->id;
@@ -51,7 +51,7 @@ class ZahtevController extends Controller
         return ZahtevResource::collection($paginator);
     }
 
-    //get/zahtevi/moji ali samo za bracni status
+    //FUNKCIJA KOJA VRACA ZAHTEV TIPA BRACNI STATUS
     public function mojiBracniStatusPaginatedFiltered(Request $request)
     {
         $userId = $request->user()->id;
@@ -79,7 +79,7 @@ class ZahtevController extends Controller
         return ZahtevResource::collection($paginator);
     }
 
-    //get/zahtevi/moji ali samo za prebivaliste
+    //FUNKCIJA KOJA VRACA ZAHTEV ALI SAMO ZA PREVIVALISTE(get/zahtevi/moji)
     public function mojiPromenaPrebivalistaPaginatedFiltered(Request $request)
     {
         $userId = $request->user()->id;
@@ -106,13 +106,23 @@ class ZahtevController extends Controller
 
         return ZahtevResource::collection($paginator);
     }
+    //FUNKCIJA KOJA TACNO TAJ VRACA ZAHTEV  GET /api/admin/zahtevi/{id} - detalji zahteva
+    public function prikaziZahtev($id)
+    {
+    $zahtev = Zahtev::with([
+        'korisnik',
+        'staraAdresa',
+        'novaAdresa',
+        'dokumenti'
+    ])->findOrFail($id);
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    return response()->json($zahtev);
+    }
+
+    //FUNKCIJA KOJA KREIRA ZAHTEV
     public function store(Request $request)
     {
-        // ✅ datum_promene mora biti najkasnije juče (minimum 1 dan u prošlosti)
+        // mora biti najkasnije juče 
         $maxDatumPromene = now()->subDay()->toDateString();
 
         $validator = Validator::make($request->all(), [
@@ -121,7 +131,7 @@ class ZahtevController extends Controller
             // zajednicka polja (na frontu su obavezna)
             'broj_licnog_dokumenta' => 'required|string|max:255',
 
-            // ✅ GLAVNA IZMENA
+            
             'datum_promene' => [
                 'required',
                 'date',
@@ -133,7 +143,7 @@ class ZahtevController extends Controller
             'ime_partnera' => 'required_if:tip_zahteva,bracni_status|string|max:255',
             'prezime_partnera' => 'required_if:tip_zahteva,bracni_status|string|max:255',
 
-            // ✅ partner mora biti 18+ (samim tim nije ni buducnost)
+            // partner mora biti 18+ 
             'datum_rodjenja_partnera' => [
                 'required_if:tip_zahteva,bracni_status',
                 'date',
@@ -232,9 +242,7 @@ class ZahtevController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    //FUNKCIJA KOJA ZA UPDATE ZAHTEVA
     public function update(Request $request, $id)
     {
         $zahtev = Zahtev::find($id);
@@ -245,7 +253,7 @@ class ZahtevController extends Controller
         // koji tip ce biti nakon update-a
         $finalTipZahteva = $request->input('tip_zahteva', $zahtev->tip_zahteva);
 
-        // ✅ datum_promene mora biti najkasnije juče (minimum 1 dan u prošlosti)
+        //  mora biti najkasnije juče
         $maxDatumPromene = now()->subDay()->toDateString();
 
         // Validacija glavnih polja
@@ -257,14 +265,14 @@ class ZahtevController extends Controller
 
             'broj_licnog_dokumenta' => 'sometimes|string|max:255',
 
-            // ✅ GLAVNA IZMENA
+            
             'datum_promene' => [
                 'sometimes',
                 'date',
                 'before_or_equal:' . $maxDatumPromene,
             ],
 
-            // bracni_status polja (obavezna ako je finalni tip bracni_status)
+            // bracni_status 
             'tip_promene' => $finalTipZahteva === 'bracni_status'
                 ? 'required|in:razvod,sklapanje_braka'
                 : 'sometimes|nullable|in:razvod,sklapanje_braka',
@@ -305,7 +313,7 @@ class ZahtevController extends Controller
         $data = $validator->validated();
         $zahtev->update($data);
 
-        // ✅ Ažuriranje povezanih adresa
+        // Ažuriranje  adresa
         if ($request->has('stara_adresa')) {
             $zahtev->staraAdresa()->update($request->input('stara_adresa'));
         }
@@ -316,9 +324,7 @@ class ZahtevController extends Controller
         return response()->json(new ZahtevResource($zahtev), 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    //FUNKCIJA KOJA BRISE ZAHTEV
     public function destroy($id)
     {
         $zahtev = Zahtev::find($id);
@@ -381,6 +387,44 @@ class ZahtevController extends Controller
         'cekajuci' => $totalCekajuci,
         'odobreni' => $totalOdobreni,
         'odbijeni' => $totalOdbijeni,
+    ]);
+}
+
+//FUNKCIJA KOJA VRACA SVE ZAHTEVE KOJI NISU OBRADJENI ( GET /api/admin/neobradjeniZahtevi)
+public function neobradjeniZahtevi()
+{
+    $zahtevi = Zahtev::where('status', 'kreiran')
+        ->with('korisnik:id,ime,prezime') 
+        ->select('id', 'tip_zahteva', 'korisnik_id', 'status', 'datum_kreiranja') 
+        ->orderBy('datum_kreiranja', 'desc')
+        ->get();
+
+    return response()->json($zahtevi);
+}
+
+// FUNKCIJA KOJA ODOBRAVA ZAHTEV POST /api/admin/zahtevi/{id}/odobri
+public function odobriZahtev($id)
+{
+    $zahtev = Zahtev::findOrFail($id);
+    $zahtev->status = 'odobren';
+    $zahtev->save();
+
+    return response()->json([
+        'message' => 'Zahtev je odobren.',
+        'zahtev' => $zahtev
+    ]);
+}
+
+// FUNKCIJA KOJA ODBIJA ZAHTEV POST /api/admin/zahtevi/{id}/odbij
+public function odbijZahtev($id)
+{
+    $zahtev = Zahtev::findOrFail($id);
+    $zahtev->status = 'odbijen';
+    $zahtev->save();
+
+    return response()->json([
+        'message' => 'Zahtev je odbijen.',
+        'zahtev' => $zahtev
     ]);
 }
 }

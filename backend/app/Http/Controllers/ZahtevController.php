@@ -391,13 +391,18 @@ class ZahtevController extends Controller
 }
 
 //FUNKCIJA KOJA VRACA SVE ZAHTEVE KOJI NISU OBRADJENI ( GET /api/admin/neobradjeniZahtevi)
-public function neobradjeniZahtevi()
+public function neobradjeniZahtevi(Request $request)
 {
-    $zahtevi = Zahtev::where('status', 'kreiran')
-        ->with('korisnik:id,ime,prezime') 
-        ->select('id', 'tip_zahteva', 'korisnik_id', 'status', 'datum_kreiranja') 
-        ->orderBy('datum_kreiranja', 'desc')
-        ->get();
+    $query = Zahtev::where('status', 'kreiran')
+        ->with('korisnik:id,ime,prezime')
+        ->select('id', 'tip_zahteva', 'korisnik_id', 'status', 'datum_kreiranja');
+
+    // Filter po tipu zahteva (prebivaliste / bracni_status)
+    if ($request->filled('tip_zahteva')) {
+        $query->where('tip_zahteva', $request->get('tip_zahteva'));
+    }
+
+    $zahtevi = $query->orderBy('datum_kreiranja', 'desc')->get();
 
     return response()->json($zahtevi);
 }

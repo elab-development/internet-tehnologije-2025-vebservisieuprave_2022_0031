@@ -1,0 +1,84 @@
+#Github Workflow - YAML GitHub Workflow (github-workflow.json)
+# naziv pipeline:
+name: Laravel Tests
+#pokrece se svaki put kada korisnik uradi push ili pull na main granu
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+#definisemo poslove koje zelimo da uradimo, prvo je tests koji ce se izvrsavati na linux vm
+#ovo u okviru opstions - da li je baza spremna da se nad njom izvrsi testiranje
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+        #pravimo bazu sa ovim parametrima
+          MYSQL_DATABASE: app_db
+          MYSQL_USER: app_user
+          MYSQL_PASSWORD: app_pass
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+    defaults:
+      run:
+        working-directory: backend #na backendu su nam svi testovi
+    
+    steps:
+      - name: Checkout code #preuzima se kod iz repozitoriju sa githuba
+        uses: actions/checkout@v4 #pise sta treba da se uradi
+
+      - name: Setup PHP #instaliranje php na vm, postavlja se verzija phpa, dodaju se ekstenzije za bazu...
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          extensions: mbstring, pdo_mysql
+          coverage: none
+
+      - name: Copy .env #kopira se env fajl ako postoji (if)
+        run: |
+          if [ -f .env.example ]; then cp .env.example .env; fi
+
+      - name: Install dependencies #instalira se composer, generise kljuc... sve sto smo radili pri preuzimaju laravel projekta
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Generate app key
+        run: php artisan key:generate
+
+      - name: Run migrations #pokrecemo migracije
+        env:
+          DB_CONNECTION: mysql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_DATABASE: app_db
+          DB_USERNAME: app_user
+          DB_PASSWORD: app_pass
+          MAIL_MAILER: array
+          CACHE_DRIVER: array
+          SESSION_DRIVER: array
+          QUEUE_CONNECTION: sync
+        run: php artisan migrate --force
+
+      - name: Run tests #nakon svega toga pokrecemo testove
+        env:
+          DB_CONNECTION: mysql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_DATABASE: app_db2
+          DB_USERNAME: app_user2
+          DB_PASSWORD: app_pass2
+          MAIL_MAILER: array
+          CACHE_DRIVER: array
+          SESSION_DRIVER: array
+          QUEUE_CONNECTION: sync
+        run: php artisan test #komanda za pokretanje testova

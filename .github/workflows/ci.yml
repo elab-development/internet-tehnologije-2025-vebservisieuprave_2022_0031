@@ -74,9 +74,9 @@ jobs:
           DB_CONNECTION: mysql
           DB_HOST: 127.0.0.1
           DB_PORT: 3306
-          DB_DATABASE: app_db2
-          DB_USERNAME: app_user2
-          DB_PASSWORD: app_pass2
+          DB_DATABASE: app_db
+          DB_USERNAME: app_user
+          DB_PASSWORD: app_pass
           MAIL_MAILER: array
           CACHE_DRIVER: array
           SESSION_DRIVER: array

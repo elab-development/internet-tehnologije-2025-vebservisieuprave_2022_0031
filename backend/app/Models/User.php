@@ -67,7 +67,7 @@ class User extends Authenticatable implements MustVerifyEmail//ovaj model ce ima
  */
 public function zahtevi()
 {
-    return $this->hasMany(Zahtev::class);
+    return $this->hasMany(Zahtev::class, 'korisnik_id');
 }
 
 /**
@@ -75,7 +75,7 @@ public function zahtevi()
  */
 public function termini()
 {
-    return $this->hasMany(Termin::class);
+    return $this->hasMany(Termin::class, 'korisnik_id');
 }
 // Helper metode
     public function isAdmin() { return $this->tip_korisnika === 'admin'; }

@@ -255,7 +255,7 @@ class ZahtevControllerTest extends TestCase
         ]);
     }
 
-    /* ADMIN 
+    // ADMIN 
 
     public function test_admin_routes_forbidden_for_non_admin(): void//Admin MiddleWare radi i blokira ne-admin korisnike
     {
@@ -390,5 +390,5 @@ class ZahtevControllerTest extends TestCase
             ->assertJsonPath('odobreni', 1)
             ->assertJsonPath('odbijeni', 1);
     }
-            */
+            
 }

@@ -49,7 +49,7 @@ Nakon uspesnog pokretanja app ce biti dostupne na sledecim linkovima:
 
 ## Funkcionalnosti aplikacije
 
-###Autentifikacija
+### Autentifikacija
 
 Korisnici mogu:
 
@@ -58,4 +58,65 @@ Korisnici mogu:
 -da se prijave na sistem (login)
 
 -da se odjave sa sistema (logout)
+Profil korisnika
+
+Korisnik može:
+
+-da vidi svoj profil
+
+-da promeni lozinku
+
+-da izmeni email adresu
+
+-da postavi/promeni profilnu sliku
+
+Zakazivanje termina
+
+Korisnici mogu zakazati termin za izdavanje ličnih dokumenata:
+
+Domaći državljani:
+
+-izdavanje lične karte
+
+-izdavanje pasoša
+
+Strani državljani:
+
+-izdavanje lične karte za strane državljane
+
+Podnošenje zahteva
+
+Korisnici mogu podneti sledeće zahteve:
+
+-promena prebivališta
+
+-promena bračnog statusa (sklapanje ili razvod braka)
+
+Korisnik može:
+
+-podneti novi zahtev
+
+-izmeniti postojeći zahtev
+
+-obrisati zahtev
+
+-pregledati listu svojih zahteva
+
+Administratorske funkcionalnosti
+
+Administrator ima pristup posebnom delu aplikacije gde može:
+
+-pregledati sve zahteve korisnika
+
+-odobriti zahtev
+
+-odbiti zahtev
+
+-filtrirati zahteve po:
+
+-tipu korisnika (domaći ili strani)
+
+-statusu zahteva (odobren, odbijen, kreiran)
+
+Administrator takođe ima pristup statističkom prikazu podataka u vidu grafikona koji prikazuju procenat domaćih i stranih korisnika i podnetih zahteva.
 

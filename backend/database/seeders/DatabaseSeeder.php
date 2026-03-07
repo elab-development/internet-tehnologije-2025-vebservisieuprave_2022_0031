@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Adresa;
 use App\Models\Dokument;
+use App\Models\Drzavljanin;
 use App\Models\Termin;
 use App\Models\User;
 use App\Models\Zahtev;
@@ -27,11 +28,14 @@ class DatabaseSeeder extends Seeder//direktno popunjavaju bazu
         Zahtev::truncate();
         Termin::truncate();
         User::truncate();
+        Drzavljanin::truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         User::factory(10)->create();
         Termin::factory(10)->create();
         Zahtev::factory(20)->create();
         Dokument::factory(10)->create();
         Adresa::factory(15)->create();
+        Drzavljanin::factory(20)->create();
+
     }
 }

@@ -40,20 +40,6 @@ const NavBar = () => {
   return (
     //Pocetna da se prikaze svima
     <div className="navbar">
-<<<<<<< HEAD
-        <Link to="/" className="href">
-        Pocetna
-        </Link>
-        {isAuth ? (
-          <>
-          <Link to="/mojizahtevi" className='href'>
-          Moji zahtevi
-          </Link>
-          <Link to="/zakazi-termin" className="href">
-  Zakaži termin
-</Link>
-          <button
-=======
   <div className="navbar-left">
     <Link to="/" className="href">Početna stranica</Link>
     
@@ -84,7 +70,6 @@ const NavBar = () => {
   {isAuth && (
     <div className="navbar-right">
       <button
->>>>>>> feature/admin
         type="button"
         className="href href-button"
         onClick={handleLogout}

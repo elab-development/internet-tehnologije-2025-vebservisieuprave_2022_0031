@@ -23,7 +23,6 @@ services:
     depends_on:
       - db
   
-<<<<<<< HEAD
   nginx:
     image: nginx:alpine
     container_name: app_nginx
@@ -35,10 +34,6 @@ services:
     depends_on:
       - backend
   
-=======
- 
-
->>>>>>> feature/admin
   front:
     build:
       context: ./frontend
@@ -51,15 +46,8 @@ services:
       - /app/node_modules
     ports:
       - "3000:3000"
-<<<<<<< HEAD
     depends_on:
        - nginx
-=======
-    environment:
-      - HOST=0.0.0.0
-      - CHOKIDAR_USEPOLLING=true
-      - WATCHPACK_POLLING=true
->>>>>>> feature/admin
     command: sh -c "npm install && npm start"
 
 volumes:

@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-import React from 'react'
-=======
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "./UserPage.css";
@@ -121,7 +118,6 @@ export default function UserPage() {
   };
 
   if (!user) return <p>Učitavanje...</p>;
->>>>>>> feature/admin
 
 const UserPage = () => {
   return (
@@ -129,9 +125,6 @@ const UserPage = () => {
   )
 }
 
-<<<<<<< HEAD
-export default UserPage
-=======
       {message && <p>{message}</p>}
 
       <div className="profile-layout">
@@ -237,7 +230,6 @@ export default UserPage
         </div>
 
       </div>
-    </div>
-  );
+    
+  
 }
->>>>>>> feature/admin

@@ -95,12 +95,9 @@ const GRADOVI_SA_OPSTINAMA = Object.keys(GRADSKE_OPSTINE);
 
 const ZakaziTerminForm = ({ user }) => {
   const [tipDokumenta, setTipDokumenta] = useState("licna_karta");
-<<<<<<< HEAD
-=======
 
   const [grad, setGrad] = useState("");
   const [opstina, setOpstina] = useState("");
->>>>>>> feature/admin
   const [lokacija, setLokacija] = useState("");
 
   const [mestaIzApi, setMestaIzApi] = useState([]);
@@ -297,18 +294,6 @@ console.log("USER OBJEKAT:", user);
 console.log("TIP KORISNIKA:", user?.tip_korisnika);
   return (
     <div className="zakazi-termin-container">
-<<<<<<< HEAD
-      <h3>Zakaži termin</h3>
-      <form onSubmit={handleSubmit}>
-        <label>Tip dokumenta:</label>
-        <select
-          value={tipDokumenta}
-          onChange={(e) => setTipDokumenta(e.target.value)}
-        >
-          <option value="licna_karta">Lična karta</option>
-          <option value="pasos">Pasoš</option>
-        </select>
-=======
       <h3>ZakaziTermin </h3>
 
       <form onSubmit={handleSubmit}>
@@ -325,7 +310,6 @@ console.log("TIP KORISNIKA:", user?.tip_korisnika);
     <option value="licna_karta">Lična karta</option>
   </select>
 )}
->>>>>>> feature/admin
 
         <label>Lokacija (mesto/grad):</label>
 

@@ -18,14 +18,9 @@ class AuthControllerTest extends TestCase
 {
     use RefreshDatabase;//aktivira RefreshDatabase -> pre svakog testa baza se resetuje (krene od nule)
 
-<<<<<<< HEAD
     private function seedDrzavljanin(array $override = []): array//rucno ubacuje test drzavljanina u DB, da bi kasnije mogli da testiramo jmbg i registraciju domaceg drzavljanina, simuliramo da drzavljanin postoji u bazi
     {//ako drzavljanin sa tim jmbg ne postoji, test pada
     //ubacimo drzavljanina->pozovemo registraciju->backend napravi usera u tabeli users
-=======
-    private function seedDrzavljanin(array $override = []): array//ubacuje test drzavljanina u DB
-    {
->>>>>>> feature/admin
         $data = array_merge([//spaja default podatke sa ovim sto je nabrojano
             'jmbg' => '1234567890123',
             'ime' => 'Petar',
@@ -44,11 +39,7 @@ class AuthControllerTest extends TestCase
             'pol' => 'M',                 
             'tip_korisnika' => 'domaci',  // default
             'datum_rodjenja' => '2000-01-01',
-<<<<<<< HEAD
         ], $override));//kreira se user u bazi, sa njim testiramo login, logout, me... (preskace registraciju)
-=======
-        ], $override));//kreira se user u bazi
->>>>>>> feature/admin
     }
 
     // CHECK JMBG 
@@ -69,15 +60,9 @@ class AuthControllerTest extends TestCase
 
     public function test_check_jmbg_returns_data_if_exists(): void//postoji drzavljanin
     {
-<<<<<<< HEAD
         $drz = $this->seedDrzavljanin();//prvo ubacuje drzavljanina u bazu i smesta podatke u $drz
 
         $this->postJson('/api/check-jmbg', ['jmbg' => $drz['jmbg']])//salje request sa njegovim jmbg
-=======
-        $drz = $this->seedDrzavljanin();//ubacuje drzavljanina u bazu i smesta podatke u $drz
-
-        $this->postJson('/api/check-jmbg', ['jmbg' => $drz['jmbg']])//salje request sa tim jmbg
->>>>>>> feature/admin
             ->assertOk()//200 OK
             ->assertJsonStructure(['drzavljanin' => ['ime', 'prezime', 'datum_rodjenja', 'pol']])//ocekuje u JSON-u objekat drzavljanin sa tim poljima
             ->assertJsonPath('drzavljanin.ime', $drz['ime'])//provera da li vraceni podaci odg ubacenim
@@ -90,11 +75,7 @@ class AuthControllerTest extends TestCase
     {
         Mail::fake();//ne šalje stvarne email-ove, nego ih fejkuje da možemo posle proveriti da li je nešto poslato
 
-<<<<<<< HEAD
         $drz = $this->seedDrzavljanin([//ubacujemo drzavljanina u bazu
-=======
-        $drz = $this->seedDrzavljanin([//ubacujemo drzavljanina
->>>>>>> feature/admin
             'jmbg' => '1111111111111',
             'ime' => 'Marko',
             'prezime' => 'Markovic',
@@ -112,17 +93,10 @@ class AuthControllerTest extends TestCase
             ->assertJsonStructure(['message', 'user'])//ocekujemo da se vrati poruka i korisnik
             //provera kljucnih vrednosti vracenog usera
             ->assertJsonPath('user.email', $email)
-<<<<<<< HEAD
             ->assertJsonPath('user.tip_korisnika', 'domaci')//provera da li je vracen domaci
             ->assertJsonPath('user.jmbg', $drz['jmbg']);
 
         $this->assertDatabaseHas('users', [//provera da li je red stvarno upisan u tabelu users
-=======
-            ->assertJsonPath('user.tip_korisnika', 'domaci')
-            ->assertJsonPath('user.jmbg', $drz['jmbg']);
-
-        $this->assertDatabaseHas('users', [//provera da li je red stvarno upisan u tabelu
->>>>>>> feature/admin
             'email' => $email,
             'tip_korisnika' => 'domaci',
             'jmbg' => $drz['jmbg'],
@@ -131,11 +105,7 @@ class AuthControllerTest extends TestCase
         Mail::assertSent(VerifyEmail::class);//provera da li je poslat email tipa VerifyEmail
     }
 
-<<<<<<< HEAD
     public function test_register_domaci_fails_if_jmbg_not_in_drzavljani(): void//registracija domaceg ne uspe jer ne postoji nijedan sa tim jmbg u drzavljani
-=======
-    public function test_register_domaci_fails_if_jmbg_not_in_drzavljani(): void//registracija ne uspe jer drzavljanin ne postoji
->>>>>>> feature/admin
     {
         $this->postJson('/api/register-domaci', [
             'jmbg' => '9999999999999',//salje se jmbg koji nije u tabeli
@@ -145,10 +115,7 @@ class AuthControllerTest extends TestCase
         ])
             ->assertStatus(404)
             ->assertJsonPath('message', 'Korisnik sa tim JMBG-om ne postoji u bazi.');
-<<<<<<< HEAD
             //domaci korisnik ne moze da se registruje ako njegov jmbg nije medju drzavljanima
-=======
->>>>>>> feature/admin
     }
 
     public function test_register_domaci_fails_if_user_with_jmbg_already_registered(): void
@@ -169,10 +136,7 @@ class AuthControllerTest extends TestCase
         ])
             ->assertStatus(409)
             ->assertJsonPath('message', 'Korisnik sa tim JMBG-om je već registrovan.');
-<<<<<<< HEAD
             //ne dozvoljova duplu registraciju istog domaceg korisnika
-=======
->>>>>>> feature/admin
     }
 
     //REGISTER STRANI 
@@ -181,20 +145,12 @@ class AuthControllerTest extends TestCase
     {//uspešna registracija stranog korisnika + upload + email
         Mail::fake();
         Storage::fake('public');//fejkujemo mail i public storage disk da se upload ne snima na stvarni disk
-<<<<<<< HEAD
         //pravi lazni jpg fajl
-=======
-
->>>>>>> feature/admin
         $email = 'strani_' . uniqid() . '@test.com';//unikatan mail
 
         $fakeJpg = UploadedFile::fake()->create('photo.jpg', 100, 'image/jpeg');//pravimo fake fajl za upload
 
-<<<<<<< HEAD
         $this->postJson('/api/register-strani', [//salje se request za stranu registraciju, sa sl podacima:
-=======
-        $this->postJson('/api/register-strani', [//salje se request za stranu registraciju
->>>>>>> feature/admin
             'ime' => 'John',
             'prezime' => 'Doe',
             'email' => $email,
@@ -207,11 +163,7 @@ class AuthControllerTest extends TestCase
             ->assertStatus(201)
             ->assertJsonStructure(['message', 'user'])
             ->assertJsonPath('user.email', $email)
-<<<<<<< HEAD
             ->assertJsonPath('user.tip_korisnika', 'strani');//provera da li je tip korisnika strani
-=======
-            ->assertJsonPath('user.tip_korisnika', 'strani');
->>>>>>> feature/admin
 
         $this->assertDatabaseHas('users', [//provera da li je korisnik upisan u bazu
             'email' => $email,
@@ -229,11 +181,7 @@ class AuthControllerTest extends TestCase
     {
         $this->makeUser([//ubacuje usera u bazu sa poznatom lozinkom
             'email' => 'a@test.com',
-<<<<<<< HEAD
             'password' => Hash::make('correct'),//lozinka u bazi je correct
-=======
-            'password' => Hash::make('correct'),
->>>>>>> feature/admin
         ]);
 
         $this->postJson('/api/login', [
@@ -256,27 +204,18 @@ class AuthControllerTest extends TestCase
             'password' => '123456',
         ])
             ->assertOk()
-<<<<<<< HEAD
             ->assertJsonStructure(['message', 'user', 'token'])//provera da li json sadrzi message, user, token
-=======
-            ->assertJsonStructure(['message', 'user', 'token'])
->>>>>>> feature/admin
             ->assertJsonPath('message', 'Uspešno ste prijavljeni.');
     }
 
     public function test_me_requires_auth(): void//bez tokena ne moze na me
     {
-<<<<<<< HEAD
         $this->getJson('/api/me')->assertStatus(401);//salje get na ovu rutu bez autentifikacije
-=======
-        $this->getJson('/api/me')->assertStatus(401);
->>>>>>> feature/admin
     }
 
     public function test_me_returns_user_when_authenticated(): void//vraca usera kad si ulogovan
     {
         $user = $this->makeUser();
-<<<<<<< HEAD
         Sanctum::actingAs($user);//actingAs simulira ulogovanog korisnika u testu
 
         $this->getJson('/api/me')//proverava da API vraća tog korisnika
@@ -284,19 +223,10 @@ class AuthControllerTest extends TestCase
             ->assertJsonPath('id', $user->id)//provera da li je json vratio pravi id i email
             ->assertJsonPath('email', $user->email);
             //ruta /api/me je zasticena i dostupna samo ulogovanom
-=======
-        Sanctum::actingAs($user);//actingAs simulira autentifikovanog korisnika u testu
-
-        $this->getJson('/api/me')//proverava da API vraća tog korisnika
-            ->assertOk()
-            ->assertJsonPath('id', $user->id)
-            ->assertJsonPath('email', $user->email);
->>>>>>> feature/admin
     }
 
     public function test_logout_requires_auth(): void
     {
-<<<<<<< HEAD
         $this->postJson('/api/logout')->assertStatus(401);//bez tokena logout ne radi, logout ne moze bez autentifikacije
     }
 
@@ -305,15 +235,6 @@ class AuthControllerTest extends TestCase
     {
         $user = $this->makeUser();
         $token = $user->createToken('api_token')->plainTextToken;//rucno kreira pravi Sanctum token koji se salje
-=======
-        $this->postJson('/api/logout')->assertStatus(401);//bez tokena logout ne radi
-    }
-
-    public function test_logout_works_when_authenticated(): void//logout radi ako ima token
-    {
-        $user = $this->makeUser();
-        $token = $user->createToken('api_token')->plainTextToken;//kreira pravi Sanctum token koji se salje
->>>>>>> feature/admin
 
         $this->withHeader('Authorization', 'Bearer ' . $token)//salje logout request sa tokenom i ocekuje uspeh
             ->postJson('/api/logout')
@@ -321,11 +242,7 @@ class AuthControllerTest extends TestCase
             ->assertJsonPath('message', 'Uspesno ste odjavljeni.');
     }
 
-<<<<<<< HEAD
     /* EMAIL VERIFY
-=======
-    // EMAIL VERIFY
->>>>>>> feature/admin
 
     public function test_verify_email_marks_verified(): void
     {
@@ -344,21 +261,13 @@ class AuthControllerTest extends TestCase
             ->assertJsonPath('message', 'Email je uspesno verifikovan.');
 
         $this->assertNotNull($user->fresh()->email_verified_at);//proverava da je u bazi upisan datum verifikacije
-<<<<<<< HEAD
     }*/
-=======
-    }
->>>>>>> feature/admin
 
     // UPDATE PROFILE
 
     public function test_update_profile_requires_auth(): void
     {
-<<<<<<< HEAD
         $this->putJson('/api/profile', ['email' => 'x@test.com'])//bez tokena tj. autentifikacije se ne moze menjati profil
-=======
-        $this->putJson('/api/profile', ['email' => 'x@test.com'])//bez tokena se ne moze menjati profil
->>>>>>> feature/admin
             ->assertStatus(401);
     }
 
@@ -366,28 +275,17 @@ class AuthControllerTest extends TestCase
     {//Update profila: email + slika + lozinka
         Storage::fake('public');//fejkuje storage
 
-<<<<<<< HEAD
         $user = $this->makeUser([//kreira usera sa starim emailom i pass
-=======
-        $user = $this->makeUser([//kreira usera
->>>>>>> feature/admin
             'email' => 'old@test.com',
             'password' => Hash::make('oldpass'),
         ]);
 
         $token = $user->createToken('api_token')->plainTextToken;//kreira token
 
-<<<<<<< HEAD
         $fakePng = UploadedFile::fake()->create('p.png', 100, 'image/png'); // fejk png fajl
 
         $this->withHeader('Authorization', 'Bearer ' . $token)
             ->putJson('/api/profile', [//salje PUT na /api/profile sa novim emailom, trenutnom i novom lozinkom
-=======
-        $fakePng = UploadedFile::fake()->create('p.png', 100, 'image/png'); // fejk upload fajl
-
-        $this->withHeader('Authorization', 'Bearer ' . $token)
-            ->putJson('/api/profile', [//salje PUT na /api/profile
->>>>>>> feature/admin
                 'email' => 'new@test.com',
                 'profile_photo' => $fakePng,
                 'current_password' => 'oldpass',
@@ -414,11 +312,7 @@ class AuthControllerTest extends TestCase
 
         $this->withHeader('Authorization', 'Bearer ' . $token)
             ->putJson('/api/profile', [
-<<<<<<< HEAD
                 'current_password' => 'wrong',//daje pogresnu trenutnu lozinku -> nije dozvoljena promena lozinke
-=======
-                'current_password' => 'wrong',
->>>>>>> feature/admin
                 'new_password' => 'newpass1',
                 'new_password_confirmation' => 'newpass1',
             ])
@@ -430,13 +324,8 @@ class AuthControllerTest extends TestCase
 
     public function test_admin_routes_forbidden_for_non_admin(): void//non-admin ne može
     {
-<<<<<<< HEAD
         $user = $this->makeUser(['tip_korisnika' => 'domaci']);//pravi običnog korisnika
         Sanctum::actingAs($user);//uloguje ga
-=======
-        $user = $this->makeUser(['tip_korisnika' => 'domaci']);//uloguje običnog korisnika
-        Sanctum::actingAs($user);
->>>>>>> feature/admin
 
         $this->getJson('/api/admin/statistika')
             ->assertStatus(403)//ocekuje 403 jer middleware vraca tu poruku
@@ -445,11 +334,7 @@ class AuthControllerTest extends TestCase
 
     public function test_admin_statistika_returns_counts_for_admin(): void
     {
-<<<<<<< HEAD
         $admin = $this->makeUser(['tip_korisnika' => 'admin']);//uloguje admina, kreira 2 domaca, 3 strana
-=======
-        $admin = $this->makeUser(['tip_korisnika' => 'admin']);//uloguje admin, kreira 2 domaca, 3 strana
->>>>>>> feature/admin
         Sanctum::actingAs($admin);
 
         $this->makeUser(['tip_korisnika' => 'domaci']);
@@ -459,13 +344,8 @@ class AuthControllerTest extends TestCase
         $this->makeUser(['tip_korisnika' => 'strani']);
 
         $this->getJson('/api/admin/statistika')//provera da li se vracaju pravi brojevi
-<<<<<<< HEAD
             ->assertOk()//provera da li je status 200
             ->assertJsonStructure(['totalUsers', 'totalDomaci', 'totalStrani'])//da li je dobra struktura
-=======
-            ->assertOk()
-            ->assertJsonStructure(['totalUsers', 'totalDomaci', 'totalStrani'])
->>>>>>> feature/admin
             ->assertJsonPath('totalDomaci', 2)
             ->assertJsonPath('totalStrani', 3);
     }
@@ -492,10 +372,7 @@ class AuthControllerTest extends TestCase
 
         foreach ($response->json('users') as $u) {
             $this->assertNotEquals('admin', $u['tip_korisnika']);
-<<<<<<< HEAD
             //provera da lista korisnika za admin panel ne prikazuje admin korisnike
-=======
->>>>>>> feature/admin
         }
     }
 
@@ -509,11 +386,7 @@ class AuthControllerTest extends TestCase
 
         $this->getJson('/api/admin/korisnici/' . $user->id)
             ->assertOk()
-<<<<<<< HEAD
             ->assertJsonPath('id', $user->id)//provera da li je vracen koristim sa tim id
-=======
-            ->assertJsonPath('id', $user->id)
->>>>>>> feature/admin
             ->assertJsonStructure([
                 'id',
                 'ime',

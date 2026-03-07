@@ -1,7 +1,9 @@
 # MojaEUprava
-kratak opis koji opisuje aplikaciju
+MojaEUprava je web aplikacija koja omogućava građanima da elektronski podnose zahteve za administrativne usluge i zakazuju termine bez potrebe za odlaskom na šalter. Cilj aplikacije je da pojednostavi komunikaciju između građana i državnih institucija i da omogući bržu i efikasniju obradu zahteva.
 
-## podnaslov, opis projekta nprm
+Aplikacija podržava različite tipove korisnika i omogućava podnošenje zahteva, zakazivanje termina, upravljanje profilom korisnika i administrativnu obradu zahteva.
+
+
 
 ## Sta je potrebno instalirati
 Da bi aplikacija mogla da se pokrene, potrebno je instalirati sledece alate:
@@ -45,4 +47,15 @@ Nakon uspesnog pokretanja app ce biti dostupne na sledecim linkovima:
                 [text](http://127.0.0.1:8000/)
                 [text](http://localhost:3000/)
 
-## Opis funkcionalnosti
+## Funkcionalnosti aplikacije
+
+###Autentifikacija
+
+Korisnici mogu:
+
+-da se registruju kao domaći ili strani državljanin
+
+-da se prijave na sistem (login)
+
+-da se odjave sa sistema (logout)
+

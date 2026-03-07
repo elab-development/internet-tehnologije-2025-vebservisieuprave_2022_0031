@@ -19,11 +19,6 @@ jobs:
         env:
         #pravimo bazu sa ovim parametrima
           MYSQL_DATABASE: app_db
-<<<<<<< HEAD
-=======
-          MYSQL_USER: app_user
-          MYSQL_PASSWORD: app_pass
->>>>>>> feature/admin
           MYSQL_ROOT_PASSWORD: root
         ports:
           - 3306:3306
@@ -64,13 +59,8 @@ jobs:
           DB_HOST: 127.0.0.1
           DB_PORT: 3306
           DB_DATABASE: app_db
-<<<<<<< HEAD
           DB_USERNAME: root
           DB_PASSWORD: root
-=======
-          DB_USERNAME: app_user
-          DB_PASSWORD: app_pass
->>>>>>> feature/admin
           MAIL_MAILER: array
           CACHE_DRIVER: array
           SESSION_DRIVER: array
@@ -82,15 +72,9 @@ jobs:
           DB_CONNECTION: mysql
           DB_HOST: 127.0.0.1
           DB_PORT: 3306
-<<<<<<< HEAD
           DB_DATABASE: app_db
           DB_USERNAME: root
           DB_PASSWORD: root
-=======
-          DB_DATABASE: app_db2
-          DB_USERNAME: app_user2
-          DB_PASSWORD: app_pass2
->>>>>>> feature/admin
           MAIL_MAILER: array
           CACHE_DRIVER: array
           SESSION_DRIVER: array

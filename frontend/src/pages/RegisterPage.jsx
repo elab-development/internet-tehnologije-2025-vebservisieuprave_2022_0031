@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Select from "react-select";
+
 import api from "../api/api";
 import TextInput from "../components/TextInput";
 import FileInput from "../components/FileInput";
@@ -30,7 +32,50 @@ const RegisterPage = () => {
   const [error, setError] = useState("");
   const [info, setInfo] = useState("");
 
-  // ----------------- DOMAĆI KORISNIK -----------------
+  // ----- Zemlje (REST Countries) -----
+  const [countries, setCountries] = useState([]);
+  const [loadingCountries, setLoadingCountries] = useState(false);
+  const [countriesError, setCountriesError] = useState("");
+
+  useEffect(() => {
+    if (korisnikTip !== "strani") return;
+    if (countries.length > 0) return; // vec učitano
+
+    const loadCountries = async () => {
+      setLoadingCountries(true);
+      setCountriesError("");
+
+      try {
+        const res = await fetch(
+          "https://restcountries.com/v3.1/all?fields=name,flags"
+        );
+        const data = await res.json();
+
+        const mapped = data
+          .map((c) => ({
+            value: c?.name?.common ?? "",
+            label: c?.name?.common ?? "",
+            flag: c?.flags?.png ?? c?.flags?.svg ?? "",
+          }))
+          .filter((x) => x.value)
+          .sort((a, b) => a.label.localeCompare(b.label));
+
+        setCountries(mapped);
+      } catch (e) {
+        setCountriesError("Ne mogu da učitam listu država. Unesi ručno.");
+      } finally {
+        setLoadingCountries(false);
+      }
+    };
+
+    loadCountries();
+  }, [korisnikTip, countries.length]);
+
+  const selectedCountry = useMemo(() => {
+    return countries.find((c) => c.value === drzavljanstvo) ?? null;
+  }, [countries, drzavljanstvo]);
+
+  // DOMAĆI KORISNIK
   const handleCheckJmbg = async () => {
     setError("");
     setLoading(true);
@@ -65,7 +110,7 @@ const RegisterPage = () => {
     }
   };
 
-  // ----------------- STRANI KORISNIK -----------------
+  // STRANI KORISNIK 
   const handleRegisterStrani = async () => {
     setError("");
     setInfo("");
@@ -163,6 +208,7 @@ const RegisterPage = () => {
       {korisnikTip === "strani" && (
         <div className="auth-card">
           <h1 className="auth-title">Registracija stranog državljanina</h1>
+
           <TextInput
             label="Ime"
             value={ime}
@@ -191,20 +237,55 @@ const RegisterPage = () => {
             value={passwordConfirmation}
             onChange={(e) => setPasswordConfirmation(e.target.value)}
           />
-           <TextInput
-           label="Broj pasoša"
-           value={brojPasosa}
-          onChange={(e) => setBrojPasosa(e.target.value)}
+          <TextInput
+            label="Broj pasoša"
+            value={brojPasosa}
+            onChange={(e) => setBrojPasosa(e.target.value)}
           />
-         <TextInput
-         label="Državljanstvo"
-         value={drzavljanstvo}
-         onChange={(e) => setDrzavljanstvo(e.target.value)}
-        />
+
+          {/* DRŽAVLJANSTVO: dropdown sa zastavama */}
+          <label style={{ display: "block", marginTop: 12, marginBottom: 6 }}>
+            Državljanstvo
+          </label>
+
+          {countriesError ? (
+            <TextInput
+              label="Državljanstvo"
+              value={drzavljanstvo}
+              onChange={(e) => setDrzavljanstvo(e.target.value)}
+            />
+          ) : (
+            <Select
+              className="custom-select"
+              classNamePrefix="custom-select"
+              isLoading={loadingCountries}
+              options={countries}
+              value={selectedCountry}
+              onChange={(opt) => setDrzavljanstvo(opt?.value ?? "")}
+              placeholder="Izaberi državljanstvo..."
+              isSearchable
+              formatOptionLabel={(opt) => (
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  {opt.flag ? (
+                    <img
+                      src={opt.flag}
+                      alt=""
+                      width={18}
+                      height={12}
+                      style={{ objectFit: "cover", borderRadius: 2 }}
+                    />
+                  ) : null}
+                  <span>{opt.label}</span>
+                </div>
+              )}
+            />
+          )}
+
           <FileInput
             label="Profilna slika (opciono)"
             onChange={(e) => setSlika(e.target.files?.[0] || null)}
           />
+
           <PrimaryButton onClick={handleRegisterStrani} loading={loading}>
             Registruj se
           </PrimaryButton>

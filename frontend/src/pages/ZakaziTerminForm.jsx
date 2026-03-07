@@ -1,15 +1,116 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import Select from "react-select";
 import api from "../api/api";
 import "./ZakaziTerminForm.css";
 
+const GRADSKE_OPSTINE = {
+  Beograd: [
+    "Barajevo",
+    "Čukarica",
+    "Grocka",
+    "Lazarevac",
+    "Mladenovac",
+    "Novi Beograd",
+    "Obrenovac",
+    "Palilula",
+    "Rakovica",
+    "Savski venac",
+    "Sopot",
+    "Stari grad",
+    "Surčin",
+    "Voždovac",
+    "Vračar",
+    "Zemun",
+    "Zvezdara",
+  ],
+  "Novi Sad": ["Novi Sad", "Petrovaradin"],
+  Niš: ["Medijana", "Palilula", "Crveni krst", "Pantelej", "Niška Banja"],
+  Požarevac: ["Požarevac", "Kostolac"],
+  Vranje: ["Vranje", "Vranjska Banja"],
+};
+
+const normalize = (s) =>
+  (s || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .trim();
+
+const canonicalCity = (name) => {
+  const raw = String(name || "").trim();
+  const n = normalize(raw);
+
+  if (n === "belgrade") return "Beograd";
+  if (n === "nis") return "Niš";
+  if (n === "pozarevac") return "Požarevac";
+  if (n === "novi belgrade") return "Novi Beograd";
+
+  // District -> Distrikt
+  if (/\bdistrict\b/.test(n)) return raw.replace(/\bDistrict\b/gi, "Distrikt");
+
+  return raw;
+};
+
+const OPSTINE_SET = new Set(
+  Object.values(GRADSKE_OPSTINE)
+    .flat()
+    .map((o) => normalize(o))
+);
+
+const hasDiacritics = (s) => /[čćšđžČĆŠĐŽ]/.test(s || "");
+
+const dedupeByNormalized = (arr) => {
+  const map = new Map();
+  for (const raw of arr) {
+    const name = String(raw || "").trim();
+    if (!name) continue;
+    const key = normalize(name);
+    const existing = map.get(key);
+    if (!existing) map.set(key, name);
+    else if (!hasDiacritics(existing) && hasDiacritics(name)) map.set(key, name);
+  }
+  return Array.from(map.values());
+};
+
+const shouldExcludeFromCityList = (name) => {
+  const n = normalize(name);
+
+  // izbaci opštine (Beogradove, Niške, NS, Vranje...) da ne budu "grad"
+  if (OPSTINE_SET.has(n)) return true;
+
+  // izbaci sve varijacije Mladenovca
+  if (n.includes("mladenovac")) return true;
+
+  // izbaci Zemun Polje i sve što sadrži "zemun" a nije baš "zemun"
+  if (n.includes("zemun") && n !== "zemun") return true;
+
+  // izbaci varijacije "Novi Beograd ..."
+  if (n.includes("novi beograd") && n !== "novi beograd") return true;
+
+  return false;
+};
+
+// Gradovi koji moraju da postoje u listi (da bi se pojavile opštine)
+const GRADOVI_SA_OPSTINAMA = Object.keys(GRADSKE_OPSTINE);
+
 const ZakaziTerminForm = ({ user }) => {
   const [tipDokumenta, setTipDokumenta] = useState("licna_karta");
+<<<<<<< HEAD
+=======
+
+  const [grad, setGrad] = useState("");
+  const [opstina, setOpstina] = useState("");
+>>>>>>> feature/admin
   const [lokacija, setLokacija] = useState("");
+
+  const [mestaIzApi, setMestaIzApi] = useState([]);
+  const [loadingLokacije, setLoadingLokacije] = useState(false);
+  const [lokacijeError, setLokacijeError] = useState("");
+
   const [datumVreme, setDatumVreme] = useState("");
   const [info, setInfo] = useState("");
   const [error, setError] = useState("");
 
-  //Minimalno dozvoljeno vreme = sada + 30 minuta
   const minDateTime = useMemo(() => {
     const now = new Date();
     now.setMinutes(now.getMinutes() + 30);
@@ -22,6 +123,11 @@ const ZakaziTerminForm = ({ user }) => {
 
     return `${yyyy}-${mm}-${dd}T${hh}:${min}`;
   }, []);
+  useEffect(() => {
+  if (user?.tip_korisnika === "strani") {
+    setTipDokumenta("licna_karta");
+  }
+}, [user]);
 
   const validateDatumVreme = (value) => {
     if (!value) return "Datum i vreme su obavezni.";
@@ -30,12 +136,120 @@ const ZakaziTerminForm = ({ user }) => {
     const minAllowed = new Date();
     minAllowed.setMinutes(minAllowed.getMinutes() + 30);
 
-    if (isNaN(selected.getTime()))
-      return "Neispravan format datuma i vremena.";
-
+    if (isNaN(selected.getTime())) return "Neispravan format datuma i vremena.";
     if (selected < minAllowed)
       return "Termin mora biti zakazan najmanje 30 minuta unapred.";
 
+    return "";
+  };
+
+  useEffect(() => {
+    const loadLokacije = async () => {
+      setLoadingLokacije(true);
+      setLokacijeError("");
+
+      try {
+        const res = await fetch(
+          "https://countriesnow.space/api/v0.1/countries/cities",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ country: "Serbia" }),
+          }
+        );
+
+        const json = await res.json();
+        if (!json?.data || !Array.isArray(json.data)) {
+          throw new Error("API nije vratio listu gradova/mesta.");
+        }
+
+        const names = json.data
+          .filter(Boolean)
+          .map((x) => String(x).trim())
+          .map(canonicalCity);
+
+        const filtered = names.filter((name) => !shouldExcludeFromCityList(name));
+
+        let unique = dedupeByNormalized(filtered);
+
+        // garancija da ovi gradovi uvek postoje u dropdown-u
+        const setNorm = new Set(unique.map((x) => normalize(x)));
+        for (const g of GRADOVI_SA_OPSTINAMA) {
+          if (!setNorm.has(normalize(g))) unique.push(g);
+        }
+
+        unique = dedupeByNormalized(unique).sort((a, b) => a.localeCompare(b, "sr"));
+
+        setMestaIzApi(unique);
+      } catch (e) {
+        console.error(e);
+        setLokacijeError(
+          "Ne mogu da učitam lokacije iz API-ja. Možete uneti lokaciju ručno."
+        );
+      } finally {
+        setLoadingLokacije(false);
+      }
+    };
+
+    loadLokacije();
+  }, []);
+
+  const gradOptions = useMemo(
+    () => mestaIzApi.map((g) => ({ value: g, label: g })),
+    [mestaIzApi]
+  );
+
+  const selectedGrad = useMemo(
+    () => (grad ? { value: grad, label: grad } : null),
+    [grad]
+  );
+
+  const opstineZaGrad = useMemo(() => GRADSKE_OPSTINE[grad] || null, [grad]);
+
+  const opstinaOptions = useMemo(() => {
+    if (!opstineZaGrad) return [];
+    return opstineZaGrad.map((o) => ({ value: o, label: o }));
+  }, [opstineZaGrad]);
+
+  const selectedOpstina = useMemo(
+    () => (opstina ? { value: opstina, label: opstina } : null),
+    [opstina]
+  );
+
+  useEffect(() => {
+    if (!grad) {
+      setOpstina("");
+      setLokacija("");
+      return;
+    }
+
+    if (!GRADSKE_OPSTINE[grad]) {
+      setOpstina("");
+      setLokacija(grad);
+    } else {
+      setOpstina("");
+      setLokacija("");
+    }
+  }, [grad]);
+
+  useEffect(() => {
+    if (!grad) return;
+
+    if (GRADSKE_OPSTINE[grad]) {
+      if (opstina) setLokacija(`${grad} - ${opstina}`);
+      else setLokacija("");
+    }
+  }, [grad, opstina]);
+
+  const validateLokacija = () => {
+    if (lokacijeError) {
+      if (!lokacija.trim()) return "Lokacija je obavezna.";
+      return "";
+    }
+
+    if (!grad) return "Izaberite mesto/grad.";
+    if (GRADSKE_OPSTINE[grad] && !opstina) return "Izaberite opštinu.";
+    if (!lokacija) return "Lokacija je obavezna.";
     return "";
   };
 
@@ -44,9 +258,15 @@ const ZakaziTerminForm = ({ user }) => {
     setError("");
     setInfo("");
 
-    const validationError = validateDatumVreme(datumVreme);
-    if (validationError) {
-      setError(validationError);
+    const lokErr = validateLokacija();
+    if (lokErr) {
+      setError(lokErr);
+      return;
+    }
+
+    const dtErr = validateDatumVreme(datumVreme);
+    if (dtErr) {
+      setError(dtErr);
       return;
     }
 
@@ -63,24 +283,21 @@ const ZakaziTerminForm = ({ user }) => {
       });
 
       setInfo("Termin uspešno zakazan!");
+      setGrad("");
+      setOpstina("");
       setLokacija("");
       setDatumVreme("");
       setError("");
     } catch (err) {
       setInfo("");
-
-      if (err.response?.status === 409) {
-        setError("Termin je zauzet, izaberite drugi.");
-      } else if (err.response?.status === 422) {
-        setError("Validacija nije prošla. Proverite unete podatke.");
-      } else {
-        setError("Greška prilikom zakazivanja termina.");
-      }
+      setError("Greška prilikom zakazivanja termina.");
     }
   };
-
+console.log("USER OBJEKAT:", user);
+console.log("TIP KORISNIKA:", user?.tip_korisnika);
   return (
     <div className="zakazi-termin-container">
+<<<<<<< HEAD
       <h3>Zakaži termin</h3>
       <form onSubmit={handleSubmit}>
         <label>Tip dokumenta:</label>
@@ -91,32 +308,74 @@ const ZakaziTerminForm = ({ user }) => {
           <option value="licna_karta">Lična karta</option>
           <option value="pasos">Pasoš</option>
         </select>
+=======
+      <h3>ZakaziTermin </h3>
 
-        <label>Lokacija:</label>
-        <input
-          type="text"
-          value={lokacija}
-          onChange={(e) => setLokacija(e.target.value)}
-          required
-        />
+      <form onSubmit={handleSubmit}>
+        <label>Tip dokumenta:</label>
+
+{user?.tip_korisnika === "strani" ? (
+  <input type="text" value="Lična karta" disabled />
+) : (
+  <select
+    value={tipDokumenta}
+    onChange={(e) => setTipDokumenta(e.target.value)}
+  >
+    <option value="pasos">Pasoš</option>
+    <option value="licna_karta">Lična karta</option>
+  </select>
+)}
+>>>>>>> feature/admin
+
+        <label>Lokacija (mesto/grad):</label>
+
+        {lokacijeError ? (
+          <>
+            <input
+              type="text"
+              value={lokacija}
+              onChange={(e) => setLokacija(e.target.value)}
+              placeholder="Unesite lokaciju (npr. Beograd - Vračar)"
+              required
+            />
+            <p className="error-message" style={{ marginTop: 6 }}>
+              {lokacijeError}
+            </p>
+          </>
+        ) : (
+          <>
+            <Select
+              isLoading={loadingLokacije}
+              options={gradOptions}
+              value={selectedGrad}
+              onChange={(opt) => setGrad(opt?.value ?? "")}
+              placeholder={
+                loadingLokacije ? "Učitavanje..." : "Pretraži i izaberi mesto..."
+              }
+              isSearchable
+            />
+
+            {opstineZaGrad && (
+              <>
+                <label style={{ marginTop: 10 }}>Opština:</label>
+                <Select
+                  options={opstinaOptions}
+                  value={selectedOpstina}
+                  onChange={(opt) => setOpstina(opt?.value ?? "")}
+                  placeholder="Pretraži i izaberi opštinu..."
+                  isSearchable
+                />
+              </>
+            )}
+          </>
+        )}
 
         <label>Datum i vreme:</label>
         <input
           type="datetime-local"
           value={datumVreme}
-          min={minDateTime} // ne dozvoljava pre 30 min
-          onChange={(e) => {
-            const val = e.target.value;
-            setDatumVreme(val);
-
-            const msg = validateDatumVreme(val);
-            if (msg) {
-              setError(msg);
-              setInfo("");
-            } else {
-              setError("");
-            }
-          }}
+          min={minDateTime}
+          onChange={(e) => setDatumVreme(e.target.value)}
           required
         />
 
@@ -125,6 +384,8 @@ const ZakaziTerminForm = ({ user }) => {
           <button
             type="button"
             onClick={() => {
+              setGrad("");
+              setOpstina("");
               setLokacija("");
               setDatumVreme("");
               setError("");
@@ -136,7 +397,13 @@ const ZakaziTerminForm = ({ user }) => {
         </div>
       </form>
 
-      {info && <p className="success-message">{info}</p>}
+    {info && (
+  <p>
+    {typeof info === "string"
+      ? info
+      : info.message || "Termin uspešno zakazan!"}
+  </p>
+)}
       {error && <p className="error-message">{error}</p>}
     </div>
   );

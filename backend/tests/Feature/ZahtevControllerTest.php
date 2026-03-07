@@ -390,5 +390,8 @@ class ZahtevControllerTest extends TestCase
             ->assertJsonPath('odobreni', 1)
             ->assertJsonPath('odbijeni', 1);
     }
+<<<<<<< HEAD
             
+=======
+>>>>>>> feature/admin
 }

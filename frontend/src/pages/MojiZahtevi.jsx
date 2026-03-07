@@ -38,7 +38,7 @@ const MojiZahtevi = () => {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [info, setInfo] = useState("");
-
+  const [showForm, setShowForm] = useState(false);
   // State hookovi za formu zahteva
   const [tipZahteva, setTipZahteva] = useState(""); // prebivaliste / bracni_status
   const [tipPromene, setTipPromene] = useState(""); // razvod / sklapanje_braka (ako je bracni_status)
@@ -183,10 +183,12 @@ const MojiZahtevi = () => {
   };
 
   const handleEdit = (zahtev) => {
+    
+  console.log("Zahtev za edit:", zahtev);
     setEditingId(zahtev.id);
 
     // Postavi tip zahteva prvo
-    setTipZahteva(zahtev.tip_zahteva || "");
+    setTipZahteva(zahtev.tip_promene ? "bracni_status" : zahtev.tip_zahteva || "");
 
     // Nakon tipa, popuni adrese i partner polja
     if (zahtev.tip_zahteva === "prebivaliste") {
@@ -401,70 +403,106 @@ const MojiZahtevi = () => {
   return (
     <div className="mojizahtevi-container">
       <div className="hero">
-        <div className="hero-left">
-          <h1>Moji zahtevi</h1>
-          <p className="moto">
-            Olakšaj sebi svakodnevne obaveze – podnesi zahtev online.
+       <div className="hero-left">
+  <h1>Moji zahtevi</h1>
+  <p className="moto">
+    Olakšaj sebi svakodnevne obaveze – podnesi zahtev online.
+  </p>
+  <p className="about">
+    Uštedi vreme i izbegni gužve. Putem naše platforme možeš brzo i
+    jednostavno da podneseš zahteve za usluge.
+  </p>
+
+  <div className="hero-actions">
+    <button
+      className="btn-add"
+      onClick={() => {
+        resetForm();
+        setEditingId(null);
+        setShowForm(true);
+      }}
+    >
+      + Dodaj zahtev
+    </button>
+  </div>
+</div>
+        
+        <div className="zahtevi-grid">
+ {loading && <p className="loading-state">Učitavanje zahteva...</p>}
+
+  {!loading && loadError && <p style={{ color: "red" }}>{loadError}</p>}
+
+  {!loading && !loadError && zahtevi.length === 0 && (
+    <div className="empty-state">
+      <h3>Nema podnetih zahteva</h3>
+      <p>Klikni na dugme + Dodaj zahtev da podneseš novi zahtev.</p>
+    </div>
+  )}
+
+  {!loading && !loadError && zahtevi.length > 0 &&
+    zahtevi.map((z) => {
+      let tipZahtevaLabel = "";
+      if (z.tip_zahteva === "bracni_status") {
+        tipZahtevaLabel = "Promena bračnog statusa";
+      } else if (z.tip_zahteva === "prebivaliste") {
+        tipZahtevaLabel = "Promena prebivališta";
+      } else {
+        tipZahtevaLabel = z.tip_zahteva;
+      }
+
+      let statusClass = "";
+      if (z.status === "odobren") statusClass = "status-odobren";
+      else if (z.status === "odbijen") statusClass = "status-odbijen";
+      else statusClass = "status-kreiran";
+
+      return (
+        <div key={z.id} className="zahtev-card">
+          <h3>{tipZahtevaLabel}</h3>
+          {z.tip_promene && <p>Tip promene: {z.tip_promene}</p>}
+          <p className={statusClass}>Status: {z.status}</p>
+          <p>
+            Datum kreiranja:{" "}
+            {z.datum_kreiranja
+              ? new Date(z.datum_kreiranja).toLocaleDateString()
+              : "-"}
           </p>
-          <p className="about">
-            Uštedi vreme i izbegni gužve. Putem naše platforme možeš brzo i
-            jednostavno da podneseš zahteve za izdavanje lične karte, promenu
-            prebivališta, bračni status i druge administrativne usluge.
-          </p>
+
+          <div className="zahtev-actions">
+            <button
+              className="btn"
+              onClick={() => {
+                handleEdit(z);
+                setShowForm(true);
+              }}
+            >
+              Uredi
+            </button>
+            <button
+              className="btn"
+              onClick={() => handleDelete(z.id)}
+            >
+              Obriši
+            </button>
+          </div>
         </div>
-
-        <div className="zahtevi-lista">
-          {loadError && <p style={{ color: "red" }}>{loadError}</p>}
-          {loading ? (
-            <p>Učitavanje...</p>
-          ) : zahtevi.length === 0 ? (
-            <p className="no-zahtevi">Nemaš nijedan zahtev. Dodaj novi zahtev!</p>
-          ) : (
-            zahtevi.map((z) => {
-              let tipZahtevaLabel = "";
-              if (z.tip_zahteva === "bracni_status") {
-                tipZahtevaLabel = "Promena bračnog statusa";
-              } else if (z.tip_zahteva === "prebivaliste") {
-                tipZahtevaLabel = "Promena prebivališta";
-              } else {
-                tipZahtevaLabel = z.tip_zahteva;
-              }
-
-              let statusClass = "";
-              if (z.status === "odobren") statusClass = "status-odobren";
-              else if (z.status === "odbijen") statusClass = "status-odbijen";
-              else statusClass = "status-kreiran";
-
-              return (
-                <div key={z.id} className="zahtev-item">
-                  <h3>{tipZahtevaLabel}</h3>
-                  {z.tip_promene && <p>Tip promene: {z.tip_promene}</p>}
-                  <p className={statusClass}>Status: {z.status}</p>
-                  <p>
-                    Datum kreiranja:{" "}
-                    {z.datum_kreiranja
-                      ? new Date(z.datum_kreiranja).toLocaleDateString()
-                      : "-"}
-                  </p>
-                  <div className="zahtev-actions">
-                    <button className="btn btn-edit" onClick={() => handleEdit(z)}>
-                      Uredi
-                    </button>
-                    <button
-                      className="btn btn-delete"
-                      onClick={() => handleDelete(z.id)}
-                    >
-                      Obriši
-                    </button>
-                  </div>
-                </div>
-              );
-            })
-          )}
-        </div>
-
+      );
+    })
+  }
+</div>
+</div>
         {/* NOVA SEKCIJA: Dodavanje / Izmena zahteva */}
-        <div className="novi-zahtev-container">
+        {showForm && (
+<div className="modal-overlay">
+<div className="modal">
+  <button
+  className="modal-close"
+  onClick={() => {
+    setShowForm(false);
+    handleCancelEdit();
+  }}
+>
+✕
+</button>
           <h2>{editingId ? "Izmena zahteva" : "Dodaj zahtev"}</h2>
           <p className="novi-zahtev-text">
             Popuni formu ispod i podnesi novi zahtev brzo i jednostavno.
@@ -475,10 +513,11 @@ const MojiZahtevi = () => {
             <div className="form-group">
               <label>Tip zahteva:</label>
               <select
-                value={tipZahteva}
-                onChange={(e) => setTipZahteva(e.target.value)}
-                required
-              >
+  value={tipZahteva}
+  onChange={(e) => setTipZahteva(e.target.value)}
+  required
+  disabled={editingId}   //  kad se uređuje, ne može promena tipa
+>
                 <option value="">-- Izaberi tip --</option>
                 {zahteviTypes.map((t) => (
                   <option key={t.value} value={t.value}>
@@ -697,11 +736,12 @@ const MojiZahtevi = () => {
 
             {error && <p style={{ color: "red" }}>{error}</p>}
             {info && <p style={{ color: "green" }}>{info}</p>}
-          </form>
-        </div>
-      </div>
-    </div>
-  );
+         </form>
+</div>
+</div>
+)}
+</div>
+);
 };
 
 export default MojiZahtevi;

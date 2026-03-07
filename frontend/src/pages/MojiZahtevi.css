@@ -1,200 +1,206 @@
-/* --- RESET --- */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-body, html {
-  width: 100%;
-  min-height: 100%;
-}
-
-/* --- Glavni container --- */
 .mojizahtevi-container {
-  background: #f7f9fc;
-  color: #333;
-  padding: 50px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px;
 }
 
-/* --- HERO SEKCIJA --- */
 .hero {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
+  align-items: flex-start;
   gap: 40px;
-  flex-wrap: wrap;
 }
 
+/* LEVA STRANA TEKST */
 .hero-left {
-  flex: 1;
-  min-width: 300px;
+  max-width: 650px;
+  display: flex;
+  flex-direction: column;
 }
 
 .hero-left h1 {
-  font-size: 3rem;
-  margin-bottom: 20px;
-  color: #1a1a1a;
+  font-size: 50px !important;
+  font-weight: 700;
+  margin-bottom: 16px;
 }
 
 .hero-left .moto {
-  font-size: 1.3rem;
-  margin-bottom: 20px;
+  font-size: 20px !important;
   color: #555;
+  margin-bottom: 12px;
 }
 
 .hero-left .about {
-  font-size: 1rem;
-  margin-bottom: 30px;
-  line-height: 1.5;
+  font-size: 18px !important;
+  line-height: 1.8;
   color: #666;
+  margin-bottom: 24px;
 }
 
-.hero-buttons {
+/* DUGME */
+.btn-add {
+  background: #2f80ed;
+  border: none;
+  padding: 16px 34px;
+  border-radius: 12px;
+  color: white;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-add:hover {
+  background: #1c6ed8;
+}
+
+/* DESNA STRANA (zahtevi) */
+.zahtevi-grid {
+  width: 380px;
   display: flex;
+  flex-direction: column;
   gap: 20px;
-  flex-wrap: wrap;
+}
+
+/* UČITAVANJE */
+.loading-state {
+  text-align: center;
+  padding: 18px;
+  margin: 10px 0;
+  font-size: 18px;
+  font-weight: 600;
+  background: #f0f4ff;
+  border-radius: 14px;
+  border: 1px solid #d5def0;
+  color: #333;
+}
+
+/* EMPTY STATE */
+.empty-state {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* KARTICE */
+.zahtev-card {
+  background: white;
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+.zahtev-card h3 {
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.zahtev-card p {
+  margin: 5px 0;
+}
+
+/* STATUS */
+.status-odobren {
+  color: green;
+}
+
+.status-odbijen {
+  color: red;
+}
+
+.status-kreiran {
+  color: #555;
+}
+
+/* AKCIJE */
+.zahtev-actions {
+  margin-top: 14px;
+  display: flex;
+  gap: 12px;
 }
 
 .btn {
-  padding: 12px 28px;
-  border-radius: 50px;
-  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background: white;
   cursor: pointer;
-  font-weight: bold;
-  transition: all 0.3s ease;
+  font-weight: 500;
+  transition: 0.2s;
 }
 
-.btn.primary {
-  background: #4a90e2;
-  color: #fff;
-}
-.btn.primary:hover {
-  background: #357abd;
-  transform: scale(1.05);
+.btn:hover {
+  background: #f5f5f5;
 }
 
-.btn.secondary {
-  background: #e0e0e0;
-  color: #333;
-}
-.btn.secondary:hover {
-  background: #cfcfcf;
-}
-
-.hero-right {
-  flex: 1;
-  min-width: 250px;
+/* MODAL */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
   display: flex;
   justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
-.user-card {
-  background: #ffffff;
-  padding: 20px;
-  border-radius: 15px;
-  width: 220px;
-  text-align: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+.modal {
+  background: white;
+  padding: 28px;
+  border-radius: 14px;
+  width: 520px;
+  max-height: 85vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
-.user-card .avatar {
-  font-size: 3rem;
-  margin-bottom: 15px;
-}
-
-.user-card h3 {
-  margin-bottom: 10px;
-  font-size: 1.3rem;
-  color: #1a1a1a;
-}
-
-.user-card p {
-  font-size: 1rem;
-  line-height: 1.5;
+/* X dugme */
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
   color: #555;
 }
 
-/* --- LISTA ZAHTEVA --- */
-.zahtevi-lista {
-  margin-top: 40px;
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
+.modal-close:hover {
+  color: #000;
 }
 
-.no-zahtevi {
-  text-align: center;
-  font-size: 1.2rem;
-  color: #555;
-  background: #f0f4f8;
-  padding: 20px;
-  border-radius: 10px;
-}
-
-.zahtev-item {
-  background: #ffffff;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.zahtev-item:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-}
-.zahtev-item h3 {
-  margin-bottom: 10px;
-  font-size: 1.4rem;
-  color: #1a1a1a;
-}
-.zahtev-item p {
-  margin-bottom: 5px;
-  font-size: 1rem;
-  color: #555;
-}
-
-/* Status boje */
-.status-odobren { color: #2e7d32; font-weight: bold; }
-.status-odbijen { color: #c62828; font-weight: bold; }
-.status-kreiran { color: #555; font-weight: bold; }
-
-/* --- NOVI ZAHTEV FORMA --- */
-.novi-zahtev-container {
-  max-width: 600px;       /* manja širina da ne iskače */
-  margin: 40px auto;      /* centrirano i manji razmak od vrha */
-  background: #fff;
-  padding: 20px;          /* smanjen padding */
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-.novi-zahtev-container h2 {
-  margin-bottom: 10px;
-  text-align: center;
-  font-size: 1.8rem;      /* malo manji naslov */
-  color: #1a1a1a;
-}
-
-.novi-zahtev-text {
-  text-align: center;
-  margin-bottom: 20px;
-  font-size: 1rem;        /* manji opisni tekst */
-  color: #555;
-}
-
+/* FORMA */
 .novi-zahtev-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;              /* razmak između polja */
+  gap: 12px;
 }
 
-/* --- Responsive --- */
-@media (max-width: 900px) {
-  .hero { flex-direction: column; align-items: center; }
-  .hero-right { margin-top: 30px; }
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-row {
+  display: flex;
+  gap: 10px;
+}
+
+.form-row .half {
+  flex: 1;
+}
+
+.hero-actions {
+  margin-top: 10px;
+}
+
+input,
+select {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
 }

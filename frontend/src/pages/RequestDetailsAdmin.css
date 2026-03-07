@@ -1,0 +1,50 @@
+.request-details-page {
+  padding: 2rem;
+}
+
+.request-details-grid {
+  display: flex;
+  gap: 2rem;
+}
+
+.user-info {
+  flex: 1;
+  text-align: center;
+}
+
+.user-avatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.request-info {
+  flex: 2;
+  background: #f8f8f8;
+  padding: 1rem;
+  border-radius: 10px;
+}
+
+.request-buttons {
+  margin-top: 1rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.request-buttons button {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+}
+
+.request-buttons button:first-child {
+  background-color: #4caf50;
+  color: white;
+}
+
+.request-buttons button:last-child {
+  background-color: #f44336;
+  color: white;
+}

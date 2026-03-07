@@ -12,8 +12,9 @@ const NavBar = () => {
   //tako sto proverimo da li localstorage ima token
   //koristimo kuku stanja sa kojom prvo predpostavljamo da korisnik nije ulogovan:
   const[isAuth, setIsAuth] = useState(false);
-  const navigate = useNavigate();
-  //kuka ovaj kod izvrsava svaki put kad se promeni location:
+  const navigate = useNavigate();//kuka ovaj kod izvrsava svaki put kad se promeni location:
+  const user = JSON.parse(localStorage.getItem("user"));
+
   useEffect(()=> {
     const token=localStorage.getItem("token");
     setIsAuth(!!token);
@@ -39,6 +40,7 @@ const NavBar = () => {
   return (
     //Pocetna da se prikaze svima
     <div className="navbar">
+<<<<<<< HEAD
         <Link to="/" className="href">
         Pocetna
         </Link>
@@ -51,24 +53,47 @@ const NavBar = () => {
   Zakaži termin
 </Link>
           <button
+=======
+  <div className="navbar-left">
+    <Link to="/" className="href">Početna stranica</Link>
+    
+    {isAuth && user?.tip_korisnika !== "admin" && (
+      <>
+        <Link to="/profil" className="href">Profil korisnika</Link>
+        <Link to="/mojizahtevi" className="href">Moji zahtevi</Link>
+        <Link to="/zakazi-termin" className="href">Zakaži termin</Link>
+      </>
+    )}
+    {isAuth && user?.tip_korisnika === "admin" && (
+      <>
+      <Link to="/profil" className="href">Profil korisnika</Link>
+      <Link to="/admin/statistika" className="href">Statistika</Link>
+      <Link to="/admin/korisnici" className="href">Korisnici</Link>
+      <Link to="/admin/neobradjeniZahtevi" className="href">Neobradjeni zahtevi</Link>
+
+      </>
+    )}
+    {!isAuth && (
+      <>
+        <Link to="/login" className="href">Prijava korisnika</Link>
+        <Link to="/register" className="href">Registracija korisnika</Link>
+      </>
+    )}
+  </div>
+
+  {isAuth && (
+    <div className="navbar-right">
+      <button
+>>>>>>> feature/admin
         type="button"
         className="href href-button"
         onClick={handleLogout}
-        >
-          Logout
-        </button>
-        </>
-        ) : (
-          <>
-          <Link to="/login" className="href">
-            Login
-          </Link>
-          <Link to="/register" className="href">
-            Registracija
-            </Link>
-          </>
-        )}
-        </div>
+      >
+        Odjava
+      </button>
+    </div>
+  )}
+</div>
   );
 };
 

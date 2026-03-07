@@ -6,7 +6,7 @@ import TextInput from '../components/TextInput';
 import PrimaryButton from '../components/PrimaryButton';
 
 
-export const LogInPage = () => {
+export const LogInPage = ({ setUser }) => {
   const navigate = useNavigate(); //navigaciona ruta
   const [email, setEmail] = useState("nitzsche.elmo@example.net");
   const [password, setPassword] = useState("password");
@@ -29,6 +29,7 @@ export const LogInPage = () => {
       
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
+      setUser(user);
 
       console.log("Login response:", res.data);
       setInfo(message || "Uspešno Ste prijavljeni.");

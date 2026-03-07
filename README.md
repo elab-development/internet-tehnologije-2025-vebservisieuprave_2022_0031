@@ -5,7 +5,7 @@ kratak opis koji opisuje aplikaciju
 
 ## Sta je potrebno instalirati
 Da bi aplikacija mogla da se pokrene, potrebno je instalirati sledece alate:
-- Docker Destop- omogucava pokretanje baze, backenda i frontenda bez rucne instalacije PHPa
+- Docker Destop- omogucava pokretanje baze, backenda i frontenda bez rucne instalacije PHP-a, MySQL-a i Node-a
 
 - Git- Koristi se za kloniranje i reprozitorijum i verzionisanje koda
 

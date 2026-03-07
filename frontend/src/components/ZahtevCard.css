@@ -1,0 +1,21 @@
+.zahtev-card {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.zahtev-card:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  background-color: #fff;
+}
+
+.zahtev-card h3 {
+  margin: 0 0 10px;
+}
+
+.zahtev-card p {
+  margin: 5px 0;
+}

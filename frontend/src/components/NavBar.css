@@ -1,54 +1,72 @@
+/* NavBar.css */
+
 /* Glavni navbar */
 .navbar {
   display: flex;
+  justify-content: space-between; /* levi deo i dugme desno */
   align-items: center;
-  gap: 14px;
-
-  padding: 12px 20px;
-  background: #ffffff;
-  border-bottom: 1px solid #e5e7eb;
-
-  font-family: Arial, sans-serif;
+  padding: 10px 20px;
+  background-color: #f5f5f5; /* boja navbar-a */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  flex-wrap: wrap; /* za mobilni prikaz */
+  gap: 10px;
 }
 
-/* Svi linkovi u navbaru */
-.navbar .href {
+/* Levi deo - linkovi */
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* razmak između linkova */
+  flex-wrap: wrap;
+}
+
+/* Desni deo - logout dugme */
+.navbar-right {
+  display: flex;
+  align-items: center;
+}
+
+/* Opšti stil za linkove */
+.href {
   text-decoration: none;
-  color: #374151;
-  font-size: 14px;
+  color: #333;
   font-weight: 500;
-
-  padding: 8px 12px;
-  border-radius: 8px;
-
-  transition: background 0.15s ease, color 0.15s ease;
+  padding: 6px 10px;
+  border-radius: 4px;
+  transition: background-color 0.2s, color 0.2s;
 }
 
-/* Hover efekat za linkove */
-.navbar .href:hover {
-  background: #f3f4f6;
-  color: #111827;
+.href:hover {
+  background-color: #e0e0e0;
+  color: #000;
 }
 
-/* Logout dugme – isti izgled kao link */
+/* Logout dugme */
 .href-button {
-  background: transparent;
-  color: #374151;
-  border: none;
-
-  padding: 8px 12px;
-  border-radius: 8px;
-
-  font-size: 14px;
-  font-weight: 500;
   cursor: pointer;
-
-  transition: background 0.15s ease, color 0.15s ease;
+  background-color: #f44336; /* crveno dugme */
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: background-color 0.2s;
 }
 
-/* Hover efekat kao i kod linkova */
 .href-button:hover {
-  background: #f3f4f6;
-  color: #111827;
+  background-color: #d32f2f;
 }
 
+/* Responsive: na manjim ekranima sve se slaže u kolonu */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .navbar-left {
+    gap: 10px;
+  }
+  .navbar-right {
+    margin-top: 10px;
+  }
+}

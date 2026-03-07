@@ -23,4 +23,4 @@ RUN composer install --no-dev --optimize-autoloader
 RUN mkdir -p storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
-CMD ["sh", "-c", "php artisan config:clear && php artisan route:clear && php artisan cache:clear && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT}"]
+CMD ["sh", "-c", "php artisan config:clear && php artisan route:clear && php artisan cache:clear && php artisan migrate --force && php artisan db:seed --force && php -S 0.0.0.0:${PORT:-8080} -t public"]

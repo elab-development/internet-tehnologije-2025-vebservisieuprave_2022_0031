@@ -1,16 +1,21 @@
-FROM node:20-alpine
+FROM node:20-alpine AS build
 
 WORKDIR /app
 
 COPY package*.json ./
-
 RUN npm install
 
 COPY . .
+RUN npm run build
 
-ENV HOST=0.0.0.0
-ENV PORT=3000
+FROM node:20-alpine
+
+WORKDIR /app
+
+RUN npm install -g serve
+
+COPY --from=build /app/build ./build
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["sh", "-c", "serve -s build -l ${PORT:-3000}"]

@@ -18,7 +18,7 @@ WORKDIR /var/www
 COPY . .
 
 RUN cp .env.example .env || true
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --optimize-autoloader
 
 RUN mkdir -p storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache

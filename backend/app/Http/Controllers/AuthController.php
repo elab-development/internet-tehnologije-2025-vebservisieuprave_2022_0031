@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\VerifyEmail;
+// use App\Mail\VerifyEmail;
 use App\Models\Zahtev;
 use App\Models\Termin;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -140,7 +140,7 @@ class AuthController extends Controller
             ['id' => $user->id]
         );
 
-        Mail::to($user->email)->send(new VerifyEmail($user, $url));
+        // Mail::to($user->email)->send(new VerifyEmail($user, $url));
 
         return response()->json([
             'message' => 'Registracija uspešna. Proverite email za verifikaciju.',
@@ -226,7 +226,7 @@ class AuthController extends Controller
             ['id' => $user->id]
         );
 
-        Mail::to($user->email)->send(new VerifyEmail($user, $url));
+        // Mail::to($user->email)->send(new VerifyEmail($user, $url));
 
         return response()->json([
             'message' => 'Registracija uspešna. Proverite email za verifikaciju.',

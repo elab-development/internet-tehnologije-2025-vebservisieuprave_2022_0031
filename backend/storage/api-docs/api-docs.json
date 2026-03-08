@@ -6,6 +6,251 @@
         "version": "1.0.0"
     },
     "paths": {
+        "/api/adresa": {
+            "get": {
+                "tags": [
+                    "Adresa"
+                ],
+                "summary": "Lista svih adresa",
+                "operationId": "dd069461a154b4f86e20a5c737455dc6",
+                "responses": {
+                    "200": {
+                        "description": "Lista adresa"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Adresa"
+                ],
+                "summary": "Kreiranje nove adrese",
+                "operationId": "6fbad82b6dc795907f8fe1f3b110943c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "zahtev_id",
+                                    "mesto",
+                                    "opstina",
+                                    "grad",
+                                    "postanski_broj",
+                                    "trajanje_prebivalista",
+                                    "uloga_adrese"
+                                ],
+                                "properties": {
+                                    "zahtev_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "ulica": {
+                                        "type": "string",
+                                        "example": "Knez Mihailova"
+                                    },
+                                    "broj": {
+                                        "type": "integer",
+                                        "example": 5
+                                    },
+                                    "mesto": {
+                                        "type": "string",
+                                        "example": "Beograd"
+                                    },
+                                    "opstina": {
+                                        "type": "string",
+                                        "example": "Stari Grad"
+                                    },
+                                    "grad": {
+                                        "type": "string",
+                                        "example": "Beograd"
+                                    },
+                                    "postanski_broj": {
+                                        "type": "string",
+                                        "example": "11000"
+                                    },
+                                    "trajanje_prebivalista": {
+                                        "type": "string",
+                                        "example": "stalna",
+                                        "enum": [
+                                            "stalna",
+                                            "privremena"
+                                        ]
+                                    },
+                                    "uloga_adrese": {
+                                        "type": "string",
+                                        "example": "nova",
+                                        "enum": [
+                                            "nova",
+                                            "stara"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Adresa uspešno kreirana"
+                    },
+                    "422": {
+                        "description": "Validaciona greška"
+                    }
+                }
+            }
+        },
+        "/api/adresa/{id}": {
+            "get": {
+                "tags": [
+                    "Adresa"
+                ],
+                "summary": "Prikaz jedne adrese",
+                "operationId": "9a69bb9ca03e3dddfae4f79f2f9da32f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID adrese",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Podaci o adresi"
+                    },
+                    "404": {
+                        "description": "Adresa nije pronađena"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Adresa"
+                ],
+                "summary": "Ažuriranje adrese",
+                "operationId": "11cef8dd342bf5a4f4d10f36134f54d8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID adrese",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "zahtev_id",
+                                    "mesto",
+                                    "opstina",
+                                    "grad",
+                                    "postanski_broj",
+                                    "trajanje_prebivalista",
+                                    "uloga_adrese"
+                                ],
+                                "properties": {
+                                    "zahtev_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "ulica": {
+                                        "type": "string",
+                                        "example": "Knez Mihailova"
+                                    },
+                                    "broj": {
+                                        "type": "integer",
+                                        "example": 5
+                                    },
+                                    "mesto": {
+                                        "type": "string",
+                                        "example": "Beograd"
+                                    },
+                                    "opstina": {
+                                        "type": "string",
+                                        "example": "Stari Grad"
+                                    },
+                                    "grad": {
+                                        "type": "string",
+                                        "example": "Beograd"
+                                    },
+                                    "postanski_broj": {
+                                        "type": "string",
+                                        "example": "11000"
+                                    },
+                                    "trajanje_prebivalista": {
+                                        "type": "string",
+                                        "example": "stalna",
+                                        "enum": [
+                                            "stalna",
+                                            "privremena"
+                                        ]
+                                    },
+                                    "uloga_adrese": {
+                                        "type": "string",
+                                        "example": "nova",
+                                        "enum": [
+                                            "nova",
+                                            "stara"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Adresa uspešno ažurirana"
+                    },
+                    "404": {
+                        "description": "Adresa nije pronađena"
+                    },
+                    "422": {
+                        "description": "Validaciona greška"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Adresa"
+                ],
+                "summary": "Brisanje adrese",
+                "operationId": "70316263ca5a753e41251885a97b03be",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID adrese",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Adresa uspešno obrisana"
+                    },
+                    "404": {
+                        "description": "Adresa nije pronađena"
+                    }
+                }
+            }
+        },
         "/api/check-jmbg": {
             "post": {
                 "tags": [
@@ -627,6 +872,281 @@
                     },
                     "404": {
                         "description": "Dokument nije pronađen"
+                    }
+                }
+            }
+        },
+        "/api/termin": {
+            "get": {
+                "tags": [
+                    "Termin"
+                ],
+                "summary": "Lista svih termina",
+                "operationId": "dad41d258b411ac28848879576658d03",
+                "responses": {
+                    "200": {
+                        "description": "Lista termina"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Termin"
+                ],
+                "summary": "Kreiranje novog termina",
+                "operationId": "00cc5bfb6f908257f7de947b0a071d55",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "tip_dokumenta",
+                                    "lokacija",
+                                    "datum_vreme",
+                                    "korisnik_id"
+                                ],
+                                "properties": {
+                                    "tip_dokumenta": {
+                                        "type": "string",
+                                        "example": "licna_karta",
+                                        "enum": [
+                                            "licna_karta",
+                                            "pasos"
+                                        ]
+                                    },
+                                    "lokacija": {
+                                        "type": "string",
+                                        "example": "Beograd - MUP"
+                                    },
+                                    "datum_vreme": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2025-06-01 10:00:00"
+                                    },
+                                    "korisnik_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Termin uspešno kreiran"
+                    },
+                    "409": {
+                        "description": "Termin je već zauzet"
+                    },
+                    "422": {
+                        "description": "Validaciona greška"
+                    }
+                }
+            }
+        },
+        "/api/termin/moje": {
+            "get": {
+                "tags": [
+                    "Termin"
+                ],
+                "summary": "Lista termina ulogovanog korisnika sa filterima i paginacijom",
+                "operationId": "a22f48f0028b033a3a451183806ecd0e",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Broj termina po stranici",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 10
+                    },
+                    {
+                        "name": "tip_dokumenta",
+                        "in": "query",
+                        "description": "Filter po tipu dokumenta",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "licna_karta",
+                                "pasos"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "lokacija",
+                        "in": "query",
+                        "description": "Filter po lokaciji",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "date_from",
+                        "in": "query",
+                        "description": "Filter od datuma",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    },
+                    {
+                        "name": "date_to",
+                        "in": "query",
+                        "description": "Filter do datuma",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista termina korisnika"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/termin/{id}": {
+            "get": {
+                "tags": [
+                    "Termin"
+                ],
+                "summary": "Prikaz jednog termina",
+                "operationId": "bdc6015d1645f5426405506d811568bc",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID termina",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Podaci o terminu"
+                    },
+                    "404": {
+                        "description": "Termin nije pronađen"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Termin"
+                ],
+                "summary": "Ažuriranje termina",
+                "operationId": "95f3c39c40821a885fca71b295608e96",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID termina",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "tip_dokumenta",
+                                    "lokacija",
+                                    "datum_vreme",
+                                    "korisnik_id"
+                                ],
+                                "properties": {
+                                    "tip_dokumenta": {
+                                        "type": "string",
+                                        "example": "licna_karta",
+                                        "enum": [
+                                            "licna_karta",
+                                            "pasos"
+                                        ]
+                                    },
+                                    "lokacija": {
+                                        "type": "string",
+                                        "example": "Beograd - MUP"
+                                    },
+                                    "datum_vreme": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2025-06-01 10:00:00"
+                                    },
+                                    "korisnik_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Termin uspešno ažuriran"
+                    },
+                    "404": {
+                        "description": "Termin nije pronađen"
+                    },
+                    "409": {
+                        "description": "Termin je već zauzet"
+                    },
+                    "422": {
+                        "description": "Validaciona greška"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Termin"
+                ],
+                "summary": "Brisanje termina",
+                "operationId": "daf70259bd987d872698a166178f2935",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID termina",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Termin uspešno obrisan"
+                    },
+                    "404": {
+                        "description": "Termin nije pronađen"
                     }
                 }
             }
@@ -1301,6 +1821,10 @@
     },
     "tags": [
         {
+            "name": "Adresa",
+            "description": "Adresa"
+        },
+        {
             "name": "Auth",
             "description": "Auth"
         },
@@ -1311,6 +1835,10 @@
         {
             "name": "Dokument",
             "description": "Dokument"
+        },
+        {
+            "name": "Termin",
+            "description": "Termin"
         },
         {
             "name": "Zahtev",

@@ -18,8 +18,8 @@ Route::post('/register-strani', [AuthController::class, 'registerStrani']);
 Route::post('/login', [AuthController::class, 'login']);
 
 //sta se desava kada korisnik ode na rutu verification.verify
-Route::get('/email/verify/{id}', [AuthController::class, 'verifyEmail'])//pozivamo iz AuthControllera metodu verifyEmail
-    ->name('verification.verify');
+//Route::get('/email/verify/{id}', [AuthController::class, 'verifyEmail'])//pozivamo iz AuthControllera metodu verifyEmail
+   // ->name('verification.verify');
 
 //Middleware filtrira rute,proverava da li postoji token, vrsi autentifikaciju
 Route::middleware('auth:sanctum')->group(function (){

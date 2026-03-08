@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+//use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -11,7 +11,7 @@ use Laravel\Sanctum\HasApiTokens;
 use App\Models\Zahtev;
 use App\Models\Termin;
 
-class User extends Authenticatable implements MustVerifyEmail//ovaj model ce imati email verified at
+class User extends Authenticatable //implements MustVerifyEmail//ovaj model ce imati email verified at
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasApiTokens, HasFactory, Notifiable;

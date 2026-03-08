@@ -38,7 +38,6 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/mojizahtevi" element={<MojiZahtevi />} /> 
          <Route path="/zakazi-termin" element={<ZakaziTerminForm user={user} />} />
-        <Route path="/profil" element={<UserPage />} />
         <Route path="/admin/statistika" element={<AdminPanel user={user} />} />
         <Route path="/admin/korisnici" element={<UsersPanelAdmin user={user} />} />
         <Route path="/admin/korisnici/:id" element={<UserProfileAdmin user={user}/>} />

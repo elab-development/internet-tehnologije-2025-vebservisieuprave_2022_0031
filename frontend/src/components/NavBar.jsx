@@ -45,14 +45,14 @@ const NavBar = () => {
     
     {isAuth && user?.tip_korisnika !== "admin" && (
       <>
-        <Link to="/profil" className="href">Profil korisnika</Link>
+        <Link to="/userpage" className="href">Profil korisnika</Link>
         <Link to="/mojizahtevi" className="href">Moji zahtevi</Link>
         <Link to="/zakazi-termin" className="href">Zakaži termin</Link>
       </>
     )}
     {isAuth && user?.tip_korisnika === "admin" && (
       <>
-      <Link to="/profil" className="href">Profil korisnika</Link>
+      <Link to="/userpage" className="href">Profil korisnika</Link>
       <Link to="/admin/statistika" className="href">Statistika</Link>
       <Link to="/admin/korisnici" className="href">Korisnici</Link>
       <Link to="/admin/neobradjeniZahtevi" className="href">Neobradjeni zahtevi</Link>

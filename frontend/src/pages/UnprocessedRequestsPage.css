@@ -1,5 +1,3 @@
-/* ZAHTEVI PAGE */
-
 .neobradjeni-zahtevi-page {
   padding: 30px;
   max-width: 1200px;
@@ -12,14 +10,23 @@
   margin-bottom: 30px;
 }
 
-/* GRID */
-.zahtevi-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 25px;
+/* FILTER */
+.filter-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 30px;
 }
 
-/* ZAHTEV CARD */
+/* GRID ZA KARTICE */
+.zahtevi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* responsive 3→2→1 kolona */
+  gap: 25px;
+  justify-items: center; /* centriraj kartice u gridu */
+}
+
+/* KARTICE */
 .zahtev-card {
   background: #f9f9f9;
   border: 1px solid #ddd;
@@ -27,8 +34,31 @@
   border-radius: 10px;
   cursor: pointer;
   transition: 0.2s;
+  width: 100%; /* vrlo važno da kartica zauzima prostor u gridu */
+  box-sizing: border-box;
 }
 
 .zahtev-card:hover {
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.zahtev-card h3 {
+  margin-bottom: 10px;
+  font-size: 18px;
+  color: #333;
+}
+
+.zahtev-card p {
+  margin: 4px 0;
+  font-size: 14px;
+  color: #555;
+  line-height: 1.4;
+}
+
+/* PORUKE */
+.loading,
+.error {
+  text-align: center;
+  font-size: 18px;
+  margin-top: 50px;
 }

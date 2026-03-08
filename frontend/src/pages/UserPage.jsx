@@ -57,7 +57,7 @@ export default function UserPage() {
         setUser(res.data);
         setEmail(res.data.email);
       } catch (err) {
-        console.error(err);
+        console.error("GREŠKA PRI UČITAVANJU KORISNIKA:", err);
         setMessage("Greška pri učitavanju korisnika.");
       } finally {
         setLoading(false);
@@ -70,7 +70,10 @@ export default function UserPage() {
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
     setPhoto(file);
-    if (file) setPreview(URL.createObjectURL(file));
+
+    if (file) {
+      setPreview(URL.createObjectURL(file));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -105,8 +108,10 @@ export default function UserPage() {
       setNewPassword("");
       setConfirmPassword("");
       setPhoto(null);
+      setPreview(null);
     } catch (err) {
-      console.error(err);
+      console.error("GREŠKA PRI IZMEnI PROFILA:", err);
+
       if (err.response?.data?.errors) {
         setErrors(err.response.data.errors);
       } else {
@@ -158,7 +163,7 @@ export default function UserPage() {
 
           {user.profile_photo_path && (
             <img
-              src={`http://localhost:8000/storage/${user.profile_photo_path}`}
+              src={`https://internet-tehnologije-2025-vebservisieuprave2022-production.up.railway.app/storage/${user.profile_photo_path}`}
               alt="Profil"
               width="120"
               style={{ borderRadius: "10px", marginTop: "10px" }}

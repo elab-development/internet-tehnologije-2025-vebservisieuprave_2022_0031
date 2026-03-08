@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../api/api";
 import "./UserPage.css";
 
 export default function UserPage() {
@@ -14,10 +14,8 @@ export default function UserPage() {
 
   const [message, setMessage] = useState("");
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(true);
 
-  const token = localStorage.getItem("token");
-
-  // format datuma u latinici
   const formatDate = (dateString) => {
     if (!dateString) return "";
 
@@ -39,14 +37,12 @@ export default function UserPage() {
     return formatted.replace(/[а-яђжљњћџ]/g, (c) => cirToLat[c] || c);
   };
 
-  // prikaz pola
   const formatPol = (pol) => {
     if (pol === "Z") return "Ženski";
     if (pol === "M") return "Muški";
     return pol;
   };
 
-  // prikaz tipa korisnika
   const formatTipKorisnika = (tip) => {
     if (tip === "domaci") return "Domaći državljanin";
     if (tip === "strani") return "Strani državljanin";
@@ -55,17 +51,20 @@ export default function UserPage() {
   };
 
   useEffect(() => {
-    axios
-      .get("https://internet-tehnologije-2025-vebservisieuprave2022-production.up.railway.app/api/me", {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => {
+    const fetchUser = async () => {
+      try {
+        const res = await api.get("/me");
         setUser(res.data);
         setEmail(res.data.email);
-      })
-      .catch(() => {
+      } catch (err) {
+        console.error(err);
         setMessage("Greška pri učitavanju korisnika.");
-      });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
   }, []);
 
   const handlePhotoChange = (e) => {
@@ -82,7 +81,9 @@ export default function UserPage() {
     const formData = new FormData();
     formData.append("email", email);
 
-    if (photo) formData.append("profile_photo", photo);
+    if (photo) {
+      formData.append("profile_photo", photo);
+    }
 
     if (newPassword) {
       formData.append("current_password", currentPassword);
@@ -91,16 +92,11 @@ export default function UserPage() {
     }
 
     try {
-      const res = await axios.post(
-        "https://internet-tehnologije-2025-vebservisieuprave2022-production.up.railway.app/api/profile?_method=PUT",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const res = await api.post("/profile?_method=PUT", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       setMessage(res.data.message);
       setUser(res.data.user);
@@ -108,7 +104,9 @@ export default function UserPage() {
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
+      setPhoto(null);
     } catch (err) {
+      console.error(err);
       if (err.response?.data?.errors) {
         setErrors(err.response.data.errors);
       } else {
@@ -117,18 +115,14 @@ export default function UserPage() {
     }
   };
 
-  if (!user) return <p>Učitavanje...</p>;
+  if (loading) return <p>Učitavanje...</p>;
+  if (!user) return <p>Nije moguće učitati korisnika.</p>;
 
-const UserPage = () => {
   return (
-    <div>UserPage</div>
-  )
-}
-
+    <>
       {message && <p>{message}</p>}
 
       <div className="profile-layout">
-
         <div className="profile-card">
           <h3>Osnovni podaci</h3>
 
@@ -164,7 +158,7 @@ const UserPage = () => {
 
           {user.profile_photo_path && (
             <img
-              src={`https://internet-tehnologije-2025-vebservisieuprave2022-production.up.railway.app/storage/${user.profile_photo_path}`}
+              src={`http://localhost:8000/storage/${user.profile_photo_path}`}
               alt="Profil"
               width="120"
               style={{ borderRadius: "10px", marginTop: "10px" }}
@@ -176,7 +170,6 @@ const UserPage = () => {
           <h3>Izmena podataka</h3>
 
           <form onSubmit={handleSubmit}>
-
             <label>Email:</label>
             <input
               type="email"
@@ -225,11 +218,9 @@ const UserPage = () => {
             />
 
             <button type="submit">Sačuvaj izmene</button>
-
           </form>
         </div>
-
       </div>
-    
-  
+    </>
+  );
 }

@@ -1,5 +1,5 @@
 .zahtev-card {
-  width: 240px;
+  width: 260px;
   min-height: 220px;
   background: #f8f8f8;
   border: 1px solid #d9d9d9;
@@ -10,6 +10,7 @@
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   text-align: left;
+  flex: 0 0 260px;
 }
 
 .zahtev-card:hover {

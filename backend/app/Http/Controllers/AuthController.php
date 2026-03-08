@@ -95,11 +95,11 @@ public function registerDomaci(Request $request)
         'password' => Hash::make($data['password']),
     ]);
 
-    $url = URL::temporarySignedRoute(
-        'verification.verify',
-        now()->addMinutes(60),
-        ['id' => $user->id]
-    );
+   // $url = URL::temporarySignedRoute(
+      //  'verification.verify',
+       // now()->addMinutes(60),
+       // ['id' => $user->id]
+   // );
 
     //Mail::to($user->email)->send(new VerifyEmail($user, $url));
 
@@ -149,11 +149,11 @@ public function registerStrani(Request $request)
         'profile_photo_path' => $data['slika'],
     ]);
 
-    $url = URL::temporarySignedRoute(
-        'verification.verify',
-        now()->addMinutes(60),
-        ['id' => $user->id]
-    );
+   // $url = URL::temporarySignedRoute(
+       // 'verification.verify',
+       // now()->addMinutes(60),
+       // ['id' => $user->id]
+   // );
 
     //Mail::to($user->email)->send(new VerifyEmail($user, $url));
 

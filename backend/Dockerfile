@@ -28,4 +28,4 @@ RUN mkdir -p storage/framework/cache \
     bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
-CMD ["sh", "-c", "php artisan config:clear && php artisan route:clear && php artisan cache:clear && php artisan vendor:publish --provider 'L5Swagger\\L5SwaggerServiceProvider' --force && ls -la public/vendor/ && php artisan l5-swagger:generate && php artisan migrate --force && php artisan db:seed --force && php -S 0.0.0.0:${PORT:-8080} -t public"]
+CMD ["sh", "-c", "php artisan config:clear && php artisan route:clear && php artisan cache:clear && php artisan l5-swagger:generate && php artisan migrate --force && php artisan db:seed --force && find /var/www/public -name 'swagger-ui.css' || echo 'NOT FOUND' && php -S 0.0.0.0:${PORT:-8080} -t public"]

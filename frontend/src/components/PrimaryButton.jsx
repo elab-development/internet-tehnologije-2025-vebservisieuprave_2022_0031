@@ -1,24 +1,24 @@
-import React from 'react'
+import React from "react";
 
 const PrimaryButton = ({
-    type="button",
-    loading=false,
-    loadingText="Ucitavanje...",
-    children,
-    className="",
-    disabled,
-    ...rest
+  type = "button",
+  loading = false,
+  loadingText = "Učitavanje...",
+  children,
+  className = "",
+  disabled,
+  ...rest
 }) => {
   return (
     <button
-    type={type}
-    className={'btn-primary auth-submit $(className)'}
-    disabled={disabled || loading}
-    {...rest}
+      type={type}
+      className={`btn-primary auth-submit ${className}`}
+      disabled={disabled || loading}
+      {...rest}
     >
-        {loading ? loadingText :children}
+      {loading ? loadingText : children}
     </button>
   );
 };
 
-export default PrimaryButton
+export default PrimaryButton;

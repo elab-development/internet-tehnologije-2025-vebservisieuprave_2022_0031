@@ -48,3 +48,23 @@
   color: #333;
   margin-top: 50px;
 }
+
+/* Filter dropdown */
+.filter-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  justify-content: center;
+}
+
+.filter-container label {
+  font-weight: bold;
+}
+
+.filter-container select {
+  padding: 5px 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}

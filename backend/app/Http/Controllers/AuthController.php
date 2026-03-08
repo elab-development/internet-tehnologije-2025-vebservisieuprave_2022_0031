@@ -307,13 +307,18 @@ public function statistika()
 }
 
 // FUNKCIJA VRACA SVE KORISNIKE KOJI NISU ADMINI (GET /api/admin/korisnici)
-public function sviKorisnici()
+// FUNKCIJA VRACA SVE KORISNIKE KOJI NISU ADMINI (GET /api/admin/korisnici)
+public function sviKorisnici(Request $request)
 {
-    
-    $users = User::where('tip_korisnika', '!=', 'admin')
-        ->select('id', 'ime', 'prezime', 'email', 'tip_korisnika', 'datum_rodjenja') 
-        ->orderBy('ime')
-        ->get();
+    $query = User::where('tip_korisnika', '!=', 'admin')
+        ->select('id', 'ime', 'prezime', 'email', 'tip_korisnika', 'datum_rodjenja');
+
+    // filtracija po tipu korisnika
+    if ($request->has('tip_korisnika') && $request->tip_korisnika != 'svi') {
+        $query->where('tip_korisnika', $request->tip_korisnika);
+    }
+
+    $users = $query->orderBy('ime')->get();
 
     return response()->json([
         'total' => $users->count(),

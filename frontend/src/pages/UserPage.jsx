@@ -56,7 +56,7 @@ export default function UserPage() {
 
   useEffect(() => {
     axios
-      .get("https://internet-tehnologije-2025-vebservisieuprave2022-production.up.railway.app/api/api/me", {
+      .get("https://internet-tehnologije-2025-vebservisieuprave2022-production.up.railway.app/api/me", {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {

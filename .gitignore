@@ -19,7 +19,12 @@
 /storage/*.key
 /storage/pail
 /vendor
+!/backend/vendor/swagger-api/
+!/backend/vendor/swagger-api/swagger-ui/
+!/backend/vendor/swagger-api/swagger-ui/dist/
 Homestead.json
 Homestead.yaml
 Thumbs.db
 .vscode/
+
+

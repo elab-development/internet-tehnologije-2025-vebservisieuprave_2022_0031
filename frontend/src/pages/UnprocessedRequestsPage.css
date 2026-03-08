@@ -1,46 +1,44 @@
 .neobradjeni-zahtevi-page {
-  max-width: 1200px;
+  width: 100%;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 40px 20px;
-  text-align: center;
+  padding: 40px 24px;
+  box-sizing: border-box;
 }
 
 .neobradjeni-zahtevi-page h1 {
+  text-align: center;
   margin-bottom: 30px;
-  font-size: 32px;
+  font-size: 48px;
+  font-weight: 700;
 }
 
 .filter-container {
-  margin-bottom: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.filter-container label {
+  font-size: 18px;
+  font-weight: 600;
 }
 
 .filter-container select {
-  margin-left: 10px;
-  padding: 6px 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+  padding: 10px 14px;
+  border: 1px solid #cfcfcf;
+  border-radius: 8px;
+  font-size: 16px;
+  min-width: 260px;
+  background-color: white;
 }
 
-/* GRID ZA KARTICE */
 .zahtevi-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 30px;
-  justify-items: center;
-}
-
-/* stil kartica */
-.zahtev-card {
-  width: 220px;
-  background: #f4f4f4;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.zahtev-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+  grid-template-columns: repeat(auto-fit, minmax(240px, 240px));
+  justify-content: center;
+  gap: 32px;
 }

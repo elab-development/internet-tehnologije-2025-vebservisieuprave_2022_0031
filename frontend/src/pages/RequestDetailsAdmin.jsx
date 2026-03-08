@@ -86,7 +86,12 @@ const RequestDetailsAdmin = () => {
           <p><strong>Datum kreiranja:</strong> {new Date(zahtev.datum_kreiranja).toLocaleString()}</p>
           {zahtev.tip_zahteva === 'bracni_status' && (
             <>
-              <p><strong>Tip promene:</strong> {zahtev.tip_promene}</p>
+              <p><strong>Tip promene:</strong>{" "}
+                {zahtev.tip_promene === 'sklapanje_braka'
+                ? 'Sklapanje braka'
+                : zahtev.tip_promene === 'razvod'
+                ? 'Razvod'
+                : zahtev.tip_promene}</p>
               <p><strong>Partner:</strong> {zahtev.ime_partnera} {zahtev.prezime_partnera}</p>
               <p><strong>Datum rođenja partnera:</strong> {new Date(zahtev.datum_rodjenja_partnera).toLocaleDateString()}</p>
               <p><strong>Pol partnera:</strong> {zahtev.partner_pol}</p>

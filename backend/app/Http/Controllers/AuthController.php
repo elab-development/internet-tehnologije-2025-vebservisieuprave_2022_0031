@@ -8,14 +8,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
-//use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Mail;
 use App\Mail\VerifyEmail;
 use App\Models\Zahtev;
 use App\Models\Termin;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use OpenApi\Attributes as OA;
 
 class AuthController extends Controller
 {
+
+
 //PROVERA DA LI JE JMBG ISPRAVAN, I DA LI POSTOJI U BAZI DRZAVLJANINA
 public function checkJmbg(Request $request)
 {
@@ -95,13 +98,13 @@ public function registerDomaci(Request $request)
         'password' => Hash::make($data['password']),
     ]);
 
-   // $url = URL::temporarySignedRoute(
-      //  'verification.verify',
-       // now()->addMinutes(60),
-       // ['id' => $user->id]
-   // );
+    $url = URL::temporarySignedRoute(
+        'verification.verify',
+        now()->addMinutes(60),
+        ['id' => $user->id]
+    );
 
-    //Mail::to($user->email)->send(new VerifyEmail($user, $url));
+    Mail::to($user->email)->send(new VerifyEmail($user, $url));
 
     return response()->json([
         'message' => 'Registracija uspešna. Proverite email za verifikaciju.',
@@ -149,13 +152,13 @@ public function registerStrani(Request $request)
         'profile_photo_path' => $data['slika'],
     ]);
 
-   // $url = URL::temporarySignedRoute(
-       // 'verification.verify',
-       // now()->addMinutes(60),
-       // ['id' => $user->id]
-   // );
+    $url = URL::temporarySignedRoute(
+        'verification.verify',
+        now()->addMinutes(60),
+        ['id' => $user->id]
+    );
 
-    //Mail::to($user->email)->send(new VerifyEmail($user, $url));
+    Mail::to($user->email)->send(new VerifyEmail($user, $url));
 
     return response()->json([
         'message' => 'Registracija uspešna. Proverite email za verifikaciju.',
@@ -213,28 +216,28 @@ public function registerStrani(Request $request)
     }
 
     //VERIFIKACIJA MEJLA
-   // public function verifyEmail(Request $request, $id)
-   // {
-       // if (!$request->hasValidSignature()) {
-           // return response()->json([
-             //   'message' => 'Link za verifikaciju je nevažeći ili je istekao.',
-           // ], 401);
-       // }
+    public function verifyEmail(Request $request, $id)
+    {
+        if (!$request->hasValidSignature()) {
+            return response()->json([
+                'message' => 'Link za verifikaciju je nevažeći ili je istekao.',
+            ], 401);
+        }
 
-        //$user = User::findOrFail($id);
+        $user = User::findOrFail($id);
 
-        //if ($user->email_verified_at) {
-           // return response()->json([
-            //    'message' => 'Email je već verifikovan.',
-           // ], 200);
-       // }
+        if ($user->email_verified_at) {
+            return response()->json([
+                'message' => 'Email je već verifikovan.',
+            ], 200);
+        }
 
-        //$user->email_verified_at = now();
-        //$user->save();
+        $user->email_verified_at = now();
+        $user->save();
 
-       // return response()->json([
-          //  'message' => 'Email je uspesno verifikovan.',
-       // ], 200);    }
+        return response()->json([
+            'message' => 'Email je uspesno verifikovan.',
+        ], 200);    }
 
 
     //UPDATE PROFILA KORISNIKA
@@ -307,18 +310,13 @@ public function statistika()
 }
 
 // FUNKCIJA VRACA SVE KORISNIKE KOJI NISU ADMINI (GET /api/admin/korisnici)
-// FUNKCIJA VRACA SVE KORISNIKE KOJI NISU ADMINI (GET /api/admin/korisnici)
-public function sviKorisnici(Request $request)
+public function sviKorisnici()
 {
-    $query = User::where('tip_korisnika', '!=', 'admin')
-        ->select('id', 'ime', 'prezime', 'email', 'tip_korisnika', 'datum_rodjenja');
-
-    // filtracija po tipu korisnika
-    if ($request->has('tip_korisnika') && $request->tip_korisnika != 'svi') {
-        $query->where('tip_korisnika', $request->tip_korisnika);
-    }
-
-    $users = $query->orderBy('ime')->get();
+    
+    $users = User::where('tip_korisnika', '!=', 'admin')
+        ->select('id', 'ime', 'prezime', 'email', 'tip_korisnika', 'datum_rodjenja') 
+        ->orderBy('ime')
+        ->get();
 
     return response()->json([
         'total' => $users->count(),
@@ -343,4 +341,3 @@ public function prikaziKorisnika($id)
     return response()->json($user);
 }
 }
-

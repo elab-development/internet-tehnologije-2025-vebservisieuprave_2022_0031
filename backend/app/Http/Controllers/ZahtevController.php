@@ -8,12 +8,18 @@ use App\Models\Adresa;
 use Illuminate\Http\Request;
 use App\Http\Resources\ZahtevResource;
 use Illuminate\Support\Facades\Log;
+use OpenApi\Attributes as OA;
 
 class ZahtevController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    #[OA\Get(
+        path: "/api/zahtev",
+        summary: "Lista svih zahteva",
+        tags: ["Zahtev"],
+        responses: [
+            new OA\Response(response: 200, description: "Lista zahteva")
+        ]
+    )]
     public function index()
     {
         return ZahtevResource::collection(Zahtev::all());
@@ -24,6 +30,22 @@ class ZahtevController extends Controller
         //
     }
 
+    #[OA\Get(
+        path: "/api/zahtev/moje",
+        summary: "Lista zahteva ulogovanog korisnika sa filterima i paginacijom",
+        tags: ["Zahtev"],
+        security: [["bearerAuth" => []]],
+        parameters: [
+            new OA\Parameter(name: "per_page", in: "query", required: false, description: "Broj zahteva po stranici", schema: new OA\Schema(type: "integer"), example: 10),
+            new OA\Parameter(name: "status", in: "query", required: false, description: "Filter po statusu", schema: new OA\Schema(type: "string")),
+            new OA\Parameter(name: "date_from", in: "query", required: false, description: "Filter od datuma", schema: new OA\Schema(type: "string", format: "date")),
+            new OA\Parameter(name: "date_to", in: "query", required: false, description: "Filter do datuma", schema: new OA\Schema(type: "string", format: "date")),
+        ],
+        responses: [
+            new OA\Response(response: 200, description: "Lista zahteva korisnika"),
+            new OA\Response(response: 401, description: "Unauthorized")
+        ]
+    )]
     //FUNKCIJA KOJA VRACA ZAHTEVE
     public function mojiZahteviPaginatedFiltered(Request $request)
     {
@@ -51,6 +73,22 @@ class ZahtevController extends Controller
         return ZahtevResource::collection($paginator);
     }
 
+    #[OA\Get(
+        path: "/api/zahtev/moje/bracni_status",
+        summary: "Lista zahteva tipa bracni_status ulogovanog korisnika sa filterima i paginacijom",
+        tags: ["Zahtev"],
+        security: [["bearerAuth" => []]],
+        parameters: [
+            new OA\Parameter(name: "per_page", in: "query", required: false, description: "Broj zahteva po stranici", schema: new OA\Schema(type: "integer"), example: 10),
+            new OA\Parameter(name: "status", in: "query", required: false, description: "Filter po statusu", schema: new OA\Schema(type: "string")),
+            new OA\Parameter(name: "date_from", in: "query", required: false, description: "Filter od datuma", schema: new OA\Schema(type: "string", format: "date")),
+            new OA\Parameter(name: "date_to", in: "query", required: false, description: "Filter do datuma", schema: new OA\Schema(type: "string", format: "date")),
+        ],
+        responses: [
+            new OA\Response(response: 200, description: "Lista zahteva bracnog statusa korisnika"),
+            new OA\Response(response: 401, description: "Unauthorized")
+        ]
+    )]
     //FUNKCIJA KOJA VRACA ZAHTEV TIPA BRACNI STATUS
     public function mojiBracniStatusPaginatedFiltered(Request $request)
     {
@@ -79,6 +117,22 @@ class ZahtevController extends Controller
         return ZahtevResource::collection($paginator);
     }
 
+    #[OA\Get(
+        path: "/api/zahtev/moje/prebivaliste",
+        summary: "Lista zahteva tipa prebivaliste ulogovanog korisnika sa filterima i paginacijom",
+        tags: ["Zahtev"],
+        security: [["bearerAuth" => []]],
+        parameters: [
+            new OA\Parameter(name: "per_page", in: "query", required: false, description: "Broj zahteva po stranici", schema: new OA\Schema(type: "integer"), example: 10),
+            new OA\Parameter(name: "status", in: "query", required: false, description: "Filter po statusu", schema: new OA\Schema(type: "string")),
+            new OA\Parameter(name: "date_from", in: "query", required: false, description: "Filter od datuma", schema: new OA\Schema(type: "string", format: "date")),
+            new OA\Parameter(name: "date_to", in: "query", required: false, description: "Filter do datuma", schema: new OA\Schema(type: "string", format: "date")),
+        ],
+        responses: [
+            new OA\Response(response: 200, description: "Lista zahteva prebivalista korisnika"),
+            new OA\Response(response: 401, description: "Unauthorized")
+        ]
+    )]
     //FUNKCIJA KOJA VRACA ZAHTEV ALI SAMO ZA PREVIVALISTE(get/zahtevi/moji)
     public function mojiPromenaPrebivalistaPaginatedFiltered(Request $request)
     {
@@ -106,6 +160,29 @@ class ZahtevController extends Controller
 
         return ZahtevResource::collection($paginator);
     }
+
+    #[OA\Get(
+        path: "/api/admin/zahtevi/{id}",
+        summary: "Prikaz jednog zahteva sa svim detaljima - samo admin",
+        tags: ["Admin"],
+        security: [["bearerAuth" => []]],
+        parameters: [
+            new OA\Parameter(
+                name: "id",
+                in: "path",
+                required: true,
+                description: "ID zahteva",
+                schema: new OA\Schema(type: "integer"),
+                example: 1
+            )
+        ],
+        responses: [
+            new OA\Response(response: 200, description: "Podaci o zahtevu"),
+            new OA\Response(response: 401, description: "Unauthorized"),
+            new OA\Response(response: 403, description: "Forbidden - nije admin"),
+            new OA\Response(response: 404, description: "Zahtev nije pronađen")
+        ]
+    )]
     //FUNKCIJA KOJA TACNO TAJ VRACA ZAHTEV  GET /api/admin/zahtevi/{id} - detalji zahteva
     public function prikaziZahtev($id)
     {
@@ -119,6 +196,35 @@ class ZahtevController extends Controller
     return response()->json($zahtev);
     }
 
+    #[OA\Post(
+        path: "/api/zahtev",
+        summary: "Kreiranje novog zahteva (prebivaliste ili bracni_status)",
+        tags: ["Zahtev"],
+        security: [["bearerAuth" => []]],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                required: ["tip_zahteva", "broj_licnog_dokumenta", "datum_promene"],
+                properties: [
+                    new OA\Property(property: "tip_zahteva", type: "string", enum: ["prebivaliste", "bracni_status"], example: "bracni_status"),
+                    new OA\Property(property: "broj_licnog_dokumenta", type: "string", example: "123456789"),
+                    new OA\Property(property: "datum_promene", type: "string", format: "date", example: "2025-01-01"),
+                    new OA\Property(property: "tip_promene", type: "string", enum: ["razvod", "sklapanje_braka"], example: "sklapanje_braka"),
+                    new OA\Property(property: "ime_partnera", type: "string", example: "Ana"),
+                    new OA\Property(property: "prezime_partnera", type: "string", example: "Anić"),
+                    new OA\Property(property: "datum_rodjenja_partnera", type: "string", format: "date", example: "1995-05-10"),
+                    new OA\Property(property: "partner_pol", type: "string", enum: ["M", "Z"], example: "Z"),
+                    new OA\Property(property: "broj_licnog_dokumenta_partnera", type: "string", example: "987654321"),
+                ],
+                type: "object"
+            )
+        ),
+        responses: [
+            new OA\Response(response: 201, description: "Zahtev uspešno kreiran"),
+            new OA\Response(response: 401, description: "Unauthorized"),
+            new OA\Response(response: 422, description: "Validaciona greška")
+        ]
+    )]
     //FUNKCIJA KOJA KREIRA ZAHTEV
     public function store(Request $request)
     {
@@ -229,6 +335,25 @@ class ZahtevController extends Controller
         return response()->json(new ZahtevResource($zahtev), 201);
     }
 
+    #[OA\Get(
+        path: "/api/zahtev/{id}",
+        summary: "Prikaz jednog zahteva",
+        tags: ["Zahtev"],
+        parameters: [
+            new OA\Parameter(
+                name: "id",
+                in: "path",
+                required: true,
+                description: "ID zahteva",
+                schema: new OA\Schema(type: "integer"),
+                example: 1
+            )
+        ],
+        responses: [
+            new OA\Response(response: 200, description: "Podaci o zahtevu"),
+            new OA\Response(response: 404, description: "Zahtev nije pronađen")
+        ]
+    )]
     /**
      * Display the specified resource.
      */
@@ -242,6 +367,44 @@ class ZahtevController extends Controller
         //
     }
 
+    #[OA\Put(
+        path: "/api/zahtev/{id}",
+        summary: "Ažuriranje zahteva",
+        tags: ["Zahtev"],
+        parameters: [
+            new OA\Parameter(
+                name: "id",
+                in: "path",
+                required: true,
+                description: "ID zahteva",
+                schema: new OA\Schema(type: "integer"),
+                example: 1
+            )
+        ],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(property: "tip_zahteva", type: "string", enum: ["prebivaliste", "bracni_status"], example: "bracni_status"),
+                    new OA\Property(property: "status", type: "string", example: "kreiran"),
+                    new OA\Property(property: "broj_licnog_dokumenta", type: "string", example: "123456789"),
+                    new OA\Property(property: "datum_promene", type: "string", format: "date", example: "2025-01-01"),
+                    new OA\Property(property: "tip_promene", type: "string", enum: ["razvod", "sklapanje_braka"], example: "razvod"),
+                    new OA\Property(property: "ime_partnera", type: "string", example: "Ana"),
+                    new OA\Property(property: "prezime_partnera", type: "string", example: "Anić"),
+                    new OA\Property(property: "datum_rodjenja_partnera", type: "string", format: "date", example: "1995-05-10"),
+                    new OA\Property(property: "partner_pol", type: "string", enum: ["M", "Z"], example: "Z"),
+                    new OA\Property(property: "broj_licnog_dokumenta_partnera", type: "string", example: "987654321"),
+                ],
+                type: "object"
+            )
+        ),
+        responses: [
+            new OA\Response(response: 200, description: "Zahtev uspešno ažuriran"),
+            new OA\Response(response: 404, description: "Zahtev nije pronađen"),
+            new OA\Response(response: 422, description: "Validaciona greška")
+        ]
+    )]
     //FUNKCIJA KOJA ZA UPDATE ZAHTEVA
     public function update(Request $request, $id)
     {
@@ -324,6 +487,26 @@ class ZahtevController extends Controller
         return response()->json(new ZahtevResource($zahtev), 200);
     }
 
+    #[OA\Delete(
+        path: "/api/zahtev/{id}",
+        summary: "Brisanje zahteva",
+        tags: ["Zahtev"],
+        security: [["bearerAuth" => []]],
+        parameters: [
+            new OA\Parameter(
+                name: "id",
+                in: "path",
+                required: true,
+                description: "ID zahteva",
+                schema: new OA\Schema(type: "integer"),
+                example: 1
+            )
+        ],
+        responses: [
+            new OA\Response(response: 200, description: "Zahtev uspešno obrisan"),
+            new OA\Response(response: 404, description: "Zahtev nije pronađen")
+        ]
+    )]
     //FUNKCIJA KOJA BRISE ZAHTEV
     public function destroy($id)
     {
@@ -337,6 +520,16 @@ class ZahtevController extends Controller
         return response()->json(['message' => 'Zahtev je obrisan.'], 200);
     }
 
+    #[OA\Get(
+        path: "/api/zahtev/export/csv",
+        summary: "Export zahteva korisnika u CSV format",
+        tags: ["Zahtev"],
+        security: [["bearerAuth" => []]],
+        responses: [
+            new OA\Response(response: 200, description: "CSV fajl sa zahtevima"),
+            new OA\Response(response: 401, description: "Unauthorized")
+        ]
+    )]
     public function exportCsv(Request $request)
     {
         $userId = $request->user()->id;
@@ -375,65 +568,129 @@ class ZahtevController extends Controller
         ]);
     }
 
-
-//FUNKCIJA KOJA VRACA STATISTIKU SVIH ZAHTEVA, SVIH KORISNIKA
+    #[OA\Get(
+        path: "/api/admin/statistikaZahteva",
+        summary: "Statistika svih zahteva (čekajući, odobreni, odbijeni) - samo admin",
+        tags: ["Admin"],
+        security: [["bearerAuth" => []]],
+        responses: [
+            new OA\Response(response: 200, description: "Statistika zahteva"),
+            new OA\Response(response: 401, description: "Unauthorized"),
+            new OA\Response(response: 403, description: "Forbidden - nije admin")
+        ]
+    )]
+    //FUNKCIJA KOJA VRACA STATISTIKU SVIH ZAHTEVA, SVIH KORISNIKA
     public function statistikaZahteva()
-{
-    $totalCekajuci = Zahtev::where('status', 'kreiran')->count();
-    $totalOdobreni = Zahtev::where('status', 'odobren')->count();
-    $totalOdbijeni = Zahtev::where('status', 'odbijen')->count();
+    {
+        $totalCekajuci = Zahtev::where('status', 'kreiran')->count();
+        $totalOdobreni = Zahtev::where('status', 'odobren')->count();
+        $totalOdbijeni = Zahtev::where('status', 'odbijen')->count();
 
-    return response()->json([
-        'cekajuci' => $totalCekajuci,
-        'odobreni' => $totalOdobreni,
-        'odbijeni' => $totalOdbijeni,
-    ]);
-}
-
-//FUNKCIJA KOJA VRACA SVE ZAHTEVE KOJI NISU OBRADJENI ( GET /api/admin/neobradjeniZahtevi)
-public function neobradjeniZahtevi(Request $request)
-{
-    $query = Zahtev::where('status', 'kreiran')
-        ->with('korisnik:id,ime,prezime')
-        ->select('id', 'tip_zahteva', 'korisnik_id', 'status', 'datum_kreiranja');
-
-    // Filter po tipu zahteva (prebivaliste / bracni_status)
-    if ($request->filled('tip_zahteva')) {
-        $query->where('tip_zahteva', $request->get('tip_zahteva'));
+        return response()->json([
+            'cekajuci' => $totalCekajuci,
+            'odobreni' => $totalOdobreni,
+            'odbijeni' => $totalOdbijeni,
+        ]);
     }
 
-    $zahtevi = $query->orderBy('datum_kreiranja', 'desc')->get();
+    #[OA\Get(
+        path: "/api/admin/neobradjeniZahtevi",
+        summary: "Lista neobrađenih zahteva - samo admin",
+        tags: ["Admin"],
+        security: [["bearerAuth" => []]],
+        parameters: [
+            new OA\Parameter(name: "tip_zahteva", in: "query", required: false, description: "Filter po tipu zahteva", schema: new OA\Schema(type: "string", enum: ["prebivaliste", "bracni_status"])),
+        ],
+        responses: [
+            new OA\Response(response: 200, description: "Lista neobrađenih zahteva"),
+            new OA\Response(response: 401, description: "Unauthorized"),
+            new OA\Response(response: 403, description: "Forbidden - nije admin")
+        ]
+    )]
+    //FUNKCIJA KOJA VRACA SVE ZAHTEVE KOJI NISU OBRADJENI ( GET /api/admin/neobradjeniZahtevi)
+    public function neobradjeniZahtevi(Request $request)
+    {
+        $query = Zahtev::where('status', 'kreiran')
+            ->with('korisnik:id,ime,prezime')
+            ->select('id', 'tip_zahteva', 'korisnik_id', 'status', 'datum_kreiranja');
 
-    return response()->json($zahtevi);
+        // Filter po tipu zahteva (prebivaliste / bracni_status)
+        if ($request->filled('tip_zahteva')) {
+            $query->where('tip_zahteva', $request->get('tip_zahteva'));
+        }
+
+        $zahtevi = $query->orderBy('datum_kreiranja', 'desc')->get();
+
+        return response()->json($zahtevi);
+    }
+
+    #[OA\Post(
+        path: "/api/admin/zahtevi/{id}/odobri",
+        summary: "Odobravanje zahteva - samo admin",
+        tags: ["Admin"],
+        security: [["bearerAuth" => []]],
+        parameters: [
+            new OA\Parameter(
+                name: "id",
+                in: "path",
+                required: true,
+                description: "ID zahteva",
+                schema: new OA\Schema(type: "integer"),
+                example: 1
+            )
+        ],
+        responses: [
+            new OA\Response(response: 200, description: "Zahtev odobren"),
+            new OA\Response(response: 401, description: "Unauthorized"),
+            new OA\Response(response: 403, description: "Forbidden - nije admin"),
+            new OA\Response(response: 404, description: "Zahtev nije pronađen")
+        ]
+    )]
+    // FUNKCIJA KOJA ODOBRAVA ZAHTEV POST /api/admin/zahtevi/{id}/odobri
+    public function odobriZahtev($id)
+    {
+        $zahtev = Zahtev::findOrFail($id);
+        $zahtev->status = 'odobren';
+        $zahtev->save();
+
+        return response()->json([
+            'message' => 'Zahtev je odobren.',
+            'zahtev' => $zahtev
+        ]);
+    }
+
+    #[OA\Post(
+        path: "/api/admin/zahtevi/{id}/odbij",
+        summary: "Odbijanje zahteva - samo admin",
+        tags: ["Admin"],
+        security: [["bearerAuth" => []]],
+        parameters: [
+            new OA\Parameter(
+                name: "id",
+                in: "path",
+                required: true,
+                description: "ID zahteva",
+                schema: new OA\Schema(type: "integer"),
+                example: 1
+            )
+        ],
+        responses: [
+            new OA\Response(response: 200, description: "Zahtev odbijen"),
+            new OA\Response(response: 401, description: "Unauthorized"),
+            new OA\Response(response: 403, description: "Forbidden - nije admin"),
+            new OA\Response(response: 404, description: "Zahtev nije pronađen")
+        ]
+    )]
+    // FUNKCIJA KOJA ODBIJA ZAHTEV POST /api/admin/zahtevi/{id}/odbij
+    public function odbijZahtev($id)
+    {
+        $zahtev = Zahtev::findOrFail($id);
+        $zahtev->status = 'odbijen';
+        $zahtev->save();
+
+        return response()->json([
+            'message' => 'Zahtev je odbijen.',
+            'zahtev' => $zahtev
+        ]);
+    }
 }
-
-// FUNKCIJA KOJA ODOBRAVA ZAHTEV POST /api/admin/zahtevi/{id}/odobri
-public function odobriZahtev($id)
-{
-    $zahtev = Zahtev::findOrFail($id);
-    $zahtev->status = 'odobren';
-    $zahtev->save();
-
-    return response()->json([
-        'message' => 'Zahtev je odobren.',
-        'zahtev' => $zahtev
-    ]);
-}
-
-// FUNKCIJA KOJA ODBIJA ZAHTEV POST /api/admin/zahtevi/{id}/odbij
-public function odbijZahtev($id)
-{
-    $zahtev = Zahtev::findOrFail($id);
-    $zahtev->status = 'odbijen';
-    $zahtev->save();
-
-    return response()->json([
-        'message' => 'Zahtev je odbijen.',
-        'zahtev' => $zahtev
-    ]);
-}
-}
-
-
-
-

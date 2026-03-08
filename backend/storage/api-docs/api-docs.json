@@ -1,0 +1,1320 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "MojaEUprava",
+        "description": "Aplikacija koja omogućava građanima da elektronski podnose zahteve za administrativne usluge i zakazuju termine bez potrebe za odlaskom na šalter.",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/check-jmbg": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Provera da li JMBG postoji u bazi drzavljana",
+                "operationId": "d5e9289ca178b462344e72a74ad4cdd1",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "jmbg"
+                                ],
+                                "properties": {
+                                    "jmbg": {
+                                        "type": "string",
+                                        "example": "1234567890123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Drzavljanin pronađen, vraća osnovne podatke"
+                    },
+                    "404": {
+                        "description": "Korisnik sa tim JMBG-om ne postoji"
+                    },
+                    "422": {
+                        "description": "Validaciona greška"
+                    }
+                }
+            }
+        },
+        "/api/register-domaci": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Registracija domaćeg korisnika pomoću JMBG-a + slanje verifikacionog emaila",
+                "operationId": "e56d71799ff48c02aec3f4255e913fe7",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "jmbg",
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "jmbg": {
+                                        "type": "string",
+                                        "example": "1234567890123"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "marko@email.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "123456"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "example": "123456"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Registracija uspešna"
+                    },
+                    "404": {
+                        "description": "JMBG ne postoji u bazi"
+                    },
+                    "409": {
+                        "description": "Korisnik sa tim JMBG-om je već registrovan"
+                    },
+                    "422": {
+                        "description": "Validaciona greška"
+                    }
+                }
+            }
+        },
+        "/api/register-strani": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Registracija stranog korisnika (uz opcioni upload profilne slike) + slanje verifikacionog emaila",
+                "operationId": "adca6f1773395a18bb6841b93d47b603",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "ime",
+                                    "prezime",
+                                    "email",
+                                    "password",
+                                    "password_confirmation",
+                                    "broj_pasosa",
+                                    "drzavljanstvo"
+                                ],
+                                "properties": {
+                                    "ime": {
+                                        "type": "string",
+                                        "example": "John"
+                                    },
+                                    "prezime": {
+                                        "type": "string",
+                                        "example": "Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john@email.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "123456"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "example": "123456"
+                                    },
+                                    "broj_pasosa": {
+                                        "type": "string",
+                                        "example": "PA1234567"
+                                    },
+                                    "drzavljanstvo": {
+                                        "type": "string",
+                                        "example": "Nemacka"
+                                    },
+                                    "slika": {
+                                        "description": "Profilna slika (jpg/jpeg/png, max 2MB)",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Registracija uspešna"
+                    },
+                    "422": {
+                        "description": "Validaciona greška"
+                    }
+                }
+            }
+        },
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Prijava korisnika (Sanctum token)",
+                "operationId": "a3b306d14572d1f4bd6c064b3233e7b8",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "marko@email.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "123456"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Uspešna prijava"
+                    },
+                    "401": {
+                        "description": "Pogrešan email ili lozinka"
+                    },
+                    "422": {
+                        "description": "Validaciona greška"
+                    }
+                }
+            }
+        },
+        "/api/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Odjava korisnika (briše trenutni token)",
+                "operationId": "fe8f3429cd6979b3b4517e186505f9f9",
+                "responses": {
+                    "200": {
+                        "description": "Uspešna odjava"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/me": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Podaci o trenutno ulogovanom korisniku",
+                "operationId": "9d9bc556f927575aa492a88c28fe5908",
+                "responses": {
+                    "200": {
+                        "description": "Podaci o korisniku"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/profile": {
+            "put": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Ažuriranje profila korisnika (email, slika, lozinka)",
+                "operationId": "ac662ae856fb1cc2239e27417f0496bd",
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "novi@email.com"
+                                    },
+                                    "profile_photo": {
+                                        "description": "Nova profilna slika (jpg/jpeg/png, max 2MB)",
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "current_password": {
+                                        "type": "string",
+                                        "example": "stara123"
+                                    },
+                                    "new_password": {
+                                        "type": "string",
+                                        "example": "nova123"
+                                    },
+                                    "new_password_confirmation": {
+                                        "type": "string",
+                                        "example": "nova123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Profil uspešno ažuriran"
+                    },
+                    "400": {
+                        "description": "Trenutna lozinka nije tačna"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "422": {
+                        "description": "Validaciona greška"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/statistika": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Statistika korisnika (ukupno, domaći, strani) - samo admin",
+                "operationId": "2bb03313dd0cd2fb21938d9bfa605840",
+                "responses": {
+                    "200": {
+                        "description": "Statistika korisnika"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden - nije admin"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/korisnici": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Lista svih korisnika koji nisu admini - samo admin",
+                "operationId": "05768f528e99b5e2119a5c0e083d6414",
+                "responses": {
+                    "200": {
+                        "description": "Lista korisnika"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden - nije admin"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/korisnici/{id}": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Prikaz jednog korisnika sa zahtevima i terminima - samo admin",
+                "operationId": "afa13e336be57584f46e6a9861d57255",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID korisnika",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Podaci o korisniku sa zahtevima i terminima"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden - nije admin"
+                    },
+                    "404": {
+                        "description": "Korisnik ne postoji"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/dokument": {
+            "get": {
+                "tags": [
+                    "Dokument"
+                ],
+                "summary": "Lista svih dokumenata",
+                "operationId": "8be29bad616560280e305632f61aeaee",
+                "responses": {
+                    "200": {
+                        "description": "Lista dokumenata"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Dokument"
+                ],
+                "summary": "Kreiranje novog dokumenta",
+                "operationId": "1c2a2c022eccd8b9ea7c621de1ed4e58",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nazivFajla",
+                                    "putanja",
+                                    "tipDokumeta",
+                                    "broj_dokumenta",
+                                    "organ_izdavanja",
+                                    "zahtev_id"
+                                ],
+                                "properties": {
+                                    "nazivFajla": {
+                                        "type": "string",
+                                        "example": "izvod.pdf"
+                                    },
+                                    "putanja": {
+                                        "type": "string",
+                                        "example": "documents/izvod.pdf"
+                                    },
+                                    "tipDokumeta": {
+                                        "type": "string",
+                                        "example": "izvod",
+                                        "enum": [
+                                            "izvod",
+                                            "presuda",
+                                            "licna_karta",
+                                            "pasos"
+                                        ]
+                                    },
+                                    "broj_dokumenta": {
+                                        "type": "string",
+                                        "example": "123456"
+                                    },
+                                    "organ_izdavanja": {
+                                        "type": "string",
+                                        "example": "MUP Srbije"
+                                    },
+                                    "zahtev_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Dokument uspešno kreiran"
+                    },
+                    "422": {
+                        "description": "Validaciona greška"
+                    }
+                }
+            }
+        },
+        "/api/dokument/{id}": {
+            "get": {
+                "tags": [
+                    "Dokument"
+                ],
+                "summary": "Prikaz jednog dokumenta",
+                "operationId": "8fcb57b2ff933ab11cfd8a2658fccb86",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID dokumenta",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Podaci o dokumentu"
+                    },
+                    "404": {
+                        "description": "Dokument nije pronađen"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Dokument"
+                ],
+                "summary": "Ažuriranje dokumenta",
+                "operationId": "29d6124e31a6b24c8d09b33df1867e78",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID dokumenta",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nazivFajla",
+                                    "putanja",
+                                    "tipDokumeta",
+                                    "broj_dokumenta",
+                                    "organ_izdavanja",
+                                    "zahtev_id"
+                                ],
+                                "properties": {
+                                    "nazivFajla": {
+                                        "type": "string",
+                                        "example": "izvod.pdf"
+                                    },
+                                    "putanja": {
+                                        "type": "string",
+                                        "example": "documents/izvod.pdf"
+                                    },
+                                    "tipDokumeta": {
+                                        "type": "string",
+                                        "example": "izvod",
+                                        "enum": [
+                                            "izvod",
+                                            "presuda",
+                                            "licna_karta",
+                                            "pasos"
+                                        ]
+                                    },
+                                    "broj_dokumenta": {
+                                        "type": "string",
+                                        "example": "123456"
+                                    },
+                                    "organ_izdavanja": {
+                                        "type": "string",
+                                        "example": "MUP Srbije"
+                                    },
+                                    "zahtev_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Dokument uspešno ažuriran"
+                    },
+                    "404": {
+                        "description": "Dokument nije pronađen"
+                    },
+                    "422": {
+                        "description": "Validaciona greška"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Dokument"
+                ],
+                "summary": "Brisanje dokumenta",
+                "operationId": "f803e230e41a88ae456a79e1209af995",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID dokumenta",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Dokument uspešno obrisan"
+                    },
+                    "404": {
+                        "description": "Dokument nije pronađen"
+                    }
+                }
+            }
+        },
+        "/api/zahtev": {
+            "get": {
+                "tags": [
+                    "Zahtev"
+                ],
+                "summary": "Lista svih zahteva",
+                "operationId": "082009bae686aa2d4a4168d4ee9486aa",
+                "responses": {
+                    "200": {
+                        "description": "Lista zahteva"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Zahtev"
+                ],
+                "summary": "Kreiranje novog zahteva (prebivaliste ili bracni_status)",
+                "operationId": "b39a3fb0ba970630b87db35f99fd7591",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "tip_zahteva",
+                                    "broj_licnog_dokumenta",
+                                    "datum_promene"
+                                ],
+                                "properties": {
+                                    "tip_zahteva": {
+                                        "type": "string",
+                                        "example": "bracni_status",
+                                        "enum": [
+                                            "prebivaliste",
+                                            "bracni_status"
+                                        ]
+                                    },
+                                    "broj_licnog_dokumenta": {
+                                        "type": "string",
+                                        "example": "123456789"
+                                    },
+                                    "datum_promene": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-01-01"
+                                    },
+                                    "tip_promene": {
+                                        "type": "string",
+                                        "example": "sklapanje_braka",
+                                        "enum": [
+                                            "razvod",
+                                            "sklapanje_braka"
+                                        ]
+                                    },
+                                    "ime_partnera": {
+                                        "type": "string",
+                                        "example": "Ana"
+                                    },
+                                    "prezime_partnera": {
+                                        "type": "string",
+                                        "example": "Anić"
+                                    },
+                                    "datum_rodjenja_partnera": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "1995-05-10"
+                                    },
+                                    "partner_pol": {
+                                        "type": "string",
+                                        "example": "Z",
+                                        "enum": [
+                                            "M",
+                                            "Z"
+                                        ]
+                                    },
+                                    "broj_licnog_dokumenta_partnera": {
+                                        "type": "string",
+                                        "example": "987654321"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Zahtev uspešno kreiran"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "422": {
+                        "description": "Validaciona greška"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/zahtev/moje": {
+            "get": {
+                "tags": [
+                    "Zahtev"
+                ],
+                "summary": "Lista zahteva ulogovanog korisnika sa filterima i paginacijom",
+                "operationId": "bdefe7387565c892b3948a91c86906c5",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Broj zahteva po stranici",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 10
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Filter po statusu",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "date_from",
+                        "in": "query",
+                        "description": "Filter od datuma",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "date_to",
+                        "in": "query",
+                        "description": "Filter do datuma",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista zahteva korisnika"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/zahtev/moje/bracni_status": {
+            "get": {
+                "tags": [
+                    "Zahtev"
+                ],
+                "summary": "Lista zahteva tipa bracni_status ulogovanog korisnika sa filterima i paginacijom",
+                "operationId": "3e4ab59e3e2877075e104769cbde0b36",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Broj zahteva po stranici",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 10
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Filter po statusu",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "date_from",
+                        "in": "query",
+                        "description": "Filter od datuma",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "date_to",
+                        "in": "query",
+                        "description": "Filter do datuma",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista zahteva bracnog statusa korisnika"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/zahtev/moje/prebivaliste": {
+            "get": {
+                "tags": [
+                    "Zahtev"
+                ],
+                "summary": "Lista zahteva tipa prebivaliste ulogovanog korisnika sa filterima i paginacijom",
+                "operationId": "46ebe60bd1b0bdec9bfcd8fcc0d6106f",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Broj zahteva po stranici",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 10
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Filter po statusu",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "date_from",
+                        "in": "query",
+                        "description": "Filter od datuma",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "date_to",
+                        "in": "query",
+                        "description": "Filter do datuma",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista zahteva prebivalista korisnika"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/zahtevi/{id}": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Prikaz jednog zahteva sa svim detaljima - samo admin",
+                "operationId": "379a4b76feded848af94b459246e2353",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID zahteva",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Podaci o zahtevu"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden - nije admin"
+                    },
+                    "404": {
+                        "description": "Zahtev nije pronađen"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/zahtev/{id}": {
+            "get": {
+                "tags": [
+                    "Zahtev"
+                ],
+                "summary": "Prikaz jednog zahteva",
+                "description": "Display the specified resource.",
+                "operationId": "4a5a43ca52b361e2baac410da2f18e83",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID zahteva",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Podaci o zahtevu"
+                    },
+                    "404": {
+                        "description": "Zahtev nije pronađen"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Zahtev"
+                ],
+                "summary": "Ažuriranje zahteva",
+                "operationId": "b6fe87eb654031eea203e8d4a2f61395",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID zahteva",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "tip_zahteva": {
+                                        "type": "string",
+                                        "example": "bracni_status",
+                                        "enum": [
+                                            "prebivaliste",
+                                            "bracni_status"
+                                        ]
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "example": "kreiran"
+                                    },
+                                    "broj_licnog_dokumenta": {
+                                        "type": "string",
+                                        "example": "123456789"
+                                    },
+                                    "datum_promene": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-01-01"
+                                    },
+                                    "tip_promene": {
+                                        "type": "string",
+                                        "example": "razvod",
+                                        "enum": [
+                                            "razvod",
+                                            "sklapanje_braka"
+                                        ]
+                                    },
+                                    "ime_partnera": {
+                                        "type": "string",
+                                        "example": "Ana"
+                                    },
+                                    "prezime_partnera": {
+                                        "type": "string",
+                                        "example": "Anić"
+                                    },
+                                    "datum_rodjenja_partnera": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "1995-05-10"
+                                    },
+                                    "partner_pol": {
+                                        "type": "string",
+                                        "example": "Z",
+                                        "enum": [
+                                            "M",
+                                            "Z"
+                                        ]
+                                    },
+                                    "broj_licnog_dokumenta_partnera": {
+                                        "type": "string",
+                                        "example": "987654321"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Zahtev uspešno ažuriran"
+                    },
+                    "404": {
+                        "description": "Zahtev nije pronađen"
+                    },
+                    "422": {
+                        "description": "Validaciona greška"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Zahtev"
+                ],
+                "summary": "Brisanje zahteva",
+                "operationId": "9adff0d7fa05485ee93cd6592a0d604b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID zahteva",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Zahtev uspešno obrisan"
+                    },
+                    "404": {
+                        "description": "Zahtev nije pronađen"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/zahtev/export/csv": {
+            "get": {
+                "tags": [
+                    "Zahtev"
+                ],
+                "summary": "Export zahteva korisnika u CSV format",
+                "operationId": "fd212bfc48809b1fdb9643a2dfb75bba",
+                "responses": {
+                    "200": {
+                        "description": "CSV fajl sa zahtevima"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/statistikaZahteva": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Statistika svih zahteva (čekajući, odobreni, odbijeni) - samo admin",
+                "operationId": "1ce8a9860ff33fec4d3e118be9964359",
+                "responses": {
+                    "200": {
+                        "description": "Statistika zahteva"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden - nije admin"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/neobradjeniZahtevi": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Lista neobrađenih zahteva - samo admin",
+                "operationId": "bbda4d3ae0ee56455591186d90161f29",
+                "parameters": [
+                    {
+                        "name": "tip_zahteva",
+                        "in": "query",
+                        "description": "Filter po tipu zahteva",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "prebivaliste",
+                                "bracni_status"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista neobrađenih zahteva"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden - nije admin"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/zahtevi/{id}/odobri": {
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Odobravanje zahteva - samo admin",
+                "operationId": "3c342af01289822857944ec2d8241ce0",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID zahteva",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Zahtev odobren"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden - nije admin"
+                    },
+                    "404": {
+                        "description": "Zahtev nije pronađen"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/zahtevi/{id}/odbij": {
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Odbijanje zahteva - samo admin",
+                "operationId": "79302d3c098401d32d9c882ba1b900a7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID zahteva",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Zahtev odbijen"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden - nije admin"
+                    },
+                    "404": {
+                        "description": "Zahtev nije pronađen"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Auth"
+        },
+        {
+            "name": "Admin",
+            "description": "Admin"
+        },
+        {
+            "name": "Dokument",
+            "description": "Dokument"
+        },
+        {
+            "name": "Zahtev",
+            "description": "Zahtev"
+        }
+    ]
+}

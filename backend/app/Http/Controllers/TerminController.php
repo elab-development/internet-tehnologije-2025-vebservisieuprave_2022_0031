@@ -6,12 +6,18 @@ use App\Models\Termin;
 use Illuminate\Http\Request;
 use App\Http\Resources\TerminResource;
 use Illuminate\Support\Facades\Validator;
+use OpenApi\Attributes as OA;
 
 class TerminController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    #[OA\Get(
+        path: "/api/termin",
+        summary: "Lista svih termina",
+        tags: ["Termin"],
+        responses: [
+            new OA\Response(response: 200, description: "Lista termina")
+        ]
+    )]
     public function index()
     {
         return TerminResource::collection(Termin::all());
@@ -22,6 +28,23 @@ class TerminController extends Controller
         //
     }
 
+    #[OA\Get(
+        path: "/api/termin/moje",
+        summary: "Lista termina ulogovanog korisnika sa filterima i paginacijom",
+        tags: ["Termin"],
+        security: [["bearerAuth" => []]],
+        parameters: [
+            new OA\Parameter(name: "per_page", in: "query", required: false, description: "Broj termina po stranici", schema: new OA\Schema(type: "integer"), example: 10),
+            new OA\Parameter(name: "tip_dokumenta", in: "query", required: false, description: "Filter po tipu dokumenta", schema: new OA\Schema(type: "string", enum: ["licna_karta", "pasos"])),
+            new OA\Parameter(name: "lokacija", in: "query", required: false, description: "Filter po lokaciji", schema: new OA\Schema(type: "string")),
+            new OA\Parameter(name: "date_from", in: "query", required: false, description: "Filter od datuma", schema: new OA\Schema(type: "string", format: "date-time")),
+            new OA\Parameter(name: "date_to", in: "query", required: false, description: "Filter do datuma", schema: new OA\Schema(type: "string", format: "date-time")),
+        ],
+        responses: [
+            new OA\Response(response: 200, description: "Lista termina korisnika"),
+            new OA\Response(response: 401, description: "Unauthorized")
+        ]
+    )]
     public function mojiTerminiPaginatedFiltered(Request $request)
     {
         $userId = $request->user()->id;
@@ -51,9 +74,29 @@ class TerminController extends Controller
         return TerminResource::collection($paginator);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    #[OA\Post(
+        path: "/api/termin",
+        summary: "Kreiranje novog termina",
+        tags: ["Termin"],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                required: ["tip_dokumenta", "lokacija", "datum_vreme", "korisnik_id"],
+                properties: [
+                    new OA\Property(property: "tip_dokumenta", type: "string", enum: ["licna_karta", "pasos"], example: "licna_karta"),
+                    new OA\Property(property: "lokacija", type: "string", example: "Beograd - MUP"),
+                    new OA\Property(property: "datum_vreme", type: "string", format: "date-time", example: "2025-06-01 10:00:00"),
+                    new OA\Property(property: "korisnik_id", type: "integer", example: 1),
+                ],
+                type: "object"
+            )
+        ),
+        responses: [
+            new OA\Response(response: 201, description: "Termin uspešno kreiran"),
+            new OA\Response(response: 409, description: "Termin je već zauzet"),
+            new OA\Response(response: 422, description: "Validaciona greška")
+        ]
+    )]
     public function store(Request $request)
     {
         $minAllowed = now()->addMinutes(30)->toDateTimeString();
@@ -104,9 +147,25 @@ class TerminController extends Controller
         return response()->json(new TerminResource($termin), 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
+    #[OA\Get(
+        path: "/api/termin/{id}",
+        summary: "Prikaz jednog termina",
+        tags: ["Termin"],
+        parameters: [
+            new OA\Parameter(
+                name: "id",
+                in: "path",
+                required: true,
+                description: "ID termina",
+                schema: new OA\Schema(type: "integer"),
+                example: 1
+            )
+        ],
+        responses: [
+            new OA\Response(response: 200, description: "Podaci o terminu"),
+            new OA\Response(response: 404, description: "Termin nije pronađen")
+        ]
+    )]
     public function show($id)
     {
         return new TerminResource(Termin::findOrFail($id));
@@ -117,9 +176,40 @@ class TerminController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    #[OA\Put(
+        path: "/api/termin/{id}",
+        summary: "Ažuriranje termina",
+        tags: ["Termin"],
+        parameters: [
+            new OA\Parameter(
+                name: "id",
+                in: "path",
+                required: true,
+                description: "ID termina",
+                schema: new OA\Schema(type: "integer"),
+                example: 1
+            )
+        ],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                required: ["tip_dokumenta", "lokacija", "datum_vreme", "korisnik_id"],
+                properties: [
+                    new OA\Property(property: "tip_dokumenta", type: "string", enum: ["licna_karta", "pasos"], example: "licna_karta"),
+                    new OA\Property(property: "lokacija", type: "string", example: "Beograd - MUP"),
+                    new OA\Property(property: "datum_vreme", type: "string", format: "date-time", example: "2025-06-01 10:00:00"),
+                    new OA\Property(property: "korisnik_id", type: "integer", example: 1),
+                ],
+                type: "object"
+            )
+        ),
+        responses: [
+            new OA\Response(response: 200, description: "Termin uspešno ažuriran"),
+            new OA\Response(response: 404, description: "Termin nije pronađen"),
+            new OA\Response(response: 409, description: "Termin je već zauzet"),
+            new OA\Response(response: 422, description: "Validaciona greška")
+        ]
+    )]
     public function update(Request $request, $id)
     {
         $termin = Termin::find($id);
@@ -175,9 +265,25 @@ class TerminController extends Controller
         return response()->json(new TerminResource($termin), 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    #[OA\Delete(
+        path: "/api/termin/{id}",
+        summary: "Brisanje termina",
+        tags: ["Termin"],
+        parameters: [
+            new OA\Parameter(
+                name: "id",
+                in: "path",
+                required: true,
+                description: "ID termina",
+                schema: new OA\Schema(type: "integer"),
+                example: 1
+            )
+        ],
+        responses: [
+            new OA\Response(response: 200, description: "Termin uspešno obrisan"),
+            new OA\Response(response: 404, description: "Termin nije pronađen")
+        ]
+    )]
     public function destroy($id)
     {
         $termin = Termin::find($id);
@@ -191,4 +297,3 @@ class TerminController extends Controller
         return response()->json(['message' => 'Termin je obrisan.'], 200);
     }
 }
-

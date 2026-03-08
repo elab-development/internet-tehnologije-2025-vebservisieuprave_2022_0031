@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\URL;
+// use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -134,11 +134,11 @@ class AuthController extends Controller
             'password' => Hash::make($data['password']),
         ]);
 
-        $url = URL::temporarySignedRoute(
-            'verification.verify',
-            now()->addMinutes(60),
-            ['id' => $user->id]
-        );
+        // $url = URL::temporarySignedRoute(
+        //     'verification.verify',
+        //     now()->addMinutes(60),
+        //     ['id' => $user->id]
+        // );
 
         // Mail::to($user->email)->send(new VerifyEmail($user, $url));
 
@@ -220,11 +220,11 @@ class AuthController extends Controller
             'profile_photo_path' => $data['slika'],
         ]);
 
-        $url = URL::temporarySignedRoute(
-            'verification.verify',
-            now()->addMinutes(60),
-            ['id' => $user->id]
-        );
+        // $url = URL::temporarySignedRoute(
+        //     'verification.verify',
+        //     now()->addMinutes(60),
+        //     ['id' => $user->id]
+        // );
 
         // Mail::to($user->email)->send(new VerifyEmail($user, $url));
 

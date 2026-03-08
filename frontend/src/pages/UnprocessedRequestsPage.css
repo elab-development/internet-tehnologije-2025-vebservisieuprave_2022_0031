@@ -1,49 +1,19 @@
 .neobradjeni-zahtevi-page {
   width: 100%;
-  min-height: 100vh;
-  padding: 40px 24px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.neobradjeni-zahtevi-page h1 {
-  margin: 0 0 30px 0;
-  font-size: 56px;
-  font-weight: 700;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
   text-align: center;
 }
 
 .filter-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
   margin-bottom: 40px;
-  flex-wrap: wrap;
 }
 
-.filter-container label {
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.filter-container select {
-  min-width: 260px;
-  padding: 10px 14px;
-  border: 1px solid #cfcfcf;
-  border-radius: 8px;
-  font-size: 16px;
-  background: #fff;
-}
-
-/* OVO JE GLAVNO */
+/* OVO JE BITNO */
 .zahtevi-grid {
-  width: 100%;
-  max-width: 1200px;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 260px));
   justify-content: center;
   gap: 32px;
 }

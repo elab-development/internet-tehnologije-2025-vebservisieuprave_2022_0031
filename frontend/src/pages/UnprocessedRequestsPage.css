@@ -1,8 +1,10 @@
+/* ZAHTEVI PAGE */
+
 .neobradjeni-zahtevi-page {
   padding: 30px;
-  font-family: Arial, sans-serif;
   max-width: 1200px;
   margin: 0 auto;
+  font-family: Arial, sans-serif;
 }
 
 .neobradjeni-zahtevi-page h1 {
@@ -10,22 +12,14 @@
   margin-bottom: 30px;
 }
 
-/* FILTER */
-.filter-container {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 30px;
-}
-
 /* GRID */
 .zahtevi-grid {
-  display: grid !important;
+  display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 25px;
 }
 
-/* KARTICA */
+/* ZAHTEV CARD */
 .zahtev-card {
   background: #f9f9f9;
   border: 1px solid #ddd;

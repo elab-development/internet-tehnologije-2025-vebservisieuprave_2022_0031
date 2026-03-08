@@ -12,7 +12,7 @@ const UserProfileAdmin = () => {
     const fetchUser = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await fetch(`http://localhost:8000/api/admin/korisnici/${id}`, {
+        const res = await fetch(`https://internet-tehnologije-2025-vebservisieuprave2022-production.up.railway.app/api/admin/korisnici/${id}`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: "Bearer " + token,
@@ -47,7 +47,7 @@ const UserProfileAdmin = () => {
         <div className="profile-photo-container">
           {user.profile_photo_path ? (
             <img
-              src={`http://localhost:8000/storage/${user.profile_photo_path}`}
+              src={`https://internet-tehnologije-2025-vebservisieuprave2022-production.up.railway.app/storage/${user.profile_photo_path}`}
               alt={`${user.ime} ${user.prezime}`}
               className="profile-photo"
             />

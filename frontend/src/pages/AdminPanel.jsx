@@ -29,7 +29,7 @@ const AdminPanel = ({ user }) => {
       setError("");
 
       try {
-        const resUsers = await fetch("http://localhost:8000/api/admin/statistika", {
+        const resUsers = await fetch("https://internet-tehnologije-2025-vebservisieuprave2022-production.up.railway.app/api/admin/statistika", {
           headers: {
             "Content-Type": "application/json",
             Authorization: "Bearer " + token,
@@ -39,7 +39,7 @@ const AdminPanel = ({ user }) => {
         const dataUsers = await resUsers.json();
         setStats(dataUsers);
 
-        const resReq = await fetch("http://localhost:8000/api/admin/statistikaZahteva", {
+        const resReq = await fetch("https://internet-tehnologije-2025-vebservisieuprave2022-production.up.railway.app/api/admin/statistikaZahteva", {
           headers: {
             "Content-Type": "application/json",
             Authorization: "Bearer " + token,

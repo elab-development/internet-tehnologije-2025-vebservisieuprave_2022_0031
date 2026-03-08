@@ -13,7 +13,7 @@ const RequestDetailsAdmin = () => {
     const fetchZahtev = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await fetch(`http://localhost:8000/api/admin/zahtevi/${id}`, {
+        const res = await fetch(`https://internet-tehnologije-2025-vebservisieuprave2022-production.up.railway.app/api/admin/zahtevi/${id}`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: "Bearer " + token,
@@ -33,7 +33,7 @@ const RequestDetailsAdmin = () => {
   const updateStatus = async (status) => {
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:8000/api/admin/zahtevi/${id}/${status}`, {
+      const res = await fetch(`https://internet-tehnologije-2025-vebservisieuprave2022-production.up.railway.app/api/admin/zahtevi/${id}/${status}`, {
         method: "POST",
        headers: {
         "Content-Type": "application/json",
@@ -65,7 +65,7 @@ const RequestDetailsAdmin = () => {
           <div className="profile-photo-container">
           {user.profile_photo_path ? (
             <img
-              src={`http://localhost:8000/storage/${user.profile_photo_path}`}
+              src={`https://internet-tehnologije-2025-vebservisieuprave2022-production.up.railway.app/storage/${user.profile_photo_path}`}
               alt={`${user.ime} ${user.prezime}`}
               className="profile-photo"
             />

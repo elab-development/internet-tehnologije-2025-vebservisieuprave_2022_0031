@@ -8,8 +8,8 @@ import PrimaryButton from '../components/PrimaryButton';
 
 export const LogInPage = ({ setUser }) => {
   const navigate = useNavigate(); //navigaciona ruta
-  const [email, setEmail] = useState("nitzsche.elmo@example.net");
-  const [password, setPassword] = useState("password");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const [loading, setLoading] = useState(false);// jer kada otvorimo stranicu forma ne radi nista pa je loading false
   const [error, setError] = useState("");

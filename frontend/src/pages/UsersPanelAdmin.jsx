@@ -22,7 +22,7 @@ const UsersPanelAdmin = ({ user }) => {
       setError("");
       try {
         const token = localStorage.getItem("token");
-        const res = await fetch("http://localhost:8000/api/admin/korisnici", {
+        const res = await fetch("https://internet-tehnologije-2025-vebservisieuprave2022-production.up.railway.app/api/admin/korisnici", {
           headers: {
             "Content-Type": "application/json",
             Authorization: "Bearer " + token,

@@ -56,7 +56,7 @@ export default function UserPage() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/api/me", {
+      .get("https://internet-tehnologije-2025-vebservisieuprave2022-production.up.railway.app/api/api/me", {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
@@ -92,7 +92,7 @@ export default function UserPage() {
 
     try {
       const res = await axios.post(
-        "http://localhost:8000/api/profile?_method=PUT",
+        "https://internet-tehnologije-2025-vebservisieuprave2022-production.up.railway.app/api/profile?_method=PUT",
         formData,
         {
           headers: {
@@ -164,7 +164,7 @@ const UserPage = () => {
 
           {user.profile_photo_path && (
             <img
-              src={`http://localhost:8000/storage/${user.profile_photo_path}`}
+              src={`https://internet-tehnologije-2025-vebservisieuprave2022-production.up.railway.app/storage/${user.profile_photo_path}`}
               alt="Profil"
               width="120"
               style={{ borderRadius: "10px", marginTop: "10px" }}

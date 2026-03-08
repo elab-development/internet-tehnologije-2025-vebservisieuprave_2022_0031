@@ -21,7 +21,7 @@ const UnprocessedRequestsPage = () => {
     setError("");
     try {
       const token = localStorage.getItem("token");
-      let url = "http://localhost:8000/api/admin/neobradjeniZahtevi";
+      let url = "https://internet-tehnologije-2025-vebservisieuprave2022-production.up.railway.app/api/admin/neobradjeniZahtevi";
       if (tip && tip !== "svi") {
         url += `?tip_zahteva=${tip}`;
       }

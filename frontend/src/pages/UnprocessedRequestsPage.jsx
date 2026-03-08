@@ -74,7 +74,7 @@ const UnprocessedRequestsPage = () => {
         </select>
       </div>
 
-      <div className="zahtevi-grid">
+      <div className="zahtevi-grid2">
         {zahtevi.map((z) => (
           <ZahtevCard key={z.id} zahtev={z} onClick={handleClick} />
         ))}

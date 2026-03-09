@@ -520,53 +520,7 @@ class ZahtevController extends Controller
         return response()->json(['message' => 'Zahtev je obrisan.'], 200);
     }
 
-    #[OA\Get(
-        path: "/api/zahtev/export/csv",
-        summary: "Export zahteva korisnika u CSV format",
-        tags: ["Zahtev"],
-        security: [["bearerAuth" => []]],
-        responses: [
-            new OA\Response(response: 200, description: "CSV fajl sa zahtevima"),
-            new OA\Response(response: 401, description: "Unauthorized")
-        ]
-    )]
-    public function exportCsv(Request $request)
-    {
-        $userId = $request->user()->id;
-
-        $zahtevi = Zahtev::with(['staraAdresa', 'novaAdresa', 'korisnik.termin'])
-            ->where('korisnik_id', $userId)
-            ->orderBy('datum_kreiranja', 'asc')
-            ->get();
-
-        $columns = ['id', 'tip_zahteva', 'status', 'datum_kreiranja', 'stara_adresa', 'nova_adresa', 'termin'];
-
-        $callback = function () use ($zahtevi, $columns) {
-            $file = fopen('php://output', 'w');
-            fputcsv($file, $columns, ';');
-
-            foreach ($zahtevi as $z) {
-                fputcsv($file, [
-                    $z->id,
-                    $z->tip_zahteva,
-                    $z->status,
-                    $z->datum_kreiranja ? $z->datum_kreiranja->format('Y-m-d') : null,
-                    optional($z->staraAdresa)->ulica,
-                    optional($z->novaAdresa)->ulica,
-                    optional($z->korisnik->termin)->lokacija
-                ], ';');
-            }
-
-            fclose($file);
-        };
-
-        $fileName = 'zahtevi_' . $userId . '_' . now()->format('Ymd_His') . '.csv';
-
-        return response()->stream($callback, 200, [
-            'Content-Type' => 'text/csv; charset=UTF-8',
-            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
-        ]);
-    }
+    
 
     #[OA\Get(
         path: "/api/admin/statistikaZahteva",

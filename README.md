@@ -1,15 +1,44 @@
 # MojaEUprava
-MojaEUprava je web aplikacija koja omogućava građanima da elektronski podnose zahteve za administrativne usluge i zakazuju termine bez potrebe za odlaskom na šalter. Cilj aplikacije je da pojednostavi komunikaciju između građana i državnih institucija i da omogući bržu i efikasniju obradu zahteva.
 
-Aplikacija podržava različite tipove korisnika i omogućava podnošenje zahteva, zakazivanje termina, upravljanje profilom korisnika i administrativnu obradu zahteva.
+MojaEUprava je web aplikacija koja omogućava građanima da elektronski podnose zahteve za administrativne usluge i zakazuju termine bez potrebe za odlaskom na šalter. Cilj aplikacije je da pojednostavi komunikaciju između građana i državnih institucija i omogući bržu i efikasniju obradu zahteva.
 
+Aplikacija podržava različite tipove korisnika i omogućava:
+- registraciju i prijavu korisnika
+- upravljanje korisničkim profilom
+- podnošenje administrativnih zahteva
+- zakazivanje termina
+- administrativnu obradu zahteva
 
+---
 
-## Sta je potrebno instalirati
-Da bi aplikacija mogla da se pokrene, potrebno je instalirati sledece alate:
-- Docker Destop- omogucava pokretanje baze, backenda i frontenda bez rucne instalacije PHP-a, MySQL-a i Node-a
+# Tehnologije
 
-- Git- Koristi se za kloniranje i reprozitorijum i verzionisanje koda
+U razvoju aplikacije korišćene su sledeće tehnologije:
+
+Backend:
+- Laravel (PHP framework)
+- MySQL baza podataka
+
+Frontend:
+- React
+- Axios (komunikacija sa backend API-jem)
+
+Alati i infrastruktura:
+- Docker
+- Docker Compose
+- Nginx (za produkciono okruženje)
+- Swagger (API dokumentacija)
+
+---
+
+# Instalacija i pokretanje aplikacije
+
+## Potrebni alati
+
+Da bi aplikacija mogla da se pokrene potrebno je instalirati:
+
+- Docker Desktop  
+- Git  
 
 ## Kako preuzeti projekat
 1. Kloniranje reprozitorijuma
@@ -43,80 +72,83 @@ Zatim pokrenuti:
             
 4. Pristup aplikaciji
 Nakon uspesnog pokretanja app ce biti dostupne na sledecim linkovima: 
-
+    Frontend:
                 [text](http://127.0.0.1:8000/)
+   Backend API:
                 [text](http://localhost:3000/)
+   
+   Swagger API dokumentacija:
+                [text](http://localhost:8000/api/documentation)
 
-## Funkcionalnosti aplikacije
+# Funkcionalnosti aplikacije
 
-### Autentifikacija
+## Autentifikacija
 
 Korisnici mogu:
 
 - da se registruju kao domaći ili strani državljanin
+- da se prijave na sistem
+- da se odjave sa sistema
 
-- da se prijave na sistem (login)
+---
 
-- da se odjave sa sistema (logout)
-Profil korisnika
+## Profil korisnika
 
 Korisnik može:
 
 - da vidi svoj profil
-
 - da promeni lozinku
-
 - da izmeni email adresu
+- da postavi ili promeni profilnu sliku
 
-- da postavi/promeni profilnu sliku
+---
 
-Zakazivanje termina
+## Zakazivanje termina
 
-Korisnici mogu zakazati termin za izdavanje ličnih dokumenata:
+Korisnici mogu zakazati termin za izdavanje ličnih dokumenata.
 
 Domaći državljani:
 
 - izdavanje lične karte
-
 - izdavanje pasoša
 
 Strani državljani:
 
 - izdavanje lične karte za strane državljane
 
-Podnošenje zahteva
+---
+
+## Podnošenje zahteva
 
 Korisnici mogu podneti sledeće zahteve:
 
 - promena prebivališta
-
 - promena bračnog statusa (sklapanje ili razvod braka)
 
 Korisnik može:
 
 - podneti novi zahtev
-
 - izmeniti postojeći zahtev
-
 - obrisati zahtev
-
 - pregledati listu svojih zahteva
 
-Administratorske funkcionalnosti
+---
+
+## Administratorske funkcionalnosti
 
 Administrator ima pristup posebnom delu aplikacije gde može:
 
 - pregledati sve zahteve korisnika
-
 - odobriti zahtev
-
 - odbiti zahtev
+- filtrirati zahteve po tipu korisnika
+- filtrirati zahteve po statusu
 
-- filtrirati zahteve po:
+Administrator ima i statistički prikaz podataka u vidu grafikona koji prikazuju procenat domaćih i stranih korisnika i podnetih zahteva.
 
-- tipu korisnika (domaći ili strani)
+---
 
--statusu zahteva (odobren, odbijen, kreiran)
+# Deploy aplikacije
 
-Administrator takođe ima pristup statističkom prikazu podataka u vidu grafikona koji prikazuju procenat domaćih i stranih korisnika i podnetih zahteva.
+Aplikacija je postavljena na Railway platformi, gde se backend, frontend i baza podataka automatski pokreću prilikom deploy-a koristeći Docker konfiguraciju.
 

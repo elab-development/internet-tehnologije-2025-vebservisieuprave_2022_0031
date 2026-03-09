@@ -1,4 +1,11 @@
 # MojaEUprava
+# Live Demo
+
+Frontend aplikacija:
+https://splendid-solace-production-f204.up.railway.app
+
+API dokumentacija (Swagger):
+https://internet-tehnologije-2025-vebservisieuprave2022-production.up.railway.app/api/documentation
 
 MojaEUprava je web aplikacija koja omogućava građanima da elektronski podnose zahteve za administrativne usluge i zakazuju termine bez potrebe za odlaskom na šalter. Cilj aplikacije je da pojednostavi komunikaciju između građana i državnih institucija i omogući bržu i efikasniju obradu zahteva.
 
@@ -28,7 +35,9 @@ Alati i infrastruktura:
 - Docker Compose
 - Nginx (za produkciono okruženje)
 - Swagger (API dokumentacija)
-
+- 
+Deploy platforma:
+- Railway (cloud hosting platforma)
 ---
 
 # Instalacija i pokretanje aplikacije

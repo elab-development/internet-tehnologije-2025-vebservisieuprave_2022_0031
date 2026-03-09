@@ -71,13 +71,14 @@ Zatim pokrenuti:
             docker compose exec app php artisan db:seed
             
 4. Pristup aplikaciji
-Nakon uspesnog pokretanja app ce biti dostupne na sledecim linkovima: 
-    Frontend:
+Nakon uspesnog pokretanja app ce biti dostupne na sledecim linkovima:
+
+        Frontend:
                 [text](http://127.0.0.1:8000/)
-   Backend API:
+       Backend API:
                 [text](http://localhost:3000/)
    
-   Swagger API dokumentacija:
+       Swagger API dokumentacija:
                 [text](http://localhost:8000/api/documentation)
 
 # Funkcionalnosti aplikacije

@@ -153,3 +153,15 @@ Administrator ima i statistički prikaz podataka u vidu grafikona koji prikazuju
 
 Aplikacija je postavljena na Railway platformi, gde se backend, frontend i baza podataka automatski pokreću prilikom deploy-a koristeći Docker konfiguraciju.
 
+Frontend aplikacija:
+
+https://splendid-solace-production-f204.up.railway.app
+
+Backend API:
+
+https://internet-tehnologije-2025-vebservisieuprave2022-production.up.railway.app
+
+Swagger API dokumentacija:
+
+https://internet-tehnologije-2025-vebservisieuprave2022-production.up.railway.app/api/documentation
+

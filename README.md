@@ -73,13 +73,14 @@ Zatim pokrenuti:
 4. Pristup aplikaciji
 Nakon uspesnog pokretanja app ce biti dostupne na sledecim linkovima:
 
-        Frontend:
-                [text](http://127.0.0.1:8000/)
-       Backend API:
-                [text](http://localhost:3000/)
+Frontend:
+http://127.0.0.1:8000/
+
+Backend API:
+http://localhost:3000/
    
-       Swagger API dokumentacija:
-                [text](http://localhost:8000/api/documentation)
+Swagger API dokumentacija:
+http://localhost:8000/api/documentation
 
 # Funkcionalnosti aplikacije
 

@@ -463,7 +463,7 @@ class AuthController extends Controller
 
     // Filtriranje po tipu korisnika
     if ($request->has('tip_korisnika') && in_array($request->tip, ['domaci', 'strani'])) {
-        $query->where('tip_korisnika', $request->tip);
+        $query->where('tip_korisnika', $request->tip_korisnika);
     }
 
     $users = $query->orderBy('ime')->get();

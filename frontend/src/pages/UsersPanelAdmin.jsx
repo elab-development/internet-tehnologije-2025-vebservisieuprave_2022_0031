@@ -52,12 +52,10 @@ const UsersPanelAdmin = ({ user }) => {
     }
 
     fetchUsers(filter);
-  }, [user, navigate]);
+  }, [user, navigate, filter]); // ← filter dodat
 
   const handleFilterChange = (e) => {
-    const tip = e.target.value;
-    setFilter(tip);
-    fetchUsers(tip);
+    setFilter(e.target.value); // ← samo menja filter, useEffect se brine za ostalo
   };
 
   if (loading) return <div className="users-loading">Učitavanje korisnika...</div>;

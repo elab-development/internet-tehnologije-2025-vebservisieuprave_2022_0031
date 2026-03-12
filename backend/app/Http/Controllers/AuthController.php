@@ -461,10 +461,9 @@ class AuthController extends Controller
     $query = User::where('tip_korisnika', '!=', 'admin')
         ->select('id', 'ime', 'prezime', 'email', 'tip_korisnika', 'datum_rodjenja');
 
-    // Filtriranje po tipu korisnika
-    if ($request->has('tip_korisnika') && in_array($request->tip, ['domaci', 'strani'])) {
-        $query->where('tip_korisnika', $request->tip_korisnika);
-    }
+    if ($request->filled('tip_korisnika')) {
+            $query->where('tip_korisnika', $request->get('tip_korisnika'));
+        }
 
     $users = $query->orderBy('ime')->get();
 

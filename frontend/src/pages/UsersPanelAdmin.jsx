@@ -11,7 +11,7 @@ const UsersPanelAdmin = ({ user }) => {
   const [error, setError] = useState("");
   const [filter, setFilter] = useState("svi");
 
-  const fetchUsers = async (tip = "svi") => {
+  const fetchUsers = async (tip = "") => {
     setLoading(true);
     setError("");
 
@@ -21,7 +21,7 @@ const UsersPanelAdmin = ({ user }) => {
       let url =
         "https://internet-tehnologije-2025-vebservisieuprave2022-production.up.railway.app/api/admin/korisnici";
 
-      if (tip !== "svi") {
+      if (tip && tip !== "svi") {
         url += `?tip_korisnika=${tip}`;
       }
 
@@ -51,11 +51,13 @@ const UsersPanelAdmin = ({ user }) => {
       return;
     }
 
-    fetchUsers(filter);
-  }, [user, navigate, filter]); // ← filter dodat
+    fetchUsers();
+  }, [user, navigate]); 
 
   const handleFilterChange = (e) => {
-    setFilter(e.target.value); // ← samo menja filter, useEffect se brine za ostalo
+    const tip = e.target.value;
+    setFilter(tip);
+    fetchUsers(tip);
   };
 
   if (loading) return <div className="users-loading">Učitavanje korisnika...</div>;

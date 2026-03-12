@@ -99,12 +99,7 @@ export const LogInPage = ({ setUser }) => {
             Prijavi se
           </PrimaryButton>
 
-          <div className="auth-extra">
-            <span>Zaboravili ste lozinku?</span>
-            <span className="auth-extra-link">
-              Obratite se opciji za reset lozinke.
-            </span>
-          </div>
+          
         </form>
       </div>
     </div>

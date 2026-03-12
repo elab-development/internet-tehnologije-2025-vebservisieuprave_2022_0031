@@ -456,18 +456,23 @@ class AuthController extends Controller
             new OA\Response(response: 403, description: "Forbidden - nije admin")
         ]
     )]
-    public function sviKorisnici()
-    {
-        $users = User::where('tip_korisnika', '!=', 'admin')
-            ->select('id', 'ime', 'prezime', 'email', 'tip_korisnika', 'datum_rodjenja')
-            ->orderBy('ime')
-            ->get();
+    public function sviKorisnici(Request $request)
+{
+    $query = User::where('tip_korisnika', '!=', 'admin')
+        ->select('id', 'ime', 'prezime', 'email', 'tip_korisnika', 'datum_rodjenja');
 
-        return response()->json([
-            'total' => $users->count(),
-            'users' => $users
-        ]);
+    // Filtriranje po tipu korisnika
+    if ($request->has('tip_korisnika') && in_array($request->tip, ['domaci', 'strani'])) {
+        $query->where('tip_korisnika', $request->tip);
     }
+
+    $users = $query->orderBy('ime')->get();
+
+    return response()->json([
+        'total' => $users->count(),
+        'users' => $users
+    ]);
+}
 
     #[OA\Get(
         path: "/api/admin/korisnici/{id}",
